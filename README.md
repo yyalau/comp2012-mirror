@@ -1,56 +1,58 @@
 # comp2012h-ShootTheBugs
 for fall 19-20 group project
 
-libraries/ functions used
-QGraphicsScene
+**libraries/ functions used** 
+
+QGraphicsScene:
 	addItem
 	setSceneRect
 	
-QGraphicsView
+QGraphicsView:
 	setHorizontalScrollBarPolicy
 	setVerticalScrollBarPolicy
 	setFixedSize
 	height
 	
 
-QDebug
+QDebug:
 	qDebug
 	
-QGraphicsItem
-	ItemIsFocusable
-	QGraphicsRectItem
-		setRect
-		setFlag
-		setFocus
+QGraphicsItem:
+	ItemIsFocusable,
+	QGraphicsRectItem:
+		setRect,
+		setFlag,
+		setFocus,
 		
 		
 keyPressEvent
-QKeyEvent
+
+QKeyEvent:
 	key
 
 	
-Qt
-	Key_Left
-	Key_Right
-	Key_Up
-	Key_Down
-	Key_Space
+Qt:
+	Key_Left,
+	Key_Right,
+	Key_Up,
+	Key_Down,
+	Key_Space,
 	ScrollBarAlwaysOff
 	
 	
-public slots and QObject
-	Q_OBJECT
+public slots and QObject:
+	Q_OBJECT,
 	connect
 	
-QTimer
-	SIGNAL(timeout())
-	SLOT(move())
+QTimer:
+	SIGNAL(timeout()),
+	SLOT(move()),
 	start
 
 scene()
 rect().height/width/blahblahblah
 
-stdlib.h
+stdlib.h:
 	rand()
 
 
