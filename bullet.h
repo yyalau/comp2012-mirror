@@ -5,8 +5,13 @@
 
 class Bullet:public QObject, public QGraphicsRectItem{
     Q_OBJECT //implies an object can handle signals
+
+private:
+    int dx;
+    int dy;
+
 public:
-    Bullet();
+    Bullet(int, int);
 
 public slots:
     void move();

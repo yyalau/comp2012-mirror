@@ -16,17 +16,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    _setup.cpp \
     bullet.cpp \
-    enemies.cpp \
     enemy.cpp \
+    health.cpp \
     main.cpp \
     mainwindow.cpp \
     shooter.cpp
 
 HEADERS += \
+    _setup.h \
     bullet.h \
-    enemies.h \
     enemy.h \
+    health.h \
     mainwindow.h \
     shooter.h
 

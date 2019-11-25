@@ -2,11 +2,18 @@
 #include <QKeyEvent>
 #include <QGraphicsScene>
 #include <QDebug>
+#include <QGraphicsRectItem>
 #include "bullet.h"
 
-void Shooter::keyPressEvent(QKeyEvent* event)
+Shooter::Shooter()
 {
-    //qDebug()<<"void Shooter::keyPressEvent(QKeyEvent *event)";
+    setBrush(Qt::green);
+    setRect(0,0,50,40);
+}
+
+void Shooter::keyPressEvent(QKeyEvent* event) //try to implement arrow keys and space bar tgt!!!!
+{
+
     if (event->key() ==Qt::Key_Left){
         if (pos().x()>0)
             setPos(x()-10,y());
@@ -24,7 +31,8 @@ void Shooter::keyPressEvent(QKeyEvent* event)
         setPos(x(),y()+10);
     }
     if(event->key()==Qt::Key_Space){
-        Bullet* bullet= new Bullet();
+        Bullet* bullet=new Bullet(0,-10);
+        bullet->setBrush(Qt::green);
         bullet->setPos(x(),y());
         scene()->addItem(bullet);
     }
