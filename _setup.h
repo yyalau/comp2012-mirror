@@ -3,28 +3,24 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QGraphicsScene>
+#include <QHBoxLayout>
 #include <QWidget>
 
 #include "shooter.h"
 #include "enemy.h"
 
 
-class _SetUp: public QGraphicsView
+class _SetUp
 {
 
 public:
     _SetUp();
-
-    QGraphicsScene* scene;
-    QGraphicsView* view;
+    QGraphicsScene* GameScene;
+    QGraphicsView* GameView;
+    QGraphicsScene* MenuScene;
+    QGraphicsView* MenuView;
     Shooter* shooter;
-
-public slots:
-
-    void start();
-
-
+    Health* health;
 };
 
 

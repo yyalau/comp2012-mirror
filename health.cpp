@@ -7,10 +7,10 @@ Health::Health( const QString& name, QGraphicsItem *parent): name(name)
     health=max_health;
 
     setPlainText(QString(this->name)+QString(" Health: ")+ QString::number(health));
-    setDefaultTextColor(Qt:: green);
+    setDefaultTextColor(Qt::yellow);
     setFont(QFont("Times, 16"));
-}
 
+}
 int Health::get_health()
 {
     return health;
