@@ -3,6 +3,7 @@
 #include <QGraphicsTextItem>
 
 class Health: public QGraphicsTextItem{
+
 private:
     const int max_health=5;
     const int min_health=0;

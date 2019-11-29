@@ -17,20 +17,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     _setup.cpp \
-    bullet.cpp \
-    enemy.cpp \
+    bulletBase.cpp \
+    bulletEnemy.cpp \
+    bulletPlayer.cpp \
     health.cpp \
     main.cpp \
     mainwindow.cpp \
-    shooter.cpp
+    shooterBase.cpp \
+    shooterEnemy.cpp \
+    shooterPlayer.cpp
 
 HEADERS += \
     _setup.h \
-    bullet.h \
-    enemy.h \
+    bulletBase.h \
+    bulletEnemy.h \
+    bulletPlayer.h \
     health.h \
     mainwindow.h \
-    shooter.h
+    shooterBase.h \
+    shooterEnemy.h \
+    shooterPlayer.h
 
 FORMS += \
     mainwindow.ui

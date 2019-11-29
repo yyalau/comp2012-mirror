@@ -7,9 +7,10 @@ Health::Health( const QString& name, QGraphicsItem *parent): name(name)
     health=max_health;
 
     setPlainText(QString(this->name)+QString(" Health: ")+ QString::number(health));
-    setDefaultTextColor(Qt:: green);
-    setFont(QFont("Times, 16"));
+    setDefaultTextColor(Qt:: black);
+    QGraphicsTextItem::setFont(QFont("Times, 16"));
 }
+
 
 int Health::get_health()
 {
@@ -18,12 +19,13 @@ int Health::get_health()
 
 void Health::increase_health()
 {
-    ++health;
+    if (health<max_health) ++health;
     setPlainText(QString(name)+QString(" Health: ")+ QString::number(health));
 }
 
 void Health::decrease_health()
 {
-    --health;
+    if(health>min_health) --health;
     setPlainText(QString(name)+QString(" Health: ")+ QString::number(health));
 }
+

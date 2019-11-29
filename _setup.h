@@ -6,8 +6,8 @@
 #include <QGraphicsScene>
 #include <QWidget>
 
-#include "shooter.h"
-#include "enemy.h"
+#include "shooterPlayer.h"
+#include "shooterEnemy.h"
 
 
 class _SetUp: public QGraphicsView
@@ -17,8 +17,7 @@ public:
     _SetUp();
 
     QGraphicsScene* scene;
-    QGraphicsView* view;
-    Shooter* shooter;
+    ShooterPlayer* player;
 
 public slots:
 
