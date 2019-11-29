@@ -6,8 +6,8 @@
 #include <QHBoxLayout>
 #include <QWidget>
 
-#include "shooter.h"
-#include "enemy.h"
+#include "shooterPlayer.h"
+#include "shooterEnemy.h"
 
 
 class _SetUp

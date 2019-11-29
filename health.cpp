@@ -18,12 +18,13 @@ int Health::get_health()
 
 void Health::increase_health()
 {
-    ++health;
+    if (health<max_health) ++health;
     setPlainText(QString(name)+QString(" Health: ")+ QString::number(health));
 }
 
 void Health::decrease_health()
 {
-    --health;
+    if(health>min_health) --health;
     setPlainText(QString(name)+QString(" Health: ")+ QString::number(health));
 }
+

@@ -1,6 +1,6 @@
 #include "_setup.h"
 
-
+extern _SetUp* setup;
 _SetUp::_SetUp()
 {
     //-----------------------------------GameSetting-------------------------------
@@ -14,7 +14,6 @@ _SetUp::_SetUp()
     GameView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); //disable horizontal scroll bar
     GameView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); //disable vertical scroll bar
     GameView->setFixedSize(800,600); //set view and scene are of the same size
-
 
     //shooter
     Shooter* shooter= new Shooter(); //create a rect
