@@ -16,14 +16,14 @@ _SetUp::_SetUp()
     GameView->setFixedSize(800,600); //set view and scene are of the same size
 
     //shooter
-    Shooter* shooter= new Shooter(); //create a rect
+    ShooterPlayer* shooter= new ShooterPlayer(); //create a rect
     GameScene->addItem(shooter); //put rect into the scene
     shooter->setFlag(QGraphicsItem::ItemIsFocusable); // setfocus1
     shooter->setFocus(); //setfocus2
     shooter->setPos(GameView->width()/2, GameView->height()-shooter->rect().height());// set the position of the shooter
 
     //enemy
-    Enemy* enemy= new Enemy();
+    ShooterEnemy* enemy= new ShooterEnemy();
     enemy->setPos(GameView->width()/2, 0);
     GameScene->addItem(enemy);
 

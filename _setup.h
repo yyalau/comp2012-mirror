@@ -19,7 +19,7 @@ public:
     QGraphicsView* GameView;
     QGraphicsScene* MenuScene;
     QGraphicsView* MenuView;
-    Shooter* shooter;
+    ShooterPlayer* shooter;
     Health* health;
 };
 
