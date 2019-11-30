@@ -14,13 +14,19 @@ ShooterEnemy::ShooterEnemy(): ShooterBase("Enemy")
     setBrush(Qt:: blue);
     setRect(0,0,40,40);
 
+    is_shooting = true;
+
     QTimer* timer= new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and the bullet
+    connect(timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
     timer->start(50);
 
     QTimer* timer2= new QTimer();
-    connect(timer2, SIGNAL(timeout()), this, SLOT(shoot_bullets())); //connect the timer and the bullet
-    timer2->start(200);
+    connect(timer2, SIGNAL(timeout()), this, SLOT(collision())); //connect the timer and collision slot
+    timer2->start(50);
+
+    QTimer* timer3= new QTimer();
+    connect(timer3, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
+    timer3->start(200);
 }
 
 void ShooterEnemy::create_health()
@@ -29,30 +35,34 @@ void ShooterEnemy::create_health()
     health->setDefaultTextColor(Qt:: blue);
 }
 
-
 void ShooterEnemy::move()
 {
     static bool left= true;
     if (left){
-        setPos(x()-10,0);
+        dx = -10;
         if (x()<100)
             left=false;
     }
     else {
-        setX(x()+10);
+        dx = +10;
         if (x()>700)
             left=true;
     }
+
+    //move
+    setPos(x()+dx,y()+dy);
+
+    //remove once its out of bound
+    if (pos().x()<0|| pos().x()>scene()->width()-rect().width()||
+            pos().y()< 0 ||pos().y()+rect().height()>scene()->height())
+    {
+        scene()->removeItem(this);
+        delete this;
+    }
 }
 
-void ShooterEnemy::shoot_bullets()
+void ShooterEnemy::collision()
 {
-    static bool created=false;
-    if (created==false){
-        this->create_health();
-        created=true;
-    }
-
     //collision!! edit!! create template!!!
     QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
 
@@ -68,6 +78,17 @@ void ShooterEnemy::shoot_bullets()
             return;
         }
     }
+}
+
+void ShooterEnemy::shoot()
+{
+    static bool created=false;
+    if (created==false){
+        this->create_health();
+        created=true;
+    }
+
+    if (!is_shooting) return;
 
     int dx= rand()%40- rand()%40;
 

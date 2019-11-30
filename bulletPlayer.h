@@ -4,17 +4,20 @@
 #include <QObject>
 #include "bulletBase.h"
 
+/**
+ * @brief The BulletPlayer class
+ * Class for bullets shot by player
+ * @include collision(): overrides bulletBase's function
+ */
+
 class BulletPlayer:public BulletBase{
-private:
-    int dx;
-    int dy;
 
 public:
     BulletPlayer(int dx=0, int dy=0);
     virtual ~BulletPlayer()=default;
 
 public slots:
-    virtual void move();
+    virtual void collision() override;
 
 };
 

@@ -13,8 +13,16 @@ ShooterPlayer::ShooterPlayer(): ShooterBase("Player")
     setRect(0,0,50,40);
 
     QTimer* timer= new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(check_health())); //connect the timer and the bullet
+    connect(timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
     timer->start(50);
+
+    QTimer* timer2= new QTimer();
+    connect(timer2, SIGNAL(timeout()), this, SLOT(collision())); //connect the timer and collision slot
+    timer2->start(50);
+
+    QTimer* timer3= new QTimer();
+    connect(timer3, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
+    timer3->start(200);
 }
 
 void ShooterPlayer::create_health()
@@ -23,34 +31,57 @@ void ShooterPlayer::create_health()
     health->setDefaultTextColor(Qt:: green);
 
 }
-void ShooterPlayer::keyPressEvent(QKeyEvent* event) //try to implement arrow keys and space bar tgt!!!!
-{
 
-    if (event->key() ==Qt::Key_Left){
-        if (pos().x()>0)
-            setPos(x()-10,y());
-    }
-    if(event->key()==Qt::Key_Right){
-        if (pos().x()+rect().width()<scene()->width())
-            setPos(x()+10,y());
-    }
-    if(event->key()==Qt::Key_Up){
-        if (pos().y()>0)
-            setPos(x(), y()-10);
-    }
-    if(event->key()==Qt::Key_Down){
-        if (pos().y()+rect().height()<scene()->height())
-        setPos(x(),y()+10);
-    }
-    if(event->key()==Qt::Key_Space){
-        BulletPlayer* bullet=new BulletPlayer(0,-10);
-        bullet->setBrush(Qt::green);
-        bullet->setPos(x(),y());
-        scene()->addItem(bullet);
+void ShooterPlayer::keyPressEvent(QKeyEvent* event)
+{
+    switch (event->key()) {
+        case Qt::Key_Left:
+            dx = -speed;
+            break;
+        case Qt::Key_Right:
+            dx = speed;
+            break;
+        case Qt::Key_Up:
+            dy = -speed;
+            break;
+        case Qt::Key_Down:
+            dy = speed;
+            break;
+        case Qt::Key_Space:
+            is_shooting = true;
+            break;
+        default:
+            break;
     }
 }
 
-void ShooterPlayer::check_health()
+void ShooterPlayer::keyReleaseEvent(QKeyEvent* event)
+{
+    switch (event->key()) {
+        case Qt::Key_Left:
+        case Qt::Key_Right:
+            dx = 0;
+            break;
+        case Qt::Key_Up:
+        case Qt::Key_Down:
+            dy = 0;
+            break;
+        case Qt::Key_Space:
+            is_shooting = false;
+            break;
+        default:
+            break;
+    }
+}
+
+void ShooterPlayer::move()
+{
+    qreal new_x = x() + (pos().x()+dx>0 && pos().x()+rect().width()+dx<scene()->width() ? dx : 0);
+    qreal new_y = y() + (pos().y()+dy>0 && pos().y()+rect().height()+dy<scene()->height() ? dy : 0);
+    setPos(new_x, new_y);
+}
+
+void ShooterPlayer::collision()
 {
     static bool created=false;
     if (created==false){
@@ -73,4 +104,21 @@ void ShooterPlayer::check_health()
             return;
         }
     }
+}
+
+void ShooterPlayer::shoot()
+{
+    static bool created=false;
+    if (created==false){
+        this->create_health();
+        created=true;
+    }
+
+    if (!is_shooting) return;
+
+    BulletPlayer* bullet=new BulletPlayer(0,-10);
+    bullet->setBrush(Qt::green);
+    bullet->setPos(x(),y());
+    scene()->addItem(bullet);
+
 }

@@ -1,22 +1,18 @@
 #include "bulletEnemy.h"
 #include "bulletPlayer.h"
-#include <QTimer>
-#include <QGraphicsScene>
-#include <QDebug>
-#include <QList>
 
-BulletPlayer::BulletPlayer(int dx, int dy):BulletBase(dx,dy), dx(dx), dy(dy)
+BulletPlayer::BulletPlayer(int dx, int dy):BulletBase(dx,dy)
 {
     setRect(0,0,20,20);
 
     QTimer* timer= new QTimer();
 
-    //connect the timer and the bullet
-    connect(timer, SIGNAL(timeout()), this, SLOT(move()));
+    //connect timer and collision slot
+    connect(timer, SIGNAL(timeout()), this, SLOT(collision()));
     timer->start(50);
 }
 
-void BulletPlayer::move()
+void BulletPlayer::collision()
 {
     //collision with other bullets
     QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
@@ -35,7 +31,4 @@ void BulletPlayer::move()
             return;
         }
     }
-
-    BulletBase::move();
-
 }

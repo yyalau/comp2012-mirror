@@ -2,7 +2,11 @@
 
 BulletBase::BulletBase(int dx, int dy): dx(dx), dy(dy)
 {
+    QTimer* timer= new QTimer();
 
+    //connect timer and move slot
+    connect(timer, SIGNAL(timeout()), this, SLOT(move()));
+    timer->start(50);
 }
 
 void BulletBase::move()

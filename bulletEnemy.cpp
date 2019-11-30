@@ -5,18 +5,18 @@
 #include <QDebug>
 #include <QList>
 
-BulletEnemy::BulletEnemy(int dx, int dy): BulletBase(dx,dy), dx(dx), dy(dy)
+BulletEnemy::BulletEnemy(int dx, int dy): BulletBase(dx,dy)
 {
     setRect(0,0,20,20);
 
     QTimer* timer= new QTimer();
 
-    //connect the timer and the bullet
-    connect(timer, SIGNAL(timeout()), this, SLOT(move()));
+    //connect timer and collision slot
+    connect(timer, SIGNAL(timeout()), this, SLOT(collision()));
     timer->start(50);
 }
 
-void BulletEnemy::move()
+void BulletEnemy::collision()
 {
-     BulletBase::move();
+    //TODO?
 }
