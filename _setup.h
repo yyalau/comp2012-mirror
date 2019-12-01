@@ -6,8 +6,11 @@
 #include <QHBoxLayout>
 #include <QWidget>
 
+#include "define.h"
 #include "shooterPlayer.h"
 #include "shooterEnemy.h"
+#include "infoBox.h"
+#include "gameEvent.h"
 
 /**
  * @brief The _SetUp class
@@ -15,7 +18,8 @@
  * @include GameScene: //TODO
  * @include GameView: //TODO
  * @include shooter: The player's shooter
- * @include health: //remove this later? check the .cpp file
+ * @include infoBox: The info screen on the right
+ * @include gameEvent: No pointer needed (for now?), this just counts the time and trigger events
  */
 
 class _SetUp
@@ -25,10 +29,8 @@ public:
     _SetUp();
     QGraphicsScene* GameScene;
     QGraphicsView* GameView;
-    //QGraphicsScene* MenuScene;
-    //QGraphicsView* MenuView;
     ShooterPlayer* shooter;
-    Health* health;
+    InfoBox* infoBox;
 };
 
 

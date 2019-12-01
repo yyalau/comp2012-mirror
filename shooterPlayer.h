@@ -1,11 +1,12 @@
 #ifndef SHOOTERPLAYER_H
 #define SHOOTERPLAYER_H
 
+#include <QObject>
+#include <QGraphicsRectItem>
+
 #include "health.h"
 #include "shooterBase.h"
 #include "bulletEnemy.h"
-#include <QObject>
-#include <QGraphicsRectItem>
 
 /**
  * @brief The ShooterPlayer class
@@ -19,16 +20,21 @@
  * @include shoot(): overrides shooterBase's function
  */
 
+#define DEFAULT_SPEED 20
+
 class ShooterPlayer: public ShooterBase{
     Q_OBJECT
 
 private:
-    qreal speed {20};
+    int speed;
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
 
 public:
-    ShooterPlayer();
+    ShooterPlayer(int hp = DEFAULT_PLAYER_HP, int speed = DEFAULT_SPEED, int dx = 0, int dy = 0,
+                  int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
+                  int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ,
+                  int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false);
     void create_health();
 
 public slots:

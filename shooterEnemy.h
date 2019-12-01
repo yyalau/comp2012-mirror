@@ -1,8 +1,9 @@
 #ifndef SHOOTERENEMY_H
 #define SHOOTERENEMY_H
 
-#include <QGraphicsRectItem>
 #include <QObject>
+#include <QGraphicsRectItem>
+
 #include "bulletPlayer.h"
 #include "shooterBase.h"
 
@@ -19,7 +20,10 @@ class ShooterEnemy:public ShooterBase{
     Q_OBJECT //implies an object can handle signals
 
 public:
-    ShooterEnemy();
+    ShooterEnemy(int hp = DEFAULT_ENEMY_HP, int dx = 0, int dy = 0,
+                 int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
+                 int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ,
+                 int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false);
     void create_health();
 
 public slots:

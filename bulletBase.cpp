@@ -1,12 +1,13 @@
 #include "bulletBase.h"
 
-BulletBase::BulletBase(int dx, int dy): dx(dx), dy(dy)
+BulletBase::BulletBase(int dx, int dy, int size_x, int size_y, int move_freq, int coll_freq):
+    dx(dx), dy(dy), size_x(size_x), size_y(size_y), move_freq(move_freq), coll_freq(coll_freq)
 {
-    QTimer* timer= new QTimer();
+    QTimer* move_timer= new QTimer();
 
     //connect timer and move slot
-    connect(timer, SIGNAL(timeout()), this, SLOT(move()));
-    timer->start(50);
+    connect(move_timer, SIGNAL(timeout()), this, SLOT(move()));
+    move_timer->start(move_freq);
 }
 
 void BulletBase::move()
@@ -15,10 +16,9 @@ void BulletBase::move()
     setPos(x()+dx,y()+dy);
 
     //remove the bullets once its out of bound
-    if (pos().x()<0|| pos().x()>scene()->width()-rect().width()||
-            pos().y()< 0 ||pos().y()+rect().height()>scene()->height())
+    if (!(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
+            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y())))
     {
-        scene()->removeItem(this);
-        delete this;
+        REMOVE_ENTITY(this)
     }
 }

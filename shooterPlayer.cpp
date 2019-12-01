@@ -1,28 +1,32 @@
 #include "shooterPlayer.h"
+
 #include <QKeyEvent>
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QTimer>
 #include <QGraphicsRectItem>
+
 #include "bulletPlayer.h"
 #include "bulletEnemy.h"
 
-ShooterPlayer::ShooterPlayer(): ShooterBase("Player")
+ShooterPlayer::ShooterPlayer(int hp, int speed, int dx, int dy, int size_x, int size_y,
+                             int move_freq, int coll_freq, int shoot_freq, bool shoot) :
+         ShooterBase("Player", hp, dx, dy, size_x, size_y, move_freq, coll_freq, shoot_freq, shoot), speed(speed)
 {
     setBrush(Qt::green);
-    setRect(0,0,50,40);
+    setRect(0, 0, size_x, size_y);
 
-    QTimer* timer= new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
-    timer->start(50);
+    QTimer* move_timer= new QTimer();
+    connect(move_timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
+    move_timer->start(move_freq);
 
-    QTimer* timer2= new QTimer();
-    connect(timer2, SIGNAL(timeout()), this, SLOT(collision())); //connect the timer and collision slot
-    timer2->start(50);
+    QTimer* coll_timer= new QTimer();
+    connect(coll_timer, SIGNAL(timeout()), this, SLOT(collision())); //connect the timer and collision slot
+    coll_timer->start(coll_freq);
 
-    QTimer* timer3= new QTimer();
-    connect(timer3, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
-    timer3->start(200);
+    QTimer* shoot_timer= new QTimer();
+    connect(shoot_timer, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
+    shoot_timer->start(shoot_freq);
 }
 
 void ShooterPlayer::create_health()
@@ -76,19 +80,13 @@ void ShooterPlayer::keyReleaseEvent(QKeyEvent* event)
 
 void ShooterPlayer::move()
 {
-    qreal new_x = x() + (pos().x()+dx>0 && pos().x()+rect().width()+dx<scene()->width() ? dx : 0);
-    qreal new_y = y() + (pos().y()+dy>0 && pos().y()+rect().height()+dy<scene()->height() ? dy : 0);
+    qreal new_x = x() + (INSCREEN_LEFT(pos().x()+dx) && INSCREEN_RIGHT(pos().x()+dx) ? dx : 0);
+    qreal new_y = y() + (INSCREEN_UP(pos().y()+dy) && INSCREEN_DOWN(pos().y()+dy) ? dy : 0);
     setPos(new_x, new_y);
 }
 
 void ShooterPlayer::collision()
 {
-    static bool created=false;
-    if (created==false){
-        create_health();
-        created=true;
-    }
-
     //collision!! edit!!!!!! create template
     QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
 
@@ -96,27 +94,21 @@ void ShooterPlayer::collision()
         if (typeid(*(colliding_items[i]))==typeid (BulletEnemy))
         {
             //delete the other bullet
-            scene()->removeItem(colliding_items[i]);
-            delete colliding_items[i];
+            REMOVE_ENTITY(colliding_items[i])
 
             //decrease own health
             health->decrease_health();
             return;
         }
+        //TODO: decrease health if hit enemy as well?
     }
 }
 
 void ShooterPlayer::shoot()
 {
-    static bool created=false;
-    if (created==false){
-        this->create_health();
-        created=true;
-    }
-
     if (!is_shooting) return;
 
-    BulletPlayer* bullet=new BulletPlayer(0,-10);
+    BulletPlayer* bullet = new BulletPlayer(0,-20);
     bullet->setBrush(Qt::green);
     bullet->setPos(x(),y());
     scene()->addItem(bullet);

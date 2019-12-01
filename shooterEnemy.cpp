@@ -1,32 +1,34 @@
 #include "shooterEnemy.h"
-#include "bulletEnemy.h"
-#include "bulletPlayer.h"
-
 
 #include <QTimer>
 #include <QGraphicsScene>
 #include <stdlib.h> //rand()
 #include <QDebug>
 
+#include "bulletEnemy.h"
+#include "bulletPlayer.h"
 
-ShooterEnemy::ShooterEnemy(): ShooterBase("Enemy")
+
+ShooterEnemy::ShooterEnemy(int hp, int dx, int dy, int size_x, int size_y,
+                           int move_freq, int coll_freq, int shoot_freq, bool shoot) :
+       ShooterBase("Enemy", hp, dx, dy, size_x, size_y, move_freq, coll_freq, shoot_freq, shoot)
 {
-    setBrush(Qt:: blue);
-    setRect(0,0,40,40);
+    setBrush(Qt::blue);
+    setRect(0, 0, size_x, size_y);
 
     is_shooting = true;
 
-    QTimer* timer= new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
-    timer->start(50);
+    QTimer* move_timer= new QTimer();
+    connect(move_timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
+    move_timer->start(move_freq);
 
-    QTimer* timer2= new QTimer();
-    connect(timer2, SIGNAL(timeout()), this, SLOT(collision())); //connect the timer and collision slot
-    timer2->start(50);
+    QTimer* coll_timer= new QTimer();
+    connect(coll_timer, SIGNAL(timeout()), this, SLOT(collision())); //connect the timer and collision slot
+    coll_timer->start(coll_freq);
 
-    QTimer* timer3= new QTimer();
-    connect(timer3, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
-    timer3->start(200);
+    QTimer* shoot_timer= new QTimer();
+    connect(shoot_timer, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
+    shoot_timer->start(shoot_freq);
 }
 
 void ShooterEnemy::create_health()
@@ -37,6 +39,7 @@ void ShooterEnemy::create_health()
 
 void ShooterEnemy::move()
 {
+    //TODO: Change this to just regular moving, handle how the enemy moves somewhere else
     static bool left= true;
     if (left){
         dx = -10;
@@ -53,11 +56,10 @@ void ShooterEnemy::move()
     setPos(x()+dx,y()+dy);
 
     //remove once its out of bound
-    if (pos().x()<0|| pos().x()>scene()->width()-rect().width()||
-            pos().y()< 0 ||pos().y()+rect().height()>scene()->height())
+    if (!(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
+            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y())))
     {
-        scene()->removeItem(this);
-        delete this;
+        REMOVE_ENTITY(this)
     }
 }
 
@@ -70,29 +72,27 @@ void ShooterEnemy::collision()
         if (typeid(*(colliding_items[i]))==typeid (BulletPlayer))
         {
             //delete the other bullet
-            scene()->removeItem(colliding_items[i]);
-            delete colliding_items[i];
+            REMOVE_ENTITY(colliding_items[i])
 
             //decrease own health
             health->decrease_health();
-            return;
+
+            //remove if dead
+            if (health->is_dead()) {
+                REMOVE_ENTITY(this)
+                return;
+            }
         }
     }
 }
 
 void ShooterEnemy::shoot()
 {
-    static bool created=false;
-    if (created==false){
-        this->create_health();
-        created=true;
-    }
-
     if (!is_shooting) return;
 
-    int dx= rand()%40- rand()%40;
+    int dx = rand()%40 - rand()%40;
 
-    BulletEnemy* bullet= new BulletEnemy(dx,20);
+    BulletEnemy* bullet = new BulletEnemy(dx,20);
     bullet->setBrush(Qt::blue);
     bullet->setPos(x(),y());
     scene()->addItem(bullet);

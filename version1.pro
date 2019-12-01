@@ -20,7 +20,9 @@ SOURCES += \
     bulletBase.cpp \
     bulletEnemy.cpp \
     bulletPlayer.cpp \
+    gameEvent.cpp \
     health.cpp \
+    infoBox.cpp \
     main.cpp \
     mainwindow.cpp \
     shooterBase.cpp \
@@ -32,7 +34,10 @@ HEADERS += \
     bulletBase.h \
     bulletEnemy.h \
     bulletPlayer.h \
+    define.h \
+    gameEvent.h \
     health.h \
+    infoBox.h \
     mainwindow.h \
     shooterBase.h \
     shooterEnemy.h \
