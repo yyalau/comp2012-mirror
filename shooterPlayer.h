@@ -15,6 +15,7 @@
  * @include speed: player's moving speed
  * @implements keyPressEvent(QKeyEvent*): handles keyboard input, updates player velocity and is_shooting
  * @implements keyReleaseEvent(QKeyEvent*): handles keyboard input, resets player velocity and is_shooting
+ * @implements focusOutEvent(QFocusEvent*): keeps the shooter to be focused
  * @include create_health(): write health
  * @include move(): overrides shooterBase's function, prevents going out of bound
  * @include collision(): overrides shooterBase's function
@@ -44,8 +45,6 @@ public slots:
     virtual void collision() override;
     virtual void shoot() override;
 
-signals:
-    void out_focus();
 
 };
 

@@ -80,7 +80,6 @@ void ShooterPlayer::keyReleaseEvent(QKeyEvent* event)
 
 void ShooterPlayer::focusOutEvent(QFocusEvent *event)
 {
-    emit out_focus();
     scene()->setFocusItem(this);
 }
 
