@@ -1,7 +1,5 @@
 #include "infoBox.h"
 
-#include <QGraphicsScene>
-
 InfoBox::InfoBox(Health* player_health) :
     player_health(player_health)
 {

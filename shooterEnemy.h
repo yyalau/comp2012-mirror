@@ -1,16 +1,19 @@
 #ifndef SHOOTERENEMY_H
 #define SHOOTERENEMY_H
 
-#include <QObject>
-#include <QGraphicsRectItem>
+#include <stdlib.h> //rand()
 
-#include "bulletPlayer.h"
 #include "shooterBase.h"
 
 /**
  * @brief The ShooterEnemy class
  * Class for enemies
+ *
+ * PUBLIC MEMBER FUNCTIONS
  * @include create_health(): write health //TODO: remove?
+ * @include pause(), unpause(): override shooterBase's functions
+ *
+ * PUBLIC SLOTS
  * @include move(): overrides shooterBase's function, handles going out of bound
  * @include collision(): overrides shooterBase's function
  * @include shoot(): overrides shooterBase's function
@@ -25,6 +28,8 @@ public:
                  int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ,
                  int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false);
     void create_health();
+    virtual void pause() override;
+    virtual void unpause() override;
 
 public slots:
     virtual void move() override;

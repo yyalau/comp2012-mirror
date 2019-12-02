@@ -3,6 +3,7 @@
 
 /**
   * Some defines to make the code easier to read
+  * TODO: change to const int and templates?
   */
 
 #define INFOBOX_LENGTH  300

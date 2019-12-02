@@ -6,10 +6,24 @@ BulletPlayer::BulletPlayer(int dx, int dy, int size_x, int size_y, int move_freq
 {
     setRect(0, 0, size_x, size_y);
 
-    QTimer* coll_timer= new QTimer();
+    coll_timer= new QTimer();
 
     //connect timer and collision slot
     connect(coll_timer, SIGNAL(timeout()), this, SLOT(collision()));
+
+    //start the timers
+    unpause();
+}
+
+void BulletPlayer::pause()
+{
+    move_timer->stop();
+    coll_timer->stop();
+}
+
+void BulletPlayer::unpause()
+{
+    move_timer->start(move_freq);
     coll_timer->start(coll_freq);
 }
 

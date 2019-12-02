@@ -20,7 +20,7 @@
  * @include GameView: //TODO
  * @include shooter: The player's shooter
  * @include infoBox: The info screen on the right
- * @include gameEvent: No pointer needed (for now?), this just counts the time and trigger events
+ * @include gameEvent: Counts the time and trigger events. Also handles pause, unpause
  */
 
 class _SetUp{
@@ -29,6 +29,7 @@ public:
     QGraphicsScene* GameScene;
     QGraphicsView* GameView;
     ShooterPlayer* shooter;
+    GameEvent* gameEvent;
     InfoBox* infoBox;
 };
 

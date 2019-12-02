@@ -3,6 +3,8 @@
 
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsTextItem>
+#include <QBrush>
 
 class PauseButton:public QObject, public QGraphicsRectItem{
     Q_OBJECT

@@ -1,14 +1,5 @@
 #include "shooterEnemy.h"
 
-#include <QTimer>
-#include <QGraphicsScene>
-#include <stdlib.h> //rand()
-#include <QDebug>
-
-#include "bulletEnemy.h"
-#include "bulletPlayer.h"
-
-
 ShooterEnemy::ShooterEnemy(int hp, int dx, int dy, int size_x, int size_y,
                            int move_freq, int coll_freq, int shoot_freq, bool shoot) :
        ShooterBase("Enemy", hp, dx, dy, size_x, size_y, move_freq, coll_freq, shoot_freq, shoot)
@@ -18,23 +9,37 @@ ShooterEnemy::ShooterEnemy(int hp, int dx, int dy, int size_x, int size_y,
 
     is_shooting = true;
 
-    QTimer* move_timer= new QTimer();
+    move_timer= new QTimer();
     connect(move_timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
-    move_timer->start(move_freq);
 
-    QTimer* coll_timer= new QTimer();
+    coll_timer= new QTimer();
     connect(coll_timer, SIGNAL(timeout()), this, SLOT(collision())); //connect the timer and collision slot
-    coll_timer->start(coll_freq);
 
-    QTimer* shoot_timer= new QTimer();
+    shoot_timer= new QTimer();
     connect(shoot_timer, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
-    shoot_timer->start(shoot_freq);
+
+    //start the timers
+    unpause();
 }
 
 void ShooterEnemy::create_health()
 {
     ShooterBase::create_health(0,0);
     health->setDefaultTextColor(Qt:: blue);
+}
+
+void ShooterEnemy::pause()
+{
+    move_timer->stop();
+    coll_timer->stop();
+    shoot_timer->stop();
+}
+
+void ShooterEnemy::unpause()
+{
+    move_timer->start(move_freq);
+    coll_timer->start(coll_freq);
+    shoot_timer->start(shoot_freq);
 }
 
 void ShooterEnemy::move()

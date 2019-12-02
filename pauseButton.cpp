@@ -1,6 +1,4 @@
 #include "pauseButton.h"
-#include <QGraphicsTextItem>
-#include <QBrush>
 
 PauseButton::PauseButton(QString name, QGraphicsItem *parent): QGraphicsRectItem(parent){
     // draw the rect

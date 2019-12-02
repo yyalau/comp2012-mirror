@@ -1,7 +1,5 @@
 #include "shooterBase.h"
 
-#include <QGraphicsScene>
-
 ShooterBase::ShooterBase(QString name, int hp, int dx, int dy, int size_x, int size_y,
                          int move_freq, int coll_freq, int shoot_freq, bool shoot) :
     dx(dx), dy(dy), size_x(size_x), size_y(size_y),

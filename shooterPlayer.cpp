@@ -1,14 +1,5 @@
 #include "shooterPlayer.h"
 
-#include <QKeyEvent>
-#include <QGraphicsScene>
-#include <QDebug>
-#include <QTimer>
-#include <QGraphicsRectItem>
-
-#include "bulletPlayer.h"
-#include "bulletEnemy.h"
-
 ShooterPlayer::ShooterPlayer(int hp, int speed, int dx, int dy, int size_x, int size_y,
                              int move_freq, int coll_freq, int shoot_freq, bool shoot) :
          ShooterBase("Player", hp, dx, dy, size_x, size_y, move_freq, coll_freq, shoot_freq, shoot), speed(speed)
@@ -16,28 +7,42 @@ ShooterPlayer::ShooterPlayer(int hp, int speed, int dx, int dy, int size_x, int 
     setBrush(Qt::green);
     setRect(0, 0, size_x, size_y);
 
-    QTimer* move_timer= new QTimer();
+    move_timer= new QTimer();
     connect(move_timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
-    move_timer->start(move_freq);
 
-    QTimer* coll_timer= new QTimer();
+    coll_timer= new QTimer();
     connect(coll_timer, SIGNAL(timeout()), this, SLOT(collision())); //connect the timer and collision slot
-    coll_timer->start(coll_freq);
 
-    QTimer* shoot_timer= new QTimer();
+    shoot_timer= new QTimer();
     connect(shoot_timer, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
-    shoot_timer->start(shoot_freq);
+
+    //start the timers
+    unpause();
 }
 
 void ShooterPlayer::create_health()
 {
     ShooterBase::create_health(0,50);
     health->setDefaultTextColor(Qt:: green);
+}
 
+void ShooterPlayer::pause()
+{
+    move_timer->stop();
+    coll_timer->stop();
+    shoot_timer->stop();
+}
+
+void ShooterPlayer::unpause()
+{
+    move_timer->start(move_freq);
+    coll_timer->start(coll_freq);
+    shoot_timer->start(shoot_freq);
 }
 
 void ShooterPlayer::keyPressEvent(QKeyEvent* event)
 {
+    static bool paused = false;
     switch (event->key()) {
         case Qt::Key_Left:
             dx = -speed;
@@ -53,6 +58,10 @@ void ShooterPlayer::keyPressEvent(QKeyEvent* event)
             break;
         case Qt::Key_Space:
             is_shooting = true;
+            break;
+        case Qt::Key_P:
+            emit (paused ? unpause_all() : pause_all());
+            paused = !paused;
             break;
         default:
             break;
@@ -103,6 +112,8 @@ void ShooterPlayer::collision()
 
             //decrease own health
             health->decrease_health();
+            if (health->is_dead()) emit player_dead();
+
             return;
         }
         //TODO: decrease health if hit enemy as well?

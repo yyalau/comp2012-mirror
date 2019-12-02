@@ -25,8 +25,8 @@ _SetUp::_SetUp()
     shooter->setFocus(); //setfocus2
     shooter->setPos(400, 540);// set the initial position of the shooter
 
-    //time counter to trigger events. no need pointer for now? we only need to delete when the game ends
-    new GameEvent(GameScene, shooter);
+    //time counter to trigger events
+    gameEvent = new GameEvent(GameScene, shooter);
 
     //------------------------------------------------InfoBoxSetting-------------------------------------------
 

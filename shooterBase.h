@@ -3,6 +3,9 @@
 
 #include <QObject>
 #include <QGraphicsRectItem>
+#include <QGraphicsScene>
+#include <QTimer>
+#include <QDebug>
 
 #include "define.h"
 #include "health.h"
@@ -12,15 +15,21 @@
 /**
  * @brief The ShooterBase class
  * Abstract Base Class for player/enemy
+ *
+ * PROTECTED DATA MEMBERS
  * @include health: Pointer to dynamic Health object, created in constructor and deleted in destructor
  * @include dx, dy: entity's velocity
  * @include size_x, size_y: entity's size
- * @include move_freq: milliseconds between times move() is called
- * @include coll_freq: milliseconds between times coll() is called
- * @include shoot_freq: milliseconds between times shoot() is called
+ * @include move_freq, coll_freq, shoot_freq: milliseconds between times move(), collision(), shoot() are called
+ * @include move_timer, coll_timer, shoot_timer: QTimer for triggering move(), collision(), shoot()
  * @include is_shooting: set to true if the entity will shoot bullet (called automatically)
+ *
+ * PUBLIC MEMBER FUNCTIONS
  * @include create_health(int, int): write entity's health on screen //TODO: remove? just need this for player
- * @include get_health(): return pointer to this entity's health
+ * @include get_health_var(): return pointer to this entity's health
+ * @include pause(), unpause(): pure virtual functions for stopping/restarting the timers
+ *
+ * PUBLIC SLOTS
  * @include move(): pure virtual slot for updating entity's position
  * @include collision(): pure virtual slot for checking collision with other entities/bullets
  * @include shoot(): pure virtual slot for shooting bullets
@@ -34,6 +43,7 @@ protected:
     int dx, dy;
     int size_x, size_y;
     int move_freq, coll_freq, shoot_freq;
+    QTimer *move_timer, *coll_timer, *shoot_timer;
     bool is_shooting;
 
 public:
@@ -43,6 +53,8 @@ public:
     ~ShooterBase();
     void create_health(int posx, int posy);
     Health* get_health_var();
+    virtual void pause() = 0;
+    virtual void unpause() = 0;
 
 public slots:
     virtual void move() = 0;

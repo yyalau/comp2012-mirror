@@ -3,11 +3,12 @@
 BulletBase::BulletBase(int dx, int dy, int size_x, int size_y, int move_freq, int coll_freq):
     dx(dx), dy(dy), size_x(size_x), size_y(size_y), move_freq(move_freq), coll_freq(coll_freq)
 {
-    QTimer* move_timer= new QTimer();
+    move_timer= new QTimer();
 
     //connect timer and move slot
     connect(move_timer, SIGNAL(timeout()), this, SLOT(move()));
-    move_timer->start(move_freq);
+
+    //timer is started in bulletEnemy/bulletPlayer's unpause()
 }
 
 void BulletBase::move()
