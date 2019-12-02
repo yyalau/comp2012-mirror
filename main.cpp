@@ -2,14 +2,12 @@
 
 #include "_setup.h"
 
-extern _SetUp* setup;
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    _SetUp setp;
-    //setup.show();
+    _SetUp setup;
 
     return a.exec();
 }

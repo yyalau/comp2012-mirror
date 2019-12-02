@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QGraphicsRectItem>
+#include <QPauseAnimation>
 
 #include "health.h"
 #include "shooterBase.h"
@@ -29,6 +30,7 @@ private:
     int speed;
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
+    void focusOutEvent(QFocusEvent* event) override;
 
 public:
     ShooterPlayer(int hp = DEFAULT_PLAYER_HP, int speed = DEFAULT_SPEED, int dx = 0, int dy = 0,
@@ -41,6 +43,9 @@ public slots:
     virtual void move() override;
     virtual void collision() override;
     virtual void shoot() override;
+
+signals:
+    void out_focus();
 
 };
 

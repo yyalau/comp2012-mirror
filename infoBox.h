@@ -5,6 +5,7 @@
 #include <QGraphicsRectItem>
 
 #include "shooterPlayer.h"
+#include "pauseButton.h"
 
 class InfoBox : public QObject, public QGraphicsRectItem
 {

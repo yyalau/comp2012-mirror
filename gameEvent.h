@@ -7,6 +7,7 @@
 
 #include "define.h"
 #include "shooterEnemy.h"
+#include "shooterPlayer.h"
 
 /**
  * @brief The GameEvent class
@@ -23,11 +24,16 @@ class GameEvent : public QObject
 
 private:
     QGraphicsScene* parentScene;
+    ShooterPlayer* shooter;
+    QTimer* event_timer;
     int game_timer {0};
 
 public:
-    GameEvent(QGraphicsScene* parentScene);
+    GameEvent(QGraphicsScene* parentScene, ShooterPlayer* shooter);
     int get_time();
+
+    //void display_gameover_scene();
+    //void draw_scene(int x =SCREEN_LENGTH/2, int y=SCREEN_HEIGHT/2, int width=SCREEN_LENGTH, int height=SCREEN_HEIGHT, QColor color=Qt::yellow, double opacity=100);
 
 public slots:
     void increment_time();

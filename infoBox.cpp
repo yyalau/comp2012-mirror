@@ -2,7 +2,8 @@
 
 #include <QGraphicsScene>
 
-InfoBox::InfoBox(Health* player_health) : player_health(player_health)
+InfoBox::InfoBox(Health* player_health) :
+    player_health(player_health)
 {
     setBrush(Qt::black);
     setRect(0, 0, INFOBOX_LENGTH, SCREEN_HEIGHT);

@@ -42,7 +42,7 @@ public:
                 int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false);
     ~ShooterBase();
     void create_health(int posx, int posy);
-    Health* get_health();
+    Health* get_health_var();
 
 public slots:
     virtual void move() = 0;

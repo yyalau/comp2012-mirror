@@ -4,7 +4,6 @@
  * TODO: Document this more properly
  */
 
-extern _SetUp* setup;
 _SetUp::_SetUp()
 {
     //-----------------------------------GameSetting-------------------------------
@@ -20,18 +19,19 @@ _SetUp::_SetUp()
     GameView->setFixedSize(SCREEN_LENGTH+INFOBOX_LENGTH, SCREEN_HEIGHT); //set view and scene are of the same size
 
     //shooter
-    ShooterPlayer* shooter= new ShooterPlayer(); //create a rect
+    shooter= new ShooterPlayer(); //create a rect
     GameScene->addItem(shooter); //put rect into the scene
     shooter->setFlag(QGraphicsItem::ItemIsFocusable); // setfocus1
     shooter->setFocus(); //setfocus2
     shooter->setPos(400, 540);// set the initial position of the shooter
 
     //time counter to trigger events. no need pointer for now? we only need to delete when the game ends
-    new GameEvent(GameScene);
+    new GameEvent(GameScene, shooter);
 
     //------------------------------------------------InfoBoxSetting-------------------------------------------
+
     //Scene&view setting
-    infoBox = new InfoBox(shooter->get_health());
+    infoBox = new InfoBox(shooter->get_health_var());
     infoBox->setPos(SCREEN_LENGTH, 0);
     GameScene->addItem(infoBox);
     infoBox->show_info();
@@ -46,3 +46,5 @@ _SetUp::_SetUp()
     window->show();
 
 }
+
+

@@ -12,6 +12,7 @@
 #include "infoBox.h"
 #include "gameEvent.h"
 
+
 /**
  * @brief The _SetUp class
  * Call this once to initialize the screen, player, game event handler, etc.
@@ -22,9 +23,7 @@
  * @include gameEvent: No pointer needed (for now?), this just counts the time and trigger events
  */
 
-class _SetUp
-{
-
+class _SetUp{
 public:
     _SetUp();
     QGraphicsScene* GameScene;

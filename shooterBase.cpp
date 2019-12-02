@@ -15,7 +15,7 @@ ShooterBase::~ShooterBase()
     delete health;
 }
 
-Health* ShooterBase::get_health()
+Health* ShooterBase::get_health_var()
 {
     return health;
 }

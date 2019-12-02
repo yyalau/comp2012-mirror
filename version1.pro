@@ -25,6 +25,7 @@ SOURCES += \
     infoBox.cpp \
     main.cpp \
     mainwindow.cpp \
+    pauseButton.cpp \
     shooterBase.cpp \
     shooterEnemy.cpp \
     shooterPlayer.cpp
@@ -39,6 +40,7 @@ HEADERS += \
     health.h \
     infoBox.h \
     mainwindow.h \
+    pauseButton.h \
     shooterBase.h \
     shooterEnemy.h \
     shooterPlayer.h

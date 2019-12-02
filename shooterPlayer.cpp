@@ -78,6 +78,12 @@ void ShooterPlayer::keyReleaseEvent(QKeyEvent* event)
     }
 }
 
+void ShooterPlayer::focusOutEvent(QFocusEvent *event)
+{
+    emit out_focus();
+    scene()->setFocusItem(this);
+}
+
 void ShooterPlayer::move()
 {
     qreal new_x = x() + (INSCREEN_LEFT(pos().x()+dx) && INSCREEN_RIGHT(pos().x()+dx) ? dx : 0);
