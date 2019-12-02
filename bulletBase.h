@@ -39,7 +39,7 @@ protected:
 public:
     BulletBase(int dx = 0, int dy = 0, int size_x = BULLET_SIZE, int size_y = BULLET_SIZE,
                int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
-    virtual ~BulletBase()=default;
+    ~BulletBase();
     virtual void pause() = 0;
     virtual void unpause() = 0;
 

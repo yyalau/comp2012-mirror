@@ -11,6 +11,12 @@ BulletBase::BulletBase(int dx, int dy, int size_x, int size_y, int move_freq, in
     //timer is started in bulletEnemy/bulletPlayer's unpause()
 }
 
+BulletBase::~BulletBase()
+{
+    delete move_timer;
+    delete coll_timer; //for safety can add "if not nullptr"
+}
+
 void BulletBase::move()
 {
     //move the bullets

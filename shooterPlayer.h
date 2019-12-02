@@ -21,6 +21,7 @@
  * PUBLIC MEMBER FUNCITONS
  * @include create_health(): write health
  * @include pause(), unpause(): override shooterBase's functions
+ * @include get_pos(): return the player's position
  *
  * SIGNALS
  * @include pause_all(), unpause_all(): signals to send to the main game
@@ -32,7 +33,7 @@
  * @include shoot(): overrides shooterBase's function
  */
 
-#define DEFAULT_SPEED 20
+#define DEFAULT_SPEED 10
 
 class ShooterPlayer: public ShooterBase{
     Q_OBJECT
@@ -51,6 +52,7 @@ public:
     void create_health();
     virtual void pause() override;
     virtual void unpause() override;
+    QPointF get_pos();
 
 signals:
     void pause_all();

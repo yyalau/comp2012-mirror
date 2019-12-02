@@ -2,16 +2,27 @@
 #define SHOOTERENEMY_H
 
 #include <stdlib.h> //rand()
+#include <cmath>
 
 #include "shooterBase.h"
+#include "shooterPlayer.h"
 
 /**
  * @brief The ShooterEnemy class
  * Class for enemies
  *
+ * ENUMS
+ * @enum EnemyPathingType: How the enemy moves after spawned
+ * @enum EnemyShootingType: How the enemy shoots bullets
+ *
+ * PRIVATE DATA MEMBERS
+ * @include pathing_type, shooting_type: See enum above
+ * @include shooter: Pointer to the player. For now use set_player() when initializing, separately
+ *
  * PUBLIC MEMBER FUNCTIONS
  * @include create_health(): write health //TODO: remove?
  * @include pause(), unpause(): override shooterBase's functions
+ * @include set_player(): Set the shooter to point to the player
  *
  * PUBLIC SLOTS
  * @include move(): overrides shooterBase's function, handles going out of bound
@@ -23,13 +34,35 @@ class ShooterEnemy:public ShooterBase{
     Q_OBJECT //implies an object can handle signals
 
 public:
-    ShooterEnemy(int hp = DEFAULT_ENEMY_HP, int dx = 0, int dy = 0,
+    enum EnemyPathingType
+    {
+        Linear,             //Move in straight line, disappears when out of bound
+        BorderBounce        //Move in straight line, reverse direction when hitting border
+        //TODO
+    };
+
+    enum EnemyShootingType
+    {
+        Random,             //Bullet's dy = 10; dx = random from -20 to 20
+        AimAtPlayer         //Aimed at the player's position when shot
+        //TODO
+    };
+
+private:
+    EnemyPathingType pathing_type;
+    EnemyShootingType shooting_type;
+    ShooterPlayer* shooter {nullptr};
+
+public:
+    ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,
+                 int hp = DEFAULT_ENEMY_HP, int dx = 0, int dy = 0,
                  int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
                  int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ,
                  int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false);
     void create_health();
     virtual void pause() override;
     virtual void unpause() override;
+    void set_player(ShooterPlayer* shooter);
 
 public slots:
     virtual void move() override;

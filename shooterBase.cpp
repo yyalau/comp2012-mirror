@@ -11,6 +11,9 @@ ShooterBase::ShooterBase(QString name, int hp, int dx, int dy, int size_x, int s
 ShooterBase::~ShooterBase()
 {
     delete health;
+    delete move_timer;
+    delete coll_timer;
+    delete shoot_timer;
 }
 
 Health* ShooterBase::get_health_var()

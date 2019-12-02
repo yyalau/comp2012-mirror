@@ -26,10 +26,10 @@ int GameEvent::get_time()
 void GameEvent::increment_time()
 {
     ++game_timer;
-    //game_timer/20 = seconds that have passed in-game
-    if ((game_timer % 100) == 0)
+    //game_timer/50 = seconds that have passed in-game
+    if ((game_timer % 200) == 0) //means every 4 seconds
     {
-        emit time_reached(0);
+        emit time_reached(game_timer % 3);
     }
 }
 
@@ -37,10 +37,30 @@ void GameEvent::trigger_event(int event_id)
 {
     switch (event_id)
     {
-        default:
-            ShooterEnemy* enemy = new ShooterEnemy();
-            enemy->setPos(400 + rand()%300, 10);
+    //TODO: create macro or template for enemy creation
+        case 0:
+        {
+            ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::Random, 2, 0, 3);
+            enemy->setPos(400 + rand()%300, 0);
             parentScene->addItem(enemy);
+            break;
+        }
+        case 1:
+        {
+            ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::AimAtPlayer, 3, 4, 0);
+            enemy->set_player(shooter);
+            enemy->setPos(0, 50);
+            parentScene->addItem(enemy);
+            break;
+        }
+        case 2:
+        {
+            ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::BorderBounce, ShooterEnemy::Random, 5, -10, 1);
+            enemy->setPos(800-ENEMY_SIZE, 50);
+            parentScene->addItem(enemy);
+            break;
+        }
+        default:
             break;
     }
 }

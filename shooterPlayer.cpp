@@ -20,25 +20,6 @@ ShooterPlayer::ShooterPlayer(int hp, int speed, int dx, int dy, int size_x, int 
     unpause();
 }
 
-void ShooterPlayer::create_health()
-{
-    ShooterBase::create_health(0,50);
-    health->setDefaultTextColor(Qt:: green);
-}
-
-void ShooterPlayer::pause()
-{
-    move_timer->stop();
-    coll_timer->stop();
-    shoot_timer->stop();
-}
-
-void ShooterPlayer::unpause()
-{
-    move_timer->start(move_freq);
-    coll_timer->start(coll_freq);
-    shoot_timer->start(shoot_freq);
-}
 
 void ShooterPlayer::keyPressEvent(QKeyEvent* event)
 {
@@ -90,6 +71,32 @@ void ShooterPlayer::keyReleaseEvent(QKeyEvent* event)
 void ShooterPlayer::focusOutEvent(QFocusEvent *event)
 {
     scene()->setFocusItem(this);
+}
+
+
+void ShooterPlayer::create_health()
+{
+    ShooterBase::create_health(0,50);
+    health->setDefaultTextColor(Qt:: green);
+}
+
+void ShooterPlayer::pause()
+{
+    move_timer->stop();
+    coll_timer->stop();
+    shoot_timer->stop();
+}
+
+void ShooterPlayer::unpause()
+{
+    move_timer->start(move_freq);
+    coll_timer->start(coll_freq);
+    shoot_timer->start(shoot_freq);
+}
+
+QPointF ShooterPlayer::get_pos()
+{
+    return pos();
 }
 
 void ShooterPlayer::move()

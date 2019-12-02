@@ -1,8 +1,10 @@
 #include "shooterEnemy.h"
 
-ShooterEnemy::ShooterEnemy(int hp, int dx, int dy, int size_x, int size_y,
+ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,
+                           int hp, int dx, int dy, int size_x, int size_y,
                            int move_freq, int coll_freq, int shoot_freq, bool shoot) :
-       ShooterBase("Enemy", hp, dx, dy, size_x, size_y, move_freq, coll_freq, shoot_freq, shoot)
+       ShooterBase("Enemy", hp, dx, dy, size_x, size_y, move_freq, coll_freq, shoot_freq, shoot),
+       pathing_type(pathing_type), shooting_type(shooting_type)
 {
     setBrush(Qt::blue);
     setRect(0, 0, size_x, size_y);
@@ -42,19 +44,28 @@ void ShooterEnemy::unpause()
     shoot_timer->start(shoot_freq);
 }
 
+void ShooterEnemy::set_player(ShooterPlayer* shooter)
+{
+    this->shooter = shooter;
+}
+
 void ShooterEnemy::move()
 {
-    //TODO: Change this to just regular moving, handle how the enemy moves somewhere else
-    static bool left= true;
-    if (left){
-        dx = -10;
-        if (x()<100)
-            left=false;
-    }
-    else {
-        dx = +10;
-        if (x()>700)
-            left=true;
+    switch (pathing_type)
+    {
+        case Linear:
+            //do nothing, should set speed in constructor already
+            break;
+        case BorderBounce:
+            if (!(INSCREEN_LEFT(pos().x()+dx)) || !(INSCREEN_RIGHT(pos().x()+dx)))
+            {
+                dx = -dx;
+            }
+            if (!(INSCREEN_UP(pos().y()+dy)) || !(INSCREEN_DOWN(pos().y()+dy)))
+            {
+                dy = -dy;
+            }
+            break;
     }
 
     //move
@@ -95,9 +106,25 @@ void ShooterEnemy::shoot()
 {
     if (!is_shooting) return;
 
-    int dx = rand()%40 - rand()%40;
+    int bullet_dx, bullet_dy;
 
-    BulletEnemy* bullet = new BulletEnemy(dx,20);
+    switch (shooting_type)
+    {
+        case Random:
+            bullet_dx = rand()%20 - rand()%20;
+            bullet_dy = 10;
+            break;
+        case AimAtPlayer:
+            double x_diff = shooter->get_pos().x()-pos().x();
+            double y_diff = shooter->get_pos().y()-pos().y();
+            bullet_dx = ((x_diff > 0) ? 1 : -1) *
+                    static_cast<int>(cos(atan(abs(y_diff/x_diff)))*20);
+            bullet_dy = ((y_diff > 0) ? 1 : -1) *
+                    static_cast<int>(sin(atan(abs(y_diff/x_diff)))*20);
+            break;
+    }
+
+    BulletEnemy* bullet = new BulletEnemy(bullet_dx, bullet_dy);
     bullet->setBrush(Qt::blue);
     bullet->setPos(x(),y());
     scene()->addItem(bullet);
