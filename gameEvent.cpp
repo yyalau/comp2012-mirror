@@ -36,7 +36,7 @@ void GameEvent::increment_time()
     //game_timer/50 = seconds that have passed in-game
     if ((game_timer % 200) == 0) //means every 4 seconds
     {
-        emit time_reached(game_timer % 3);
+        emit time_reached((game_timer/200) % 5);
     }
 }
 
@@ -77,6 +77,13 @@ void GameEvent::trigger_event(int event_id)
             enemy2->setPos(500, 100);
             enemy2->set_player(shooter);
             parentScene->addItem(enemy2);
+            break;
+        }
+        case 4:
+        {
+            ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Circular, ShooterEnemy::Random, 5, 0, 0);
+            //enemy->setPos(800-ENEMY_SIZE, 50);
+            parentScene->addItem(enemy);
             break;
         }
         default:

@@ -47,6 +47,7 @@ void ShooterEnemy::unpause()
     shoot_timer->start(shoot_freq);
 }
 
+
 void ShooterEnemy::set_player(ShooterPlayer* shooter)
 {
     this->shooter = shooter;
@@ -58,6 +59,7 @@ void ShooterEnemy::move()
     {
         case Linear:
             //do nothing, should set speed in constructor already
+            setPos(x()+dx,y()+dy);
             break;
         case BorderBounce:
             if (!(INSCREEN_LEFT(pos().x()+dx)) || !(INSCREEN_RIGHT(pos().x()+dx)))
@@ -68,11 +70,21 @@ void ShooterEnemy::move()
             {
                 dy = -dy;
             }
-            break;
+            setPos(x()+dx,y()+dy);
+        break;
+        case Circular:
+            QPainterPath circularpath;
+            circularpath.addEllipse(100,50,400,200);
+            static double i=0.0;
+            QPoint temp=circularpath.pointAtPercent(i).toPoint();
+            setPos(temp);
+            i+=0.007;
+            if(i>1){i=0;}
+        break;
     }
 
     //move
-    setPos(x()+dx,y()+dy);
+
 
     //remove once its out of bound
     if (!(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||

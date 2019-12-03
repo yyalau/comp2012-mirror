@@ -6,6 +6,7 @@
 
 #include "shooterBase.h"
 #include "shooterPlayer.h"
+#include <QPainterPath>
 
 /**
  * @brief The ShooterEnemy class
@@ -37,8 +38,8 @@ public:
     enum EnemyPathingType
     {
         Linear,             //Move in straight line, disappears when out of bound
-        BorderBounce        //Move in straight line, reverse direction when hitting border
-        //TODO
+        BorderBounce,        //Move in straight line, reverse direction when hitting border
+        Circular//TODO
     };
 
     enum EnemyShootingType
