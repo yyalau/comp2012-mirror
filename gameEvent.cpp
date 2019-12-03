@@ -13,9 +13,16 @@ GameEvent::GameEvent(QGraphicsScene* parentScene, ShooterPlayer* shooter) :
     //for pausing/unpausing the game
     connect(shooter, SIGNAL(pause_all()), this, SLOT(pause_game()));
     connect(shooter, SIGNAL(unpause_all()), this, SLOT(unpause_game()));
+
     //for handling game over
     connect(shooter, SIGNAL(player_dead()), this, SLOT(trigger_game_over()));
 
+}
+
+GameEvent::~GameEvent()
+{
+    clear_popup_screen();
+    delete event_timer;
 }
 
 int GameEvent::get_time()
@@ -29,7 +36,7 @@ void GameEvent::increment_time()
     //game_timer/50 = seconds that have passed in-game
     if ((game_timer % 200) == 0) //means every 4 seconds
     {
-        emit time_reached((game_timer/200)%4);
+        emit time_reached(game_timer % 3);
     }
 }
 
@@ -37,7 +44,7 @@ void GameEvent::trigger_event(int event_id)
 {
     switch (event_id)
     {
-    //TODO: create macro or template for enemy creation
+        //TODO: create macro or template for enemy creation
         case 0:
         {
             ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::Random, 2, 0, 3);
@@ -74,7 +81,7 @@ void GameEvent::trigger_event(int event_id)
         }
         default:
             break;
-    }
+        }
 }
 
 //helper template
@@ -88,6 +95,7 @@ bool try_pause(QGraphicsItem* item)
     }
     return false;
 }
+
 void GameEvent::pause_game()
 {
     QList<QGraphicsItem*> scene_items = parentScene->items(); //pause all items
@@ -99,6 +107,8 @@ void GameEvent::pause_game()
         if (try_pause<ShooterPlayer>(scene_items[i])) continue;
     }
     event_timer->stop();
+
+    if(!shooter->get_health_var()->is_dead()) display_popup("\t Press P to continue", Qt::gray);
 }
 
 //helper template
@@ -114,6 +124,8 @@ bool try_unpause(QGraphicsItem* item)
 }
 void GameEvent::unpause_game()
 {
+    clear_popup_screen();
+
     QList<QGraphicsItem*> scene_items = parentScene->items(); //pause all items
 
     for(int i=0; i<scene_items.size(); ++i){
@@ -130,28 +142,32 @@ void GameEvent::unpause_game()
 void GameEvent::trigger_game_over()
 {
     pause_game(); //TODO: if we want to do like death animation or something, add it under here
-    display_gameover_scene();
+    display_popup("\t YOU LOSE! RUNTIME ERROR!!", Qt::red, 0.7);
 }
 
 
-void GameEvent::display_gameover_scene()
+void GameEvent::display_popup(QString message, QColor color, double opacity, int x, int y, int width, int height)
 {
-    // pop up semi transparent panel
-    draw_scene(0,0,SCREEN_LENGTH,SCREEN_HEIGHT,Qt::white,1);
-
-    QGraphicsTextItem* gameover_text = new QGraphicsTextItem("YOU LOSE!");
-    gameover_text->setPos(SCREEN_LENGTH/2,SCREEN_HEIGHT/2);
-    parentScene->addItem(gameover_text);
-}
-
-void GameEvent::draw_scene(int x, int y, int width, int height, QColor color, double opacity)
-{
-    QGraphicsRectItem* popup_scene = new QGraphicsRectItem(x,y,width,height);
+    //popup a new scene
+    popup_scene = new QGraphicsRectItem(x,y,width,height);
     QBrush brush;
-    brush.setStyle(Qt::SolidPattern);
-    brush.setColor(color);
-    popup_scene->setBrush(brush);
+    popup_scene->setBrush(color);
     popup_scene->setOpacity(opacity);
     parentScene->addItem(popup_scene);
+
+    popup_text = new QGraphicsTextItem(message);
+    QFont Font("Times", 16);
+    popup_text->setFont(Font);
+
+    popup_text->setPos(0,SCREEN_HEIGHT/2);
+    parentScene->addItem(popup_text);
+}
+
+void GameEvent::clear_popup_screen()
+{
+    parentScene->removeItem(popup_scene);
+    delete popup_scene;
+    parentScene->removeItem(popup_text);
+    delete popup_text;
 }
 

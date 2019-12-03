@@ -43,16 +43,20 @@ class GameEvent : public QObject
 
 private:
     QGraphicsScene* parentScene;
+    QGraphicsRectItem* popup_scene;
+    QGraphicsTextItem* popup_text;
     ShooterPlayer* shooter;
     QTimer* event_timer;
     int game_timer {0};
 
+    void display_popup(QString message, QColor color=Qt::yellow, double opacity=0.5, int x =0, int y=0, int width=SCREEN_LENGTH, int height=SCREEN_HEIGHT);
+    void clear_popup_screen();
+
 public:
     GameEvent(QGraphicsScene* parentScene, ShooterPlayer* shooter);
-    int get_time();
+    ~GameEvent();
 
-    void display_gameover_scene();
-    void draw_scene(int x =SCREEN_LENGTH/2, int y=SCREEN_HEIGHT/2, int width=SCREEN_LENGTH, int height=SCREEN_HEIGHT, QColor color=Qt::yellow, double opacity=100);
+    int get_time();
 
 public slots:
     void increment_time();

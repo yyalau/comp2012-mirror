@@ -37,5 +37,8 @@ void BulletEnemy::unpause()
 void BulletEnemy::collision()
 {
     //TODO?
+    // i dont think we should implement anything
+    // i tried to do the collision function for bulletEnemy and bulletShooter, and delete only itself
+    // but idk why it doesnt work
 }
 

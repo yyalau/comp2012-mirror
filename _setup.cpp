@@ -30,21 +30,34 @@ _SetUp::_SetUp()
 
     //------------------------------------------------InfoBoxSetting-------------------------------------------
 
-    //Scene&view setting
+    //add infoBox into the GameScene
     infoBox = new InfoBox(shooter->get_health_var());
     infoBox->setPos(SCREEN_LENGTH, 0);
     GameScene->addItem(infoBox);
     infoBox->show_info();
 
     //Layout Setting
-    QHBoxLayout* layout = new QHBoxLayout();
+    layout = new QHBoxLayout();
     layout->addWidget(GameView);
     layout->setSizeConstraint(QLayout::SetFixedSize);
 
-    QWidget* window = new QWidget();
+    window = new QWidget();
     window->setLayout(layout);
     window->show();
 
+}
+
+_SetUp::~_SetUp()
+{
+    delete shooter;
+    delete gameEvent;
+    delete infoBox;
+
+    //dont mess up the following order
+    delete GameView;
+    delete layout;
+    delete window;
+    delete GameScene;
 }
 
 

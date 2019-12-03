@@ -4,9 +4,9 @@
 #include <QObject>
 #include <QGraphicsRectItem>
 #include <QGraphicsScene>
+#include <QTextEdit>
 
 #include "shooterPlayer.h"
-#include "pauseButton.h"
 
 /**
  * @brief The InfoBox class
