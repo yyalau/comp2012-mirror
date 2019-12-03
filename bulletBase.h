@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QGraphicsRectItem>
+#include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QTimer>
 #include <QDebug>
@@ -28,7 +29,7 @@
  * @include collision(): pure virtual slot for checking bullet collision with other entities
  */
 
-class BulletBase: public QObject, public QGraphicsRectItem{
+class BulletBase: public QObject, public QGraphicsPixmapItem{
      Q_OBJECT //implies the object can handle signals
 protected:
     int dx, dy;

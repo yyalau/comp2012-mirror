@@ -4,7 +4,13 @@
 BulletPlayer::BulletPlayer(int dx, int dy, int size_x, int size_y, int move_freq, int coll_freq):
     BulletBase(dx, dy, size_x, size_y, move_freq, coll_freq)
 {
-    setRect(0, 0, size_x, size_y);
+    //setRect(0, 0, size_x, size_y);
+    QPixmap bulletimage(":/image/images/firebullet.png");
+    setPixmap(bulletimage.scaled(BULLET_SIZE,BULLET_SIZE,Qt::KeepAspectRatio));
+    setRotation(-90);
+    setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
+    setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
+    setScale(1.4);
 
     coll_timer= new QTimer();
 

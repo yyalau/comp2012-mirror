@@ -12,10 +12,10 @@
 
 //for out of bound checking
 #define INSCREEN_LEFT(X)        (X) >= 0
-#define INSCREEN_RIGHT(X)       (X)+rect().width() <= scene()->width()-INFOBOX_LENGTH
-#define INSCREEN_RIGHT_OOB(X)   (X)+rect().width() <= scene()->width()
+#define INSCREEN_RIGHT(X)       (X)+boundingRect().width() <= scene()->width()-INFOBOX_LENGTH
+#define INSCREEN_RIGHT_OOB(X)   (X)+boundingRect().width() <= scene()->width()
 #define INSCREEN_UP(Y)          (Y) >= 0
-#define INSCREEN_DOWN(Y)        (Y)+rect().height() <= scene()->height()
+#define INSCREEN_DOWN(Y)        (Y)+boundingRect().height() <= scene()->height()
 
 //timer update duration (= 1000/frame per sec)
 //MIN_FREQ: ensures the slots are triggered in sync
@@ -24,10 +24,10 @@
 #define DEFAULT_SHOOT_FREQ  8*MIN_FREQ
 
 //hitbox sizes
-#define BULLET_SIZE 10
+#define BULLET_SIZE 30
 #define ENTITY_SIZE 40
-#define ENEMY_SIZE 40
-#define PLAYER_SIZE 40
+#define ENEMY_SIZE 50
+#define PLAYER_SIZE 70
 
 //player and enemy's health
 #define DEFAULT_PLAYER_HP   100

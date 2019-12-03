@@ -4,8 +4,11 @@ ShooterPlayer::ShooterPlayer(int hp, int speed, int dx, int dy, int size_x, int 
                              int move_freq, int coll_freq, int shoot_freq, bool shoot) :
          ShooterBase("Player", hp, dx, dy, size_x, size_y, move_freq, coll_freq, shoot_freq, shoot), speed(speed)
 {
-    setBrush(Qt::green);
-    setRect(0, 0, size_x, size_y);
+    QPixmap shooterimage(":/image/images/shooter.png");
+    setPixmap(shooterimage.scaled(PLAYER_SIZE,PLAYER_SIZE,Qt::KeepAspectRatio));
+    setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
+    setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
+    setScale(1.5);
 
     move_timer= new QTimer();
     connect(move_timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
@@ -132,7 +135,7 @@ void ShooterPlayer::shoot()
     if (!is_shooting) return;
 
     BulletPlayer* bullet = new BulletPlayer(0,-20);
-    bullet->setBrush(Qt::green);
+    //bullet->setBrush(Qt::green);
     bullet->setPos(x(),y());
     scene()->addItem(bullet);
 

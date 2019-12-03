@@ -23,7 +23,7 @@ _SetUp::_SetUp()
     GameScene->addItem(shooter); //put rect into the scene
     shooter->setFlag(QGraphicsItem::ItemIsFocusable); // setfocus1
     shooter->setFocus(); //setfocus2
-    shooter->setPos(400, 540);// set the initial position of the shooter
+    shooter->setPos(400, 500);// set the initial position of the shooter
 
     //time counter to trigger events
     gameEvent = new GameEvent(GameScene, shooter);

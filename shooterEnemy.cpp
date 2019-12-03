@@ -6,8 +6,11 @@ ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shoo
        ShooterBase("Enemy", hp, dx, dy, size_x, size_y, move_freq, coll_freq, shoot_freq, shoot),
        pathing_type(pathing_type), shooting_type(shooting_type)
 {
-    setBrush(Qt::blue);
-    setRect(0, 0, size_x, size_y);
+    QPixmap enemyimage(":/image/images/computer.png");
+    setPixmap(enemyimage.scaled(ENEMY_SIZE,ENEMY_SIZE,Qt::KeepAspectRatio));
+    setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
+    setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
+    setScale(1.5);
 
     is_shooting = true;
 
@@ -125,7 +128,7 @@ void ShooterEnemy::shoot()
     }
 
     BulletEnemy* bullet = new BulletEnemy(bullet_dx, bullet_dy);
-    bullet->setBrush(Qt::blue);
+    //bullet->setBrush(Qt::blue);
     bullet->setPos(x(),y());
     scene()->addItem(bullet);
 
