@@ -12,6 +12,7 @@
  *
  * PRIVATE DATA MEMBERS
  * @include speed: player's moving speed
+ * @include immune_counter: player is immune for 1 second (50 * MIN_FREQ) when hit
  *
  * PRIVATE MEMBER FUNCTION RE-IMPLEMENTATIONS
  * @implements keyPressEvent(QKeyEvent*): handles keyboard input, updates player velocity and is_shooting
@@ -39,16 +40,17 @@ class ShooterPlayer: public ShooterBase{
     Q_OBJECT
 
 private:
-    int speed;
+    int speed {DEFAULT_SPEED};
+    int immune_counter {0};
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void focusOutEvent(QFocusEvent* event) override;
 
 public:
-    ShooterPlayer(int hp = DEFAULT_PLAYER_HP, int speed = DEFAULT_SPEED, int dx = 0, int dy = 0,
+    ShooterPlayer(int hp = DEFAULT_PLAYER_HP, int dx = 0, int dy = 0,
+                  int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false,
                   int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
-                  int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ,
-                  int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false);
+                  int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
     void create_health();
     virtual void pause() override;
     virtual void unpause() override;
@@ -63,7 +65,6 @@ public slots:
     virtual void move() override;
     virtual void collision() override;
     virtual void shoot() override;
-
 
 };
 

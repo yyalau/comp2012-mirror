@@ -12,6 +12,7 @@
 
 //for out of bound checking
 #define INSCREEN_LEFT(X)        (X) >= 0
+#define INSCREEN_LEFT_OOB(X)    (X) >= 0-INFOBOX_LENGTH
 #define INSCREEN_RIGHT(X)       (X)+boundingRect().width() <= scene()->width()-INFOBOX_LENGTH
 #define INSCREEN_RIGHT_OOB(X)   (X)+boundingRect().width() <= scene()->width()
 #define INSCREEN_UP(Y)          (Y) >= 0

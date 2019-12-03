@@ -1,18 +1,19 @@
 #include "shooterEnemy.h"
 
+//static member declaration
+ShooterPlayer* ShooterEnemy::player = nullptr;
+
 ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,
-                           int hp, int dx, int dy, int size_x, int size_y,
-                           int move_freq, int coll_freq, int shoot_freq, bool shoot) :
-       ShooterBase("Enemy", hp, dx, dy, size_x, size_y, move_freq, coll_freq, shoot_freq, shoot),
+                           int hp, int dx, int dy, int shoot_freq, bool shoot,
+                           int size_x, int size_y, int move_freq, int coll_freq) :
+       ShooterBase("Enemy", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq),
        pathing_type(pathing_type), shooting_type(shooting_type)
 {
     QPixmap enemyimage(":/image/images/computer.png");
-    setPixmap(enemyimage.scaled(ENEMY_SIZE,ENEMY_SIZE,Qt::KeepAspectRatio));
+    setPixmap(enemyimage.scaled(size_x, size_y, Qt::KeepAspectRatio));
     setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.5);
-
-    is_shooting = true;
 
     move_timer= new QTimer();
     connect(move_timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
@@ -47,10 +48,9 @@ void ShooterEnemy::unpause()
     shoot_timer->start(shoot_freq);
 }
 
-
 void ShooterEnemy::set_player(ShooterPlayer* shooter)
 {
-    this->shooter = shooter;
+    player = shooter;
 }
 
 void ShooterEnemy::move()
@@ -122,26 +122,33 @@ void ShooterEnemy::shoot()
     if (!is_shooting) return;
 
     int bullet_dx, bullet_dy;
+    BulletEnemy::BulletType bullet_type;
 
     switch (shooting_type)
     {
         case Random:
             bullet_dx = rand()%20 - rand()%20;
             bullet_dy = 10;
+            bullet_type = BulletEnemy::OutOfBound;
             break;
         case AimAtPlayer:
-            double x_diff = shooter->get_pos().x()-pos().x();
-            double y_diff = shooter->get_pos().y()-pos().y();
+        {
+            double x_diff = player->get_pos().x()-pos().x();
+            double y_diff = player->get_pos().y()-pos().y();
             bullet_dx = ((x_diff > 0) ? 1 : -1) *
                     static_cast<int>(cos(atan(abs(y_diff/x_diff)))*20);
             bullet_dy = ((y_diff > 0) ? 1 : -1) *
                     static_cast<int>(sin(atan(abs(y_diff/x_diff)))*20);
+            bullet_type = BulletEnemy::Normal;
+            break;
+        }
+        default:
             break;
     }
 
-    BulletEnemy* bullet = new BulletEnemy(bullet_dx, bullet_dy);
+    BulletEnemy* bullet = new BulletEnemy(bullet_dx, bullet_dy, bullet_type);
     //bullet->setBrush(Qt::blue);
-    bullet->setPos(x(),y());
+    bullet->setPos(x()+size_x/2, y()+size_y/2);
     scene()->addItem(bullet);
 
 }

@@ -1,21 +1,21 @@
 #include "bulletEnemy.h"
 #include "bulletPlayer.h"
 
-BulletPlayer::BulletPlayer(int dx, int dy, int size_x, int size_y, int move_freq, int coll_freq):
-    BulletBase(dx, dy, size_x, size_y, move_freq, coll_freq)
+BulletPlayer::BulletPlayer(int dx, int dy, int size_x, int size_y, int move_freq/*, int coll_freq*/):
+    BulletBase(dx, dy, size_x, size_y, move_freq/*, coll_freq*/)
 {
     //setRect(0, 0, size_x, size_y);
     QPixmap bulletimage(":/image/images/firebullet.png");
-    setPixmap(bulletimage.scaled(BULLET_SIZE,BULLET_SIZE,Qt::KeepAspectRatio));
+    setPixmap(bulletimage.scaled(size_x, size_y, Qt::KeepAspectRatio));
     setRotation(-90);
     setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.4);
 
-    coll_timer= new QTimer();
+    //coll_timer= new QTimer();
 
     //connect timer and collision slot
-    connect(coll_timer, SIGNAL(timeout()), this, SLOT(collision()));
+    //connect(coll_timer, SIGNAL(timeout()), this, SLOT(collision()));
 
     //start the timers
     unpause();
@@ -24,30 +24,30 @@ BulletPlayer::BulletPlayer(int dx, int dy, int size_x, int size_y, int move_freq
 void BulletPlayer::pause()
 {
     move_timer->stop();
-    coll_timer->stop();
+    //coll_timer->stop();
 }
 
 void BulletPlayer::unpause()
 {
     move_timer->start(move_freq);
-    coll_timer->start(coll_freq);
+    //coll_timer->start(coll_freq);
 }
 
-void BulletPlayer::collision()
-{
+//void BulletPlayer::collision()
+//{
     //collision with other bullets
-    QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
+    //QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
 
-    for(int i=0; i<colliding_items.size(); ++i){
-        if (typeid(*(colliding_items[i]))==typeid (BulletEnemy))
-        {
+    //for(int i=0; i<colliding_items.size(); ++i){
+        //if (typeid(*(colliding_items[i]))==typeid (BulletEnemy))
+        //{
             //delete the other bullet //TODO: remove?
-            REMOVE_ENTITY(colliding_items[i])
+            //REMOVE_ENTITY(colliding_items[i])
 
             //delete yourself
-            REMOVE_ENTITY(this)
+            //REMOVE_ENTITY(this)
 
-            return;
-        }
-    }
-}
+            //return;
+        //}
+    //}
+//}

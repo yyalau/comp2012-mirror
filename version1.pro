@@ -26,6 +26,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     shooterBase.cpp \
+    shooterBoss.cpp \
     shooterEnemy.cpp \
     shooterPlayer.cpp
 
@@ -40,6 +41,7 @@ HEADERS += \
     infoBox.h \
     mainwindow.h \
     shooterBase.h \
+    shooterBoss.h \
     shooterEnemy.h \
     shooterPlayer.h
 

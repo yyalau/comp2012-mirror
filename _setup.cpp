@@ -24,6 +24,7 @@ _SetUp::_SetUp()
     shooter->setFlag(QGraphicsItem::ItemIsFocusable); // setfocus1
     shooter->setFocus(); //setfocus2
     shooter->setPos(400, 500);// set the initial position of the shooter
+    ShooterEnemy::set_player(shooter);
 
     //time counter to trigger events
     gameEvent = new GameEvent(GameScene, shooter);
@@ -49,15 +50,15 @@ _SetUp::_SetUp()
 
 _SetUp::~_SetUp()
 {
-    delete shooter;
-    delete gameEvent;
-    delete infoBox;
+    //delete shooter;
+    //delete gameEvent;
+    //delete infoBox;
 
     //dont mess up the following order
-    delete GameView;
-    delete layout;
-    delete window;
-    delete GameScene;
+    //delete GameView;
+    //delete layout;
+    //delete window;
+    //delete GameScene;
 }
 
 

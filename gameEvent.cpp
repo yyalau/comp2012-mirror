@@ -55,7 +55,6 @@ void GameEvent::trigger_event(int event_id)
         case 1:
         {
             ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::AimAtPlayer, 3, 4, 0);
-            enemy->set_player(shooter);
             enemy->setPos(0, 50);
             parentScene->addItem(enemy);
             break;
@@ -69,13 +68,11 @@ void GameEvent::trigger_event(int event_id)
         }
         case 3:
         {
-            ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::AimAtPlayer, 2, 0, 0,ENTITY_SIZE,ENTITY_SIZE,DEFAULT_FREQ,DEFAULT_FREQ,DEFAULT_SHOOT_FREQ*2);
+            ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::AimAtPlayer, 2, 0, 0, DEFAULT_SHOOT_FREQ*2);
             enemy->setPos(100, 100);
-            enemy->set_player(shooter);
             parentScene->addItem(enemy);
-            ShooterEnemy* enemy2 = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::AimAtPlayer, 2, 0, 0,ENTITY_SIZE,ENTITY_SIZE,DEFAULT_FREQ,DEFAULT_FREQ,DEFAULT_SHOOT_FREQ*2);
+            ShooterEnemy* enemy2 = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::AimAtPlayer, 2, 0, 0, DEFAULT_SHOOT_FREQ*2);
             enemy2->setPos(500, 100);
-            enemy2->set_player(shooter);
             parentScene->addItem(enemy2);
             break;
         }
@@ -115,6 +112,8 @@ void GameEvent::pause_game()
     }
     event_timer->stop();
 
+    //pause screen
+    //TODO: make it more interesting
     if(!shooter->get_health_var()->is_dead()) display_popup("\t Press P to continue", Qt::gray);
 }
 

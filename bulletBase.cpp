@@ -1,7 +1,7 @@
 #include "bulletBase.h"
 
-BulletBase::BulletBase(int dx, int dy, int size_x, int size_y, int move_freq, int coll_freq):
-    dx(dx), dy(dy), size_x(size_x), size_y(size_y), move_freq(move_freq), coll_freq(coll_freq)
+BulletBase::BulletBase(int dx, int dy, int size_x, int size_y, int move_freq/*, int coll_freq*/):
+    dx(dx), dy(dy), size_x(size_x), size_y(size_y), move_freq(move_freq)/*, coll_freq(coll_freq)*/
 {
     move_timer= new QTimer();
 
@@ -14,7 +14,7 @@ BulletBase::BulletBase(int dx, int dy, int size_x, int size_y, int move_freq, in
 BulletBase::~BulletBase()
 {
     delete move_timer;
-    delete coll_timer; //for safety can add "if not nullptr"
+    //delete coll_timer; //for safety can add "if not nullptr"
 }
 
 void BulletBase::move()

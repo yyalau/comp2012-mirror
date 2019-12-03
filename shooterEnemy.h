@@ -3,10 +3,10 @@
 
 #include <stdlib.h> //rand()
 #include <cmath>
+#include <QPainterPath>
 
 #include "shooterBase.h"
 #include "shooterPlayer.h"
-#include <QPainterPath>
 
 /**
  * @brief The ShooterEnemy class
@@ -18,7 +18,7 @@
  *
  * PRIVATE DATA MEMBERS
  * @include pathing_type, shooting_type: See enum above
- * @include shooter: Pointer to the player. For now use set_player() when initializing, separately
+ * @include player: Pointer to the player. Use set_player() when initializing the player in SetUp
  *
  * PUBLIC MEMBER FUNCTIONS
  * @include create_health(): write health //TODO: remove?
@@ -39,31 +39,33 @@ public:
     {
         Linear,             //Move in straight line, disappears when out of bound
         BorderBounce,        //Move in straight line, reverse direction when hitting border
-        Circular//TODO
+        Circular
+        //TODO
     };
 
     enum EnemyShootingType
     {
         Random,             //Bullet's dy = 10; dx = random from -20 to 20
-        AimAtPlayer         //Aimed at the player's position when shot
+        AimAtPlayer,        //Aimed at the player's position when shot
+        NoShooting
         //TODO
     };
 
 private:
     EnemyPathingType pathing_type;
     EnemyShootingType shooting_type;
-    ShooterPlayer* shooter {nullptr};
+    static ShooterPlayer* player;
 
 public:
     ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,
                  int hp = DEFAULT_ENEMY_HP, int dx = 0, int dy = 0,
+                 int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = true,
                  int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
-                 int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ,
-                 int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false);
+                 int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
     void create_health();
     virtual void pause() override;
     virtual void unpause() override;
-    void set_player(ShooterPlayer* shooter);
+    static void set_player(ShooterPlayer* shooter);
 
 public slots:
     virtual void move() override;

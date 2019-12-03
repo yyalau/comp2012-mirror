@@ -1,11 +1,13 @@
 #include "shooterPlayer.h"
+#include "shooterEnemy.h"
+#include "bulletEnemy.h"
 
-ShooterPlayer::ShooterPlayer(int hp, int speed, int dx, int dy, int size_x, int size_y,
-                             int move_freq, int coll_freq, int shoot_freq, bool shoot) :
-         ShooterBase("Player", hp, dx, dy, size_x, size_y, move_freq, coll_freq, shoot_freq, shoot), speed(speed)
+ShooterPlayer::ShooterPlayer(int hp, int dx, int dy, int shoot_freq,  bool shoot,
+                             int size_x, int size_y, int move_freq, int coll_freq) :
+         ShooterBase("Player", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq)
 {
     QPixmap shooterimage(":/image/images/shooter.png");
-    setPixmap(shooterimage.scaled(PLAYER_SIZE,PLAYER_SIZE,Qt::KeepAspectRatio));
+    setPixmap(shooterimage.scaled(size_x, size_y, Qt::KeepAspectRatio));
     setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.5);
@@ -104,13 +106,22 @@ QPointF ShooterPlayer::get_pos()
 
 void ShooterPlayer::move()
 {
-    qreal new_x = x() + (INSCREEN_LEFT(pos().x()+dx) && INSCREEN_RIGHT(pos().x()+dx) ? dx : 0);
-    qreal new_y = y() + (INSCREEN_UP(pos().y()+dy) && INSCREEN_DOWN(pos().y()+dy) ? dy : 0);
+    double new_x = x() + (INSCREEN_LEFT(pos().x()+dx) && INSCREEN_RIGHT(pos().x()+dx) ? dx : 0);
+    double new_y = y() + (INSCREEN_UP(pos().y()+dy) && INSCREEN_DOWN(pos().y()+dy) ? dy : 0);
     setPos(new_x, new_y);
 }
 
 void ShooterPlayer::collision()
 {
+    //immune handling. if immune_counter > 0, count up until 50 then set back to 0
+    if (immune_counter > 0)
+    {
+        ++immune_counter;
+        //TODO: do something with the sprite? blink?
+        if (immune_counter == 50) immune_counter = 0;
+        return;
+    }
+
     //collision!! edit!!!!!! create template
     QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
 
@@ -124,9 +135,19 @@ void ShooterPlayer::collision()
             health->decrease_health();
             if (health->is_dead()) emit player_dead();
 
+            immune_counter = 1;
             return;
         }
-        //TODO: decrease health if hit enemy as well?
+        else if (typeid(*(colliding_items[i]))==typeid (ShooterEnemy))
+        {
+            //decrease own health
+            health->decrease_health();
+            if (health->is_dead()) emit player_dead();
+
+            immune_counter = 1;
+            return;
+        }
+
     }
 }
 
@@ -136,7 +157,7 @@ void ShooterPlayer::shoot()
 
     BulletPlayer* bullet = new BulletPlayer(0,-20);
     //bullet->setBrush(Qt::green);
-    bullet->setPos(x(),y());
+    bullet->setPos(x()+size_x/2, y()-size_y/2);
     scene()->addItem(bullet);
 
 }
