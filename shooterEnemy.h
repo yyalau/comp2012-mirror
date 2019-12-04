@@ -22,7 +22,6 @@
  *
  * PUBLIC MEMBER FUNCTIONS
  * @include create_health(): write health //TODO: remove?
- * @include pause(), unpause(): override shooterBase's functions
  * @include set_player(): Set the shooter to point to the player
  *
  * PUBLIC SLOTS
@@ -59,11 +58,9 @@ private:
 public:
     ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,
                  int hp = DEFAULT_ENEMY_HP, int dx = 0, int dy = 0,
-                 int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = true,
+                 int shoot_freq = 2*DEFAULT_SHOOT_FREQ, bool shoot = true,
                  int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
                  int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
-    virtual void pause() override;
-    virtual void unpause() override;
     static void set_player(ShooterPlayer* shooter);
 
 public slots:

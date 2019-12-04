@@ -78,20 +78,6 @@ void ShooterPlayer::focusOutEvent(QFocusEvent *event)
     scene()->setFocusItem(this);
 }
 
-void ShooterPlayer::pause()
-{
-    move_timer->stop();
-    coll_timer->stop();
-    shoot_timer->stop();
-}
-
-void ShooterPlayer::unpause()
-{
-    move_timer->start(move_freq);
-    coll_timer->start(coll_freq);
-    shoot_timer->start(shoot_freq);
-}
-
 QPointF ShooterPlayer::get_pos()
 {
     return pos();

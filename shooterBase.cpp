@@ -20,3 +20,18 @@ Health* ShooterBase::get_health_var()
 {
     return health;
 }
+
+void ShooterBase::pause()
+{
+    move_timer->stop();
+    coll_timer->stop();
+    shoot_timer->stop();
+}
+
+void ShooterBase::unpause()
+{
+    move_timer->start(move_freq);
+    coll_timer->start(coll_freq);
+    shoot_timer->start(shoot_freq);
+}
+

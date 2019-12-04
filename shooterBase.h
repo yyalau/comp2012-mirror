@@ -27,7 +27,7 @@
  * PUBLIC MEMBER FUNCTIONS
  * @include create_health(int, int): write entity's health on screen //TODO: remove? just need this for player
  * @include get_health_var(): return pointer to this entity's health
- * @include pause(), unpause(): pure virtual functions for stopping/restarting the timers
+ * @include pause(), unpause(): functions for stopping/restarting the timers
  *
  * PUBLIC SLOTS
  * @include move(): pure virtual slot for updating entity's position
@@ -52,8 +52,8 @@ public:
                 int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
     ~ShooterBase();
     Health* get_health_var();
-    virtual void pause() = 0;
-    virtual void unpause() = 0;
+    void pause();
+    void unpause();
 
 public slots:
     virtual void move() = 0;

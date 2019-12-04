@@ -22,7 +22,7 @@
 //MIN_FREQ: ensures the slots are triggered in sync
 #define MIN_FREQ            20
 #define DEFAULT_FREQ        MIN_FREQ
-#define DEFAULT_SHOOT_FREQ  8*MIN_FREQ
+#define DEFAULT_SHOOT_FREQ  5*MIN_FREQ
 
 //hitbox sizes
 #define BULLET_SIZE 30

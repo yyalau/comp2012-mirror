@@ -25,20 +25,6 @@ void ShooterBoss::show_health()
     //of the screen that gets shorter according to the remaining health of the boss
 }
 
-void ShooterBoss::pause()
-{
-    move_timer->stop();
-    coll_timer->stop();
-    shoot_timer->stop();
-}
-
-void ShooterBoss::unpause()
-{
-    move_timer->start(move_freq);
-    coll_timer->start(coll_freq);
-    shoot_timer->start(shoot_freq);
-}
-
 void ShooterBoss::move()
 {
     //TODO: idk probably wont move much anyway

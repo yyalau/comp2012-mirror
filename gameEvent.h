@@ -12,6 +12,7 @@
 #include "bulletPowerUp.h"
 #include "shooterEnemy.h"
 #include "shooterPlayer.h"
+#include "popUpDialogue.h"
 
 /**
  * @brief The GameEvent class
@@ -22,8 +23,6 @@
  * @include shooter: Pointer to the player (for receiving signals)
  * @include event_timer: QTimer for triggering increment_time()
  * @include game_timer: Goes up by 1 every MIN_TIME ms
- * @include display_popup(): displays a pop-up screen/ rect (when the pause_game()/ trigger_game_over() is called)
- * @include clear_popup_screen(): removes the pop-up screen, and deletes it
  *
  * PUBLIC MEMBER FUNCTIONS:
  * @include get_time(): Returns the value of game_timer
@@ -44,18 +43,14 @@ class GameEvent : public QObject
     Q_OBJECT
 
 private:
-    QGraphicsScene* parentScene;
-    QGraphicsRectItem* popup_scene;
-    QGraphicsTextItem* popup_text;
+    QGraphicsScene* parent_scene;
+    PopUpDialogue* dialogue;
     ShooterPlayer* shooter;
     QTimer* event_timer;
     int game_timer {0};
 
-    void display_popup(QString message, QColor color=Qt::yellow, double opacity=0.5, int x =0, int y=0, int width=SCREEN_LENGTH, int height=SCREEN_HEIGHT);
-    void clear_popup_screen();
-
 public:
-    GameEvent(QGraphicsScene* parentScene, ShooterPlayer* shooter);
+    GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter);
     ~GameEvent();
 
     int get_time();

@@ -28,20 +28,6 @@ ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shoo
     unpause();
 }
 
-void ShooterEnemy::pause()
-{
-    move_timer->stop();
-    coll_timer->stop();
-    shoot_timer->stop();
-}
-
-void ShooterEnemy::unpause()
-{
-    move_timer->start(move_freq);
-    coll_timer->start(coll_freq);
-    shoot_timer->start(shoot_freq);
-}
-
 void ShooterEnemy::set_player(ShooterPlayer* shooter)
 {
     player = shooter;

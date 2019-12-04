@@ -1,7 +1,7 @@
 #include "bulletPowerUp.h"
 
-BulletPowerUp::BulletPowerUp(int dx, int dy, int size_x, int size_y, int move_freq):
-    BulletBase(dx, dy, size_x, size_y, move_freq/*, coll_freq*/)
+BulletPowerUp::BulletPowerUp(int dx, int dy, PowerUpType power_type, int size_x, int size_y, int move_freq):
+    BulletBase(dx, dy, size_x, size_y, move_freq), power_type(power_type)
 {
 
     QPixmap bulletimage(":/image/images/powerup.png");

@@ -22,7 +22,6 @@
  *
  * PUBLIC MEMBER FUNCITONS
  * @include create_health(): write health
- * @include pause(), unpause(): override shooterBase's functions
  * @include get_pos(): return the player's position
  *
  * SIGNALS
@@ -53,8 +52,6 @@ public:
                   int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false,
                   int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
                   int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
-    virtual void pause() override;
-    virtual void unpause() override;
     QPointF get_pos();
 
 signals:

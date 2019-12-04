@@ -17,7 +17,6 @@
  *
  * PUBLIC MEMBER FUNCTIONS
  * @include show_health(): Show the boss's remaining health
- * @include pause(), unpause(): override shooterBase's functions
  *
  * PUBLIC SLOTS
  * @include move(): overrides shooterBase's function, handles going out of bound
@@ -51,8 +50,6 @@ public:
                 int size_x = BOSS_SIZE_X, int size_y = BOSS_SIZE_Y,
                 int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
     void show_health();
-    virtual void pause() override;
-    virtual void unpause() override;
 
 public slots:
     virtual void move() override;
