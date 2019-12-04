@@ -62,7 +62,6 @@ public:
                  int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = true,
                  int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
                  int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
-    void create_health();
     virtual void pause() override;
     virtual void unpause() override;
     static void set_player(ShooterPlayer* shooter);

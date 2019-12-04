@@ -51,7 +51,6 @@ public:
                 int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
                 int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
     ~ShooterBase();
-    void create_health(int posx, int posy);
     Health* get_health_var();
     virtual void pause() = 0;
     virtual void unpause() = 0;

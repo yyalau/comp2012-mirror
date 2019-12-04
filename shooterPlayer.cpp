@@ -10,7 +10,7 @@ ShooterPlayer::ShooterPlayer(int hp, int dx, int dy, int shoot_freq,  bool shoot
     setPixmap(shooterimage.scaled(size_x, size_y, Qt::KeepAspectRatio));
     setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
-    setScale(1.5);
+    setScale(1.3);
 
     move_timer= new QTimer();
     connect(move_timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
@@ -78,13 +78,6 @@ void ShooterPlayer::focusOutEvent(QFocusEvent *event)
     scene()->setFocusItem(this);
 }
 
-
-void ShooterPlayer::create_health()
-{
-    ShooterBase::create_health(0,50);
-    health->setDefaultTextColor(Qt:: green);
-}
-
 void ShooterPlayer::pause()
 {
     move_timer->stop();
@@ -122,7 +115,6 @@ void ShooterPlayer::collision()
         return;
     }
 
-    //collision!! edit!!!!!! create template
     QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
 
     for(int i=0; i<colliding_items.size(); ++i){
@@ -147,7 +139,11 @@ void ShooterPlayer::collision()
             immune_counter = 1;
             return;
         }
-
+        else if(typeid(*(colliding_items[i]))==typeid (BulletPowerUp)){
+            REMOVE_ENTITY(colliding_items[i])
+            emit powerup(); //->emit powerup(rand%3)
+            return;
+        }
     }
 }
 
@@ -156,8 +152,7 @@ void ShooterPlayer::shoot()
     if (!is_shooting) return;
 
     BulletPlayer* bullet = new BulletPlayer(0,-20);
-    //bullet->setBrush(Qt::green);
-    bullet->setPos(x()+size_x/2, y()-size_y/2);
+    bullet->setPos(x()-size_x/6, y()-size_y);
     scene()->addItem(bullet);
 
 }

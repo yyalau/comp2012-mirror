@@ -17,6 +17,16 @@ BulletBase::~BulletBase()
     //delete coll_timer; //for safety can add "if not nullptr"
 }
 
+void BulletBase::pause()
+{
+    move_timer->stop();
+}
+
+void BulletBase::unpause()
+{
+    move_timer->start(move_freq);
+}
+
 void BulletBase::move()
 {
     //move the bullets

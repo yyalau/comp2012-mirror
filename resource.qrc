@@ -4,5 +4,6 @@
         <file>images/firebullet.png</file>
         <file>images/computer.png</file>
         <file>images/shooter.png</file>
+        <file>images/powerup.png</file>
     </qresource>
 </RCC>

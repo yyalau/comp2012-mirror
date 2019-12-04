@@ -11,7 +11,7 @@ BulletEnemy::BulletEnemy(int dx, int dy, BulletType bullet_type,
     setRotation(180);
     setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
-    setScale(1.2);
+    setScale(1);
 
     //coll_timer = new QTimer();
 
@@ -22,17 +22,17 @@ BulletEnemy::BulletEnemy(int dx, int dy, BulletType bullet_type,
     unpause();
 }
 
-void BulletEnemy::pause()
-{
-    move_timer->stop();
-    //coll_timer->stop();
-}
+//void BulletEnemy::pause()
+//{
+//    move_timer->stop();
+//    //coll_timer->stop();
+//}
 
-void BulletEnemy::unpause()
-{
-    move_timer->start(move_freq);
-    //coll_timer->start(coll_freq);
-}
+//void BulletEnemy::unpause()
+//{
+//    move_timer->start(move_freq);
+//    //coll_timer->start(coll_freq);
+//}
 
 void BulletEnemy::move()
 {

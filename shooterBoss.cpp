@@ -46,7 +46,6 @@ void ShooterBoss::move()
 
 void ShooterBoss::collision()
 {
-    //collision!! edit!! create template!!!
     QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
 
     for(int i=0; i<colliding_items.size(); ++i){

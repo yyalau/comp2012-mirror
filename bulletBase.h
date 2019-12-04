@@ -17,12 +17,11 @@
  *
  * PROTECTED DATA MEMBERS
  * @include dx, dy: velocity of bullet
- * @include size_x, size_y: bullet's hitbox size
  * @include move_freq: milliseconds between times move() is called
  * @include move_timer: QTimer for triggering move()
  *
  * PUBLIC FUNCTIONS
- * @include pause(), unpause(): pure virtual functions for stopping/restarting the timers
+ * @include pause(), unpause(): stopping/restarting the timers
  *
  * PUBLIC SLOTS
  * @include move(): virtual slot for updating the position of bullet, has out of bound handling
@@ -41,8 +40,8 @@ public:
     BulletBase(int dx = 0, int dy = 0, int size_x = BULLET_SIZE, int size_y = BULLET_SIZE,
                int move_freq = DEFAULT_FREQ/*, int coll_freq = DEFAULT_FREQ*/);
     ~BulletBase();
-    virtual void pause() = 0;
-    virtual void unpause() = 0;
+    virtual void pause();
+    virtual void unpause();
 
 public slots:
     virtual void move();

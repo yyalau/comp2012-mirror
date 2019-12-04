@@ -14,7 +14,7 @@
  * @include bullet_type: See enum above
  *
  * PUBLIC MEMBER FUNCTIONS
- * @include pause(), unpause(): override bulletBase's functions
+ * (@include pause(), unpause(): override bulletBase's functions)
  *
  * PUBLIC SLOTS
  * @include move(): overrides bulletBase's function to reimplement out-of-bound case
@@ -40,8 +40,8 @@ public:
     BulletEnemy(int dx = 0, int dy = 0, BulletType bullet_type = Normal,
                 int size_x = BULLET_SIZE, int size_y = BULLET_SIZE,
                 int move_freq = DEFAULT_FREQ/*, int coll_freq = DEFAULT_FREQ*/);
-    virtual void pause() override;
-    virtual void unpause() override;
+//    virtual void pause() override;
+//    virtual void unpause() override;
 
 public slots:
     virtual void move() override;

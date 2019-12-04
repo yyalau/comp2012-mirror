@@ -1,5 +1,4 @@
 #include "health.h"
-//#include "_setup.h"
 
 Health::Health(const QString& name, int max_health, QGraphicsItem *parent): name(name)
 {

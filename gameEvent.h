@@ -9,6 +9,7 @@
 #include "define.h"
 #include "bulletEnemy.h"
 #include "bulletPlayer.h"
+#include "bulletPowerUp.h"
 #include "shooterEnemy.h"
 #include "shooterPlayer.h"
 
@@ -21,13 +22,14 @@
  * @include shooter: Pointer to the player (for receiving signals)
  * @include event_timer: QTimer for triggering increment_time()
  * @include game_timer: Goes up by 1 every MIN_TIME ms
+ * @include display_popup(): displays a pop-up screen/ rect (when the pause_game()/ trigger_game_over() is called)
+ * @include clear_popup_screen(): removes the pop-up screen, and deletes it
  *
  * PUBLIC MEMBER FUNCTIONS:
  * @include get_time(): Returns the value of game_timer
- * @include display_gameover_scene(): //TODO, draw a game over screen?
- * @include draw_scene(): //TODO, draw a generic rectangle for dialogue?
  *
  * PUBLIC SLOTS:
+ * @include collision_powerup(): If the shooter collides with the BulletPowerUp, it gets certain health/ shooter improvements
  * @include increment_time(): Increase game_timer by 1 when triggered
  * @include trigger_event(): Trigger time-based game events, such as spawning enemies, when called
  * @include pause_game(), unpause_game(): Pause/Unpause the game, connect with signals sent by shooterPlayer
@@ -59,6 +61,7 @@ public:
     int get_time();
 
 public slots:
+    void collision_powerup();
     void increment_time();
     void trigger_event(int event_id);
     void pause_game();

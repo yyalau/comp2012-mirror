@@ -28,12 +28,6 @@ ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shoo
     unpause();
 }
 
-void ShooterEnemy::create_health()
-{
-    ShooterBase::create_health(0,0);
-    health->setDefaultTextColor(Qt:: blue);
-}
-
 void ShooterEnemy::pause()
 {
     move_timer->stop();

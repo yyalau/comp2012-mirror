@@ -20,9 +20,3 @@ Health* ShooterBase::get_health_var()
 {
     return health;
 }
-
-void ShooterBase::create_health(int posx, int posy)
-{
-     health->setPos(posx,posy);
-     scene()->addItem(health);
-}

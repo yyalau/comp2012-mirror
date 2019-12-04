@@ -19,8 +19,8 @@ _SetUp::_SetUp()
     GameView->setFixedSize(SCREEN_LENGTH+INFOBOX_LENGTH, SCREEN_HEIGHT); //set view and scene are of the same size
 
     //shooter
-    shooter= new ShooterPlayer(); //create a rect
-    GameScene->addItem(shooter); //put rect into the scene
+    shooter= new ShooterPlayer();
+    GameScene->addItem(shooter);
     shooter->setFlag(QGraphicsItem::ItemIsFocusable); // setfocus1
     shooter->setFocus(); //setfocus2
     shooter->setPos(400, 500);// set the initial position of the shooter
@@ -46,19 +46,6 @@ _SetUp::_SetUp()
     window->setLayout(layout);
     window->show();
 
-}
-
-_SetUp::~_SetUp()
-{
-    //delete shooter;
-    //delete gameEvent;
-    //delete infoBox;
-
-    //dont mess up the following order
-    //delete GameView;
-    //delete layout;
-    //delete window;
-    //delete GameScene;
 }
 
 

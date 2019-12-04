@@ -28,7 +28,6 @@
 class _SetUp{
 public:
     _SetUp();
-    ~_SetUp();
 
     QGraphicsScene* GameScene;
     QGraphicsView* GameView;

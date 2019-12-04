@@ -5,6 +5,7 @@
 #include <QKeyEvent>
 
 #include "shooterBase.h"
+#include "bulletPowerUp.h"
 
 /**
  * @brief The ShooterPlayer class
@@ -27,6 +28,7 @@
  * SIGNALS
  * @include pause_all(), unpause_all(): signals to send to the main game
  * @include player_dead(): signal triggered when health reaches 0
+ * @include powerup(): signal to send to gameEvent, indicating that the shooter hits Bullet_PowerUp
  *
  * PUBLIC SLOTS
  * @include move(): overrides shooterBase's function, prevents going out of bound
@@ -51,7 +53,6 @@ public:
                   int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false,
                   int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
                   int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
-    void create_health();
     virtual void pause() override;
     virtual void unpause() override;
     QPointF get_pos();
@@ -60,6 +61,7 @@ signals:
     void pause_all();
     void unpause_all();
     void player_dead();
+    void powerup();
 
 public slots:
     virtual void move() override;

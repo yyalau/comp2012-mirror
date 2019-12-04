@@ -8,6 +8,8 @@ GameEvent::GameEvent(QGraphicsScene* parentScene, ShooterPlayer* shooter) :
     connect(event_timer, SIGNAL(timeout()), this, SLOT(increment_time())); //connect the timer and time increase slot
     event_timer->start(MIN_FREQ);
 
+    connect(shooter, SIGNAL(powerup()), this, SLOT(collision_powerup()));
+
     connect(this, SIGNAL(time_reached(int)), this, SLOT(trigger_event(int))); //when time is reached, trigger game events
 
     //for pausing/unpausing the game
@@ -30,13 +32,21 @@ int GameEvent::get_time()
     return game_timer;
 }
 
+void GameEvent::collision_powerup()
+{
+    //TODO: create switch case
+    shooter->get_health_var()->increase_health();
+}
+
+
 void GameEvent::increment_time()
 {
     ++game_timer;
     //game_timer/50 = seconds that have passed in-game
     if ((game_timer % 200) == 0) //means every 4 seconds
     {
-        emit time_reached((game_timer/200) % 5);
+        emit time_reached((game_timer/200) % 6);
+        //emit time_reached(5);
     }
 }
 
@@ -83,6 +93,13 @@ void GameEvent::trigger_event(int event_id)
             parentScene->addItem(enemy);
             break;
         }
+        case 5:
+        {
+            BulletPowerUp* bullet_powerup=new BulletPowerUp(10,10);
+            bullet_powerup->setPos(rand()%SCREEN_LENGTH/2,0);
+            parentScene->addItem(bullet_powerup);
+            break;
+        }
         default:
             break;
         }
@@ -107,6 +124,7 @@ void GameEvent::pause_game()
     for(int i=0; i<scene_items.size(); ++i){
         if (try_pause<BulletEnemy>(scene_items[i])) continue;
         if (try_pause<BulletPlayer>(scene_items[i])) continue;
+        if (try_pause<BulletPowerUp>(scene_items[i])) continue;
         if (try_pause<ShooterEnemy>(scene_items[i])) continue;
         if (try_pause<ShooterPlayer>(scene_items[i])) continue;
     }
@@ -137,6 +155,7 @@ void GameEvent::unpause_game()
     for(int i=0; i<scene_items.size(); ++i){
         if (try_unpause<BulletEnemy>(scene_items[i])) continue;
         if (try_unpause<BulletPlayer>(scene_items[i])) continue;
+        if (try_unpause<BulletPowerUp>(scene_items[i])) continue;
         if (try_unpause<ShooterEnemy>(scene_items[i])) continue;
         if (try_unpause<ShooterPlayer>(scene_items[i])) continue;
     }
@@ -156,11 +175,11 @@ void GameEvent::display_popup(QString message, QColor color, double opacity, int
 {
     //popup a new scene
     popup_scene = new QGraphicsRectItem(x,y,width,height);
-    QBrush brush;
     popup_scene->setBrush(color);
     popup_scene->setOpacity(opacity);
     parentScene->addItem(popup_scene);
 
+    //show the message
     popup_text = new QGraphicsTextItem(message);
     QFont Font("Times", 16);
     popup_text->setFont(Font);
