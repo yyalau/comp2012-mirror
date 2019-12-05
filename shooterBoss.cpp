@@ -27,6 +27,7 @@ ShooterBoss::ShooterBoss(int hp, int dx, int dy, int shoot_freq, bool shoot,
 ShooterBoss::~ShooterBoss()
 {
     if (health_bar != nullptr) delete health_bar;
+    if (pattern_name != nullptr) delete pattern_name;
     //TODO: add delete for timers? i forgot if overriden destructor calls base destructor
 }
 
@@ -106,7 +107,20 @@ void ShooterBoss::move()
 
 void ShooterBoss::collision()
 {
-    if (phase == Dialogue) return;
+    if (phase == Dialogue)
+    {
+        if (pattern_name_counter > 0) //while the pattern name is active
+        {
+            ++pattern_name_counter;
+            if (pattern_name_counter == 50)
+            {
+                if (pattern_name != nullptr) delete pattern_name;
+                pattern_name_counter = 0;
+                boss_to_next_phase = true; //set flag to true for move() to switch to next phase
+            }
+        }
+        return;
+    }
     QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
 
     for(int i=0; i<colliding_items.size(); ++i){
@@ -127,8 +141,21 @@ void ShooterBoss::collision()
             //phase should be from -1 to 2
             if (health->get_health() == PHASE_HEALTH[phase+1]) // use <= if decrease_health is > 1
             {
+                switch (phase)
+                {
+                    case PhasePre1: //show Phase1's pattern name
+                        pattern_name = new PopUpDialogue(scene(), "IndexOutOfBoundException", PopUpDialogue::Dialogue);
+                        pattern_name_counter = 1;
+                        break;
+                    case PhasePre2: //show Phase2's pattern name
+                        break;
+                    case Phase2:    //show Phase3's pattern name
+                        break;
+                    default:
+                        break;
+                }
+
                 phase = Dialogue;
-                boss_to_next_phase = true;
                 return;
             }
 

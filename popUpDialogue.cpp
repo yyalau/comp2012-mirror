@@ -16,7 +16,7 @@ PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, QString message, PopU
             create_dialogue(message, Qt::gray, 0.5, 0, 0, SCREEN_LENGTH, SCREEN_HEIGHT);
             break;
         case Dialogue:
-            create_dialogue(message, Qt::gray, 0.5, 0, SCREEN_HEIGHT/3, SCREEN_LENGTH/3, SCREEN_HEIGHT);
+            create_dialogue(message, Qt::gray, 0.5, 0, SCREEN_HEIGHT/3, SCREEN_LENGTH, SCREEN_HEIGHT/3);
             break;
         case BossHealth:
             create_dialogue(message, Qt::red, 1, 0, SCREEN_HEIGHT-10, SCREEN_LENGTH, 10); //TODO: 10?

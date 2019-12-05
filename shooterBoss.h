@@ -18,6 +18,8 @@
  * @include PHASE_HEALTH: Health when the boss switches to next state. PHASE_HEALTH[X] -> go to state X
  * @include boss_to_next_phase: flag for allowing boss to switch from Dialogue to other phases
  * @include health_bar: PopUpDialogue for displaying the health bar
+ * @include pattern_name: PopUpDialogue for displaying pattern name at the beginning of phase
+ * @include pattern_name_counter: counter for displaying the pattern name 1 second
  *
  * PUBLIC MEMBER FUNCTIONS
  * @include show_health(): Show the boss's remaining health. ONLY CALL AFTER parent_scene->addItem()
@@ -54,6 +56,8 @@ private:
     const int PHASE_HEALTH[4] {850, 650, 500, 300};
     bool boss_to_next_phase {false};
     PopUpDialogue* health_bar;
+    PopUpDialogue* pattern_name;
+    int pattern_name_counter;
 
 public:
     ShooterBoss(int hp = BOSS_HP, int dx = 0, int dy = 0,
