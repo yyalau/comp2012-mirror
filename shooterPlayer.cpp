@@ -94,7 +94,8 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
 
         case(BulletPowerUp::PowerUpType::CoutTestEndl): //increase shooter strength
             qDebug()<<"increase shooter strength";
-            //TODO
+            powerup_shooter=true;
+            QTimer::singleShot(10000,this,SLOT(normal_shooter()));
             break;
 
         case(BulletPowerUp::PowerUpType::StackOverflow): //clear field
@@ -108,6 +109,8 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
             }
         }
             break;
+
+
          default: break;
     }
 }
@@ -179,4 +182,19 @@ void ShooterPlayer::shoot()
     bullet->setPos(x()-size_x/6, y()-size_y);
     scene()->addItem(bullet);
 
+    if (powerup_shooter==true){
+        BulletPlayer* bullet2 = new BulletPlayer(-10,-20);
+        bullet2->setPos(x()-size_x/6, y()-size_y);
+        scene()->addItem(bullet2);
+
+        BulletPlayer* bullet3 = new BulletPlayer(10,-20);
+        bullet3->setPos(x()-size_x/6, y()-size_y);
+        scene()->addItem(bullet3);
+    }
+
+}
+
+void ShooterPlayer::normal_shooter()
+{
+    powerup_shooter=false;
 }

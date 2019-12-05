@@ -86,7 +86,7 @@ void GameEvent::trigger_event(int event_id)
         }
         case 5:
         {
-            BulletPowerUp* bullet_powerup=new BulletPowerUp(10,10);
+            BulletPowerUp* bullet_powerup=new BulletPowerUp(rand()%10+1, rand()%10+1);
             bullet_powerup->setPos(rand()%SCREEN_LENGTH/2,0);
             parent_scene->addItem(bullet_powerup);
             break;
