@@ -98,7 +98,7 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
             break;
 
         case(BulletPowerUp::PowerUpType::StackOverflow): //clear field
-            qDebug()<<"clear field";
+            qDebug()<<"clear field";    //TODO: Put as separate function in gameEvent, in case we need field clear for restart?
         {   QList<QGraphicsItem*> scene_items = scene()->items();
 
             for(int i=0; i<scene_items.size(); i++){
@@ -175,8 +175,9 @@ void ShooterPlayer::shoot()
 {
     if (!is_shooting) return;
 
-    BulletPlayer* bullet = new BulletPlayer(0,-20);
-    bullet->setPos(x()-size_x/6, y()-size_y);
-    scene()->addItem(bullet);
+    //BulletPlayer* bullet = new BulletPlayer(0,-20);
+    //bullet->setPos(x()-size_x/6, y()-size_y);
+    //scene()->addItem(bullet);
+    shoot_bullet(new BulletPlayer(0, -20));
 
 }

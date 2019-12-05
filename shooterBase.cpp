@@ -35,3 +35,9 @@ void ShooterBase::unpause()
     shoot_timer->start(shoot_freq);
 }
 
+void ShooterBase::shoot_bullet(BulletBase *bullet)
+{
+    bullet->setPos(x()+size_x/2, y()+size_y/2);
+    scene()->addItem(bullet);
+}
+

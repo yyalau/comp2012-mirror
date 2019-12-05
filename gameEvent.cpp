@@ -34,10 +34,10 @@ void GameEvent::increment_time()
 {
     ++game_timer;
     //game_timer/50 = seconds that have passed in-game
-    if ((game_timer % 200) == 0) //means every 4 seconds
+    if ((game_timer /*% 200) == 0*/ == 100)) //means every 4 seconds
     {
-        emit time_reached((game_timer/200) % 6);
-        //emit time_reached(5);
+        //emit time_reached((game_timer/200) % 6);
+        emit time_reached(6);
     }
 }
 
@@ -91,6 +91,15 @@ void GameEvent::trigger_event(int event_id)
             parent_scene->addItem(bullet_powerup);
             break;
         }
+        case 6:
+        {
+            ShooterBoss* boss = new ShooterBoss();
+            boss->setPos(250, 0);
+            parent_scene->addItem(boss);
+            boss->show_health();
+            boss->start_bossfight();
+            break;
+        }
         default:
             break;
         }
@@ -118,6 +127,7 @@ void GameEvent::pause_game()
         if (try_pause<BulletPowerUp>(scene_items[i])) continue;
         if (try_pause<ShooterEnemy>(scene_items[i])) continue;
         if (try_pause<ShooterPlayer>(scene_items[i])) continue;
+        if (try_pause<ShooterBoss>(scene_items[i])) continue;
     }
     event_timer->stop();
 
@@ -152,6 +162,7 @@ void GameEvent::unpause_game()
         if (try_unpause<BulletPowerUp>(scene_items[i])) continue;
         if (try_unpause<ShooterEnemy>(scene_items[i])) continue;
         if (try_unpause<ShooterPlayer>(scene_items[i])) continue;
+        if (try_unpause<ShooterBoss>(scene_items[i])) continue;
     }
     event_timer->start(MIN_FREQ);
 }

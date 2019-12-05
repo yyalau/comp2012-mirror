@@ -12,6 +12,7 @@
 #include "bulletPowerUp.h"
 #include "shooterEnemy.h"
 #include "shooterPlayer.h"
+#include "shooterBoss.h"
 #include "popUpDialogue.h"
 
 /**

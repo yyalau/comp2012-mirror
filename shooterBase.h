@@ -23,6 +23,7 @@
  * @include move_freq, coll_freq, shoot_freq: milliseconds between times move(), collision(), shoot() are called
  * @include move_timer, coll_timer, shoot_timer: QTimer for triggering move(), collision(), shoot()
  * @include is_shooting: set to true if the entity will shoot bullet (called automatically)
+ * @include shoot_bullet(): convenient function for creating a bullet
  *
  * PUBLIC MEMBER FUNCTIONS
  * @include create_health(int, int): write entity's health on screen //TODO: remove? just need this for player
@@ -54,6 +55,7 @@ public:
     Health* get_health_var();
     void pause();
     void unpause();
+    void shoot_bullet(BulletBase* bullet);
 
 public slots:
     virtual void move() = 0;
