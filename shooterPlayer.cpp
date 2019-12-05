@@ -83,6 +83,35 @@ QPointF ShooterPlayer::get_pos()
     return pos();
 }
 
+void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
+{
+    switch(bullet->get_power_type()){
+
+        case(BulletPowerUp::PowerUpType::Breakpoint): //health increase
+            health->increase_health();
+            qDebug()<<"increase health";
+            break;
+
+        case(BulletPowerUp::PowerUpType::CoutTestEndl): //increase shooter strength
+            qDebug()<<"increase shooter strength";
+            //TODO
+            break;
+
+        case(BulletPowerUp::PowerUpType::StackOverflow): //clear field
+            qDebug()<<"clear field";
+        {   QList<QGraphicsItem*> scene_items = scene()->items();
+
+            for(int i=0; i<scene_items.size(); i++){
+                if (typeid(*(scene_items[i]))==typeid (BulletEnemy)||typeid(*(scene_items[i]))==typeid (ShooterEnemy))
+                    REMOVE_ENTITY(scene_items[i]);
+
+            }
+        }
+            break;
+         default: break;
+    }
+}
+
 void ShooterPlayer::move()
 {
     double new_x = x() + (INSCREEN_LEFT(pos().x()+dx) && INSCREEN_RIGHT(pos().x()+dx) ? dx : 0);
@@ -92,6 +121,21 @@ void ShooterPlayer::move()
 
 void ShooterPlayer::collision()
 {
+
+    QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
+
+    //handling powerup
+    for(int i=0; i<colliding_items.size(); i++){
+        if(typeid(*(colliding_items[i]))==typeid (BulletPowerUp)){
+
+            scene()->removeItem(colliding_items[i]);
+            BulletPowerUp* temp= dynamic_cast<BulletPowerUp*>(colliding_items[i]);
+            process_powerup(temp);
+            delete colliding_items[i];
+        }
+    }
+
+
     //immune handling. if immune_counter > 0, count up until 50 then set back to 0
     if (immune_counter > 0)
     {
@@ -101,12 +145,10 @@ void ShooterPlayer::collision()
         return;
     }
 
-    QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
-
     for(int i=0; i<colliding_items.size(); ++i){
         if (typeid(*(colliding_items[i]))==typeid (BulletEnemy))
         {
-            //delete the other bullet
+            //delete the enemies bullet
             REMOVE_ENTITY(colliding_items[i])
 
             //decrease own health
@@ -125,12 +167,8 @@ void ShooterPlayer::collision()
             immune_counter = 1;
             return;
         }
-        else if(typeid(*(colliding_items[i]))==typeid (BulletPowerUp)){
-            REMOVE_ENTITY(colliding_items[i])
-            emit powerup(); //->emit powerup(rand%3)
-            return;
-        }
     }
+
 }
 
 void ShooterPlayer::shoot()

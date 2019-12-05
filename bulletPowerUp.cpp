@@ -11,5 +11,28 @@ BulletPowerUp::BulletPowerUp(int dx, int dy, PowerUpType power_type, int size_x,
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.2);
 
+    int random_power= rand()%3;
+    //int random_power=1;
+    qDebug()<<"random_power: "<< random_power;
+
+    switch (random_power) {
+    case 0:
+        this->power_type= Breakpoint; //health increase
+    break;
+    case 1:
+        this->power_type = StackOverflow; //clear field
+    break;
+    case 2:
+        this->power_type = CoutTestEndl; //increase shooter strength
+    break;
+    default:
+            break;
+    }
+
     unpause();
+}
+
+BulletPowerUp::PowerUpType BulletPowerUp::get_power_type()
+{
+    return power_type;
 }

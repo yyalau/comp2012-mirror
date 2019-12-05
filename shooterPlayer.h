@@ -3,6 +3,8 @@
 
 #include <QPauseAnimation>
 #include <QKeyEvent>
+#include <QDebug>
+#include <QList>
 
 #include "shooterBase.h"
 #include "bulletPowerUp.h"
@@ -53,12 +55,12 @@ public:
                   int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
                   int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
     QPointF get_pos();
+    void process_powerup(BulletPowerUp* bullet);
 
 signals:
     void pause_all();
     void unpause_all();
     void player_dead();
-    void powerup();
 
 public slots:
     virtual void move() override;

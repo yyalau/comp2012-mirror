@@ -3,7 +3,7 @@
 InfoBox::InfoBox(Health* player_health) :
     player_health(player_health)
 {
-    setBrush(Qt::black);
+    setBrush(Qt::gray);
     setRect(0, 0, INFOBOX_LENGTH, SCREEN_HEIGHT);
 }
 

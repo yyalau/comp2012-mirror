@@ -56,7 +56,6 @@ public:
     int get_time();
 
 public slots:
-    void collision_powerup();
     void increment_time();
     void trigger_event(int event_id);
     void pause_game();

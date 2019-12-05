@@ -8,8 +8,6 @@ GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter) :
     connect(event_timer, SIGNAL(timeout()), this, SLOT(increment_time())); //connect the timer and time increase slot
     event_timer->start(MIN_FREQ);
 
-    connect(shooter, SIGNAL(powerup()), this, SLOT(collision_powerup()));
-
     connect(this, SIGNAL(time_reached(int)), this, SLOT(trigger_event(int))); //when time is reached, trigger game events
 
     //for pausing/unpausing the game
@@ -31,13 +29,6 @@ int GameEvent::get_time()
 {
     return game_timer;
 }
-
-void GameEvent::collision_powerup()
-{
-    //TODO: create switch case
-    shooter->get_health_var()->increase_health();
-}
-
 
 void GameEvent::increment_time()
 {
@@ -134,7 +125,7 @@ void GameEvent::pause_game()
     //TODO: make it more interesting
     if(!shooter->get_health_var()->is_dead())
     {
-        dialogue = new PopUpDialogue(parent_scene, "Press P to continue", PopUpDialogue::FullScreen);
+        dialogue = new PopUpDialogue(parent_scene, "\t Press P to continue", PopUpDialogue::FullScreen);
     }
 }
 
@@ -166,7 +157,6 @@ void GameEvent::unpause_game()
 }
 
 //gameover part
-
 void GameEvent::trigger_game_over()
 {
     pause_game(); //TODO: if we want to do like death animation or something, add it under here
