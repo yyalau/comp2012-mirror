@@ -87,28 +87,30 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
 {
     switch(bullet->get_power_type()){
 
-        case(BulletPowerUp::PowerUpType::Breakpoint): //health increase
+        case(BulletPowerUp::Breakpoint): //health increase
             health->increase_health();
             qDebug()<<"increase health";
             break;
 
-        case(BulletPowerUp::PowerUpType::CoutTestEndl): //increase shooter strength
+        case(BulletPowerUp::CoutTestEndl): //increase shooter strength
             qDebug()<<"increase shooter strength";
             powerup_shooter=true;
-            QTimer::singleShot(10000,this,SLOT(normal_shooter()));
+            QTimer::singleShot(10000, this, SLOT(reset_shooter()));
             break;
 
-        case(BulletPowerUp::PowerUpType::StackOverflow): //clear field
+        case(BulletPowerUp::StackOverflow): //clear field
             qDebug()<<"clear field";    //TODO: Put as separate function in gameEvent, in case we need field clear for restart?
-        {   QList<QGraphicsItem*> scene_items = scene()->items();
+        {
+            QList<QGraphicsItem*> scene_items = scene()->items();
 
-            for(int i=0; i<scene_items.size(); i++){
+            for(int i=0; i<scene_items.size(); i++)
+            {
                 if (typeid(*(scene_items[i]))==typeid (BulletEnemy)||typeid(*(scene_items[i]))==typeid (ShooterEnemy))
                     REMOVE_ENTITY(scene_items[i]);
 
             }
-        }
             break;
+        }
 
 
          default: break;
@@ -124,29 +126,9 @@ void ShooterPlayer::move()
 
 void ShooterPlayer::collision()
 {
+    if (immune) return;
 
     QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
-
-    //handling powerup
-    for(int i=0; i<colliding_items.size(); i++){
-        if(typeid(*(colliding_items[i]))==typeid (BulletPowerUp)){
-
-            scene()->removeItem(colliding_items[i]);
-            BulletPowerUp* temp= dynamic_cast<BulletPowerUp*>(colliding_items[i]);
-            process_powerup(temp);
-            delete colliding_items[i];
-        }
-    }
-
-
-    //immune handling. if immune_counter > 0, count up until 50 then set back to 0
-    if (immune_counter > 0)
-    {
-        ++immune_counter;
-        //TODO: do something with the sprite? blink?
-        if (immune_counter == 50) immune_counter = 0;
-        return;
-    }
 
     for(int i=0; i<colliding_items.size(); ++i){
         if (typeid(*(colliding_items[i]))==typeid (BulletEnemy))
@@ -156,19 +138,36 @@ void ShooterPlayer::collision()
 
             //decrease own health
             health->decrease_health();
-            if (health->is_dead()) emit player_dead();
-
-            immune_counter = 1;
-            return;
+            if (health->is_dead())
+            {
+                emit player_dead();
+                return;
+            }
+            else
+            {
+                immune = true;
+                QTimer::singleShot(1000, this, SLOT(reset_immunity()));
+            }
         }
         else if (typeid(*(colliding_items[i]))==typeid (ShooterEnemy))
         {
             //decrease own health
             health->decrease_health();
-            if (health->is_dead()) emit player_dead();
+            if (health->is_dead())
+            {
+                emit player_dead();
+                return;
+            }
+            else
+            {
+                immune = true;
+                QTimer::singleShot(1000, this, SLOT(reset_immunity()));
+            }
+        }
+        else if(typeid(*(colliding_items[i]))==typeid (BulletPowerUp)){
 
-            immune_counter = 1;
-            return;
+            process_powerup(dynamic_cast<BulletPowerUp*>(colliding_items[i]));
+            REMOVE_ENTITY(colliding_items[i])
         }
     }
 
@@ -178,24 +177,21 @@ void ShooterPlayer::shoot()
 {
     if (!is_shooting) return;
 
-    //BulletPlayer* bullet = new BulletPlayer(0,-20);
-    //bullet->setPos(x()-size_x/6, y()-size_y);
-    //scene()->addItem(bullet);
     shoot_bullet(new BulletPlayer(0, -20));
 
     if (powerup_shooter==true){
-        BulletPlayer* bullet2 = new BulletPlayer(-10,-20);
-        bullet2->setPos(x()-size_x/6, y()-size_y);
-        scene()->addItem(bullet2);
-
-        BulletPlayer* bullet3 = new BulletPlayer(10,-20);
-        bullet3->setPos(x()-size_x/6, y()-size_y);
-        scene()->addItem(bullet3);
+        shoot_bullet(new BulletPlayer(10, -20));
+        shoot_bullet(new BulletPlayer(-10, -20));
     }
 
 }
 
-void ShooterPlayer::normal_shooter()
+void ShooterPlayer::reset_shooter()
 {
     powerup_shooter=false;
+}
+
+void ShooterPlayer::reset_immunity()
+{
+    immune = false;
 }

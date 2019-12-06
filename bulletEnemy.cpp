@@ -24,8 +24,14 @@ void BulletEnemy::move()
         case Normal:
             break;
         case OutOfBound:
+        {
             //this type is only used for the boss. the following segment handles creating the pattern
             //TODO
+            if (!bounced && y() > 350)
+            {
+                bounced = true;
+                dx = -dx;
+            }
 
             //move the bullets
             setPos(x()+dx,y()+dy);
@@ -37,6 +43,7 @@ void BulletEnemy::move()
                 REMOVE_ENTITY(this)
             }
             return; //in other cases, move() using base class after the switch case statement
+        }
         case Falling:
             dy += 1;
             break;

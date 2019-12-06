@@ -15,7 +15,7 @@
  *
  * PRIVATE DATA MEMBERS
  * @include speed: player's moving speed
- * @include immune_counter: player is immune for 1 second (50 * MIN_FREQ) when hit
+ * @include immune: set to true if the player is immune (for 1 second after being hit)
  * @include powerup_shooter: return true if the shooter has been improved
  *
  * PRIVATE MEMBER FUNCTION RE-IMPLEMENTATIONS
@@ -36,7 +36,8 @@
  * @include move(): overrides shooterBase's function, prevents going out of bound
  * @include collision(): overrides shooterBase's function
  * @include shoot(): overrides shooterBase's function
- * @include normal_shooter(): sets powerup_shooter to false
+ * @include reset_shooter(): sets powerup_shooter to false after 10 seconds
+ * @include reset_immune(): reset immunity after 1 second
  */
 
 #define DEFAULT_SPEED 10
@@ -46,8 +47,8 @@ class ShooterPlayer: public ShooterBase{
 
 private:
     int speed {DEFAULT_SPEED};
-    int immune_counter {0};
-    bool powerup_shooter{false};
+    bool immune {false};
+    bool powerup_shooter {false};
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void focusOutEvent(QFocusEvent* event) override;
@@ -69,7 +70,8 @@ public slots:
     virtual void move() override;
     virtual void collision() override;
     virtual void shoot() override;
-    void normal_shooter();
+    void reset_shooter();
+    void reset_immunity();
 
 };
 

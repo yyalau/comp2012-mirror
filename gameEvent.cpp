@@ -94,10 +94,9 @@ void GameEvent::trigger_event(int event_id)
         case 6:
         {
             ShooterBoss* boss = new ShooterBoss();
-            boss->setPos(250, 0);
+            boss->setPos(250, -200);
             parent_scene->addItem(boss);
             boss->show_health();
-            boss->start_bossfight();
             break;
         }
         default:

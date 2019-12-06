@@ -126,11 +126,6 @@ void ShooterEnemy::shoot()
             break;
     }
 
-    //BulletEnemy* bullet = new BulletEnemy(bullet_dx, bullet_dy, bullet_type);
-    //bullet->setBrush(Qt::blue);
-    //bullet->setPos(x()+size_x/2, y()+size_y/2);
-    //scene()->addItem(bullet);
-
     shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
 
 }

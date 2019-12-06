@@ -33,6 +33,7 @@ public:
 
 private:
     BulletType bullet_type;
+    bool bounced {false};
 
 public:
     BulletEnemy(int dx = 0, int dy = 0, BulletType bullet_type = Normal,
