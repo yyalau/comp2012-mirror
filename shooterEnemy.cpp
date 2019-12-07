@@ -6,7 +6,7 @@ ShooterPlayer* ShooterEnemy::player = nullptr;
 ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,
                            int hp, int dx, int dy, int shoot_freq, bool shoot,
                            int size_x, int size_y, int move_freq, int coll_freq) :
-       ShooterBase("Enemy", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq),
+       ShooterBase("Enemy", hp, false, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq),
        pathing_type(pathing_type), shooting_type(shooting_type)
 {
     QPixmap enemyimage(":/image/images/computer.png");
@@ -63,8 +63,8 @@ void ShooterEnemy::move()
         break;
     }
 
-    //move
-
+    //show and move health
+    health->setPos(x()+size_x,y());
 
     //remove once its out of bound
     if (!(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
@@ -76,7 +76,6 @@ void ShooterEnemy::move()
 
 void ShooterEnemy::collision()
 {
-    //collision!! edit!! create template!!!
     QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
 
     for(int i=0; i<colliding_items.size(); ++i){

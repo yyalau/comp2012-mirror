@@ -26,9 +26,11 @@ class Health: public QGraphicsTextItem{
 private:
     int health;
     QString name;
+    bool show_name;
 
 public:
-    Health(const QString& name, int max_health, QGraphicsItem* parent=nullptr);
+    Health(const QString& name, int max_health, bool show_name=true, QGraphicsItem* parent=nullptr);
+    void set_text();
     int get_health();
     void increase_health();
     void decrease_health();

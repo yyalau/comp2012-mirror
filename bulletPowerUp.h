@@ -4,9 +4,10 @@
 #include <stdlib.h>
 
 #include "bulletBase.h"
+#include "bulletPlayer.h"
+#include "shooterPlayer.h"
 
 class BulletPowerUp: public BulletBase{
-
 public:
     enum PowerUpType
     {
@@ -23,7 +24,6 @@ public:
                   int size_x = BULLET_SIZE, int size_y = BULLET_SIZE,
                   int move_freq = DEFAULT_FREQ);
     PowerUpType get_power_type();
-public slots:
 };
 
 #endif // BULLETPOWERUP_H

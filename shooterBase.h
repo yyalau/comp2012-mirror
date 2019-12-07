@@ -48,7 +48,7 @@ protected:
     bool is_shooting;
 
 public:
-    ShooterBase(QString, int hp, int dx = 0, int dy = 0, int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false,
+    ShooterBase(QString, int hp, bool health_title, int dx = 0, int dy = 0, int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false,
                 int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
                 int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
     ~ShooterBase();

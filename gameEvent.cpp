@@ -34,10 +34,14 @@ void GameEvent::increment_time()
 {
     ++game_timer;
     //game_timer/50 = seconds that have passed in-game
-    if ((game_timer /*% 200) == 0*/ == 100)) //means every 4 seconds
+    if ((game_timer % 200) == 0) //means every 4 seconds
     {
-        //emit time_reached((game_timer/200) % 6);
-        emit time_reached(6);
+        emit time_reached((game_timer/200) % 5);
+        //emit time_reached(6);
+    }
+    if ((game_timer % 300)==0)
+    {
+        emit time_reached(5);
     }
 }
 
@@ -51,6 +55,7 @@ void GameEvent::trigger_event(int event_id)
             ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::Random, 2, 0, 3);
             enemy->setPos(400 + rand()%300, 0);
             parent_scene->addItem(enemy);
+            parent_scene->addItem(enemy->get_health_var());
             break;
         }
         case 1:
@@ -58,6 +63,7 @@ void GameEvent::trigger_event(int event_id)
             ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::AimAtPlayer, 3, 4, 0);
             enemy->setPos(0, 50);
             parent_scene->addItem(enemy);
+            parent_scene->addItem(enemy->get_health_var());
             break;
         }
         case 2:
@@ -65,6 +71,7 @@ void GameEvent::trigger_event(int event_id)
             ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::BorderBounce, ShooterEnemy::Random, 5, -10, 1);
             enemy->setPos(800-ENEMY_SIZE, 50);
             parent_scene->addItem(enemy);
+            parent_scene->addItem(enemy->get_health_var());
             break;
         }
         case 3:
@@ -72,9 +79,11 @@ void GameEvent::trigger_event(int event_id)
             ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::AimAtPlayer, 2, 0, 0, DEFAULT_SHOOT_FREQ*2);
             enemy->setPos(100, 100);
             parent_scene->addItem(enemy);
+            parent_scene->addItem(enemy->get_health_var());
             ShooterEnemy* enemy2 = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::AimAtPlayer, 2, 0, 0, DEFAULT_SHOOT_FREQ*2);
             enemy2->setPos(500, 100);
             parent_scene->addItem(enemy2);
+            parent_scene->addItem(enemy2->get_health_var());
             break;
         }
         case 4:
@@ -82,6 +91,7 @@ void GameEvent::trigger_event(int event_id)
             ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Circular, ShooterEnemy::Random, 5, 0, 0);
             //enemy->setPos(800-ENEMY_SIZE, 50);
             parent_scene->addItem(enemy);
+            parent_scene->addItem(enemy->get_health_var());
             break;
         }
         case 5:

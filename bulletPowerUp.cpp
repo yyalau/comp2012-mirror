@@ -12,8 +12,6 @@ BulletPowerUp::BulletPowerUp(int dx, int dy, PowerUpType power_type, int size_x,
     setScale(1.2);
 
     int random_power= rand()%3;
-    //int random_power=2;
-    qDebug()<<"random_power: "<< random_power;
 
     switch (random_power) {
     case 0:
@@ -36,3 +34,4 @@ BulletPowerUp::PowerUpType BulletPowerUp::get_power_type()
 {
     return power_type;
 }
+

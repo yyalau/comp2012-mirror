@@ -32,10 +32,10 @@ _SetUp::_SetUp()
     //------------------------------------------------InfoBoxSetting-------------------------------------------
 
     //add infoBox into the GameScene
-    infoBox = new InfoBox(shooter->get_health_var());
+    infoBox = new InfoBox(shooter);
     infoBox->setPos(SCREEN_LENGTH, 0);
     GameScene->addItem(infoBox);
-    infoBox->show_info();
+    infoBox->show_general_info();
 
     //Layout Setting
     layout = new QHBoxLayout();

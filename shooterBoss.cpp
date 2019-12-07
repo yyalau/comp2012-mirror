@@ -2,7 +2,7 @@
 
 ShooterBoss::ShooterBoss(int hp, int dx, int dy, int shoot_freq, bool shoot,
                          int size_x, int size_y, int move_freq, int coll_freq) :
-     ShooterBase("Boss", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq)
+     ShooterBase("Boss", hp, true, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq)
 {
     //TODO: use another sprite
     QPixmap enemyimage(":/image/images/computer.png");

@@ -4,7 +4,8 @@
 #include <QObject>
 #include <QGraphicsRectItem>
 #include <QGraphicsScene>
-#include <QTextEdit>
+#include <QGraphicsTextItem>
+#include <QTimer>
 
 #include "shooterPlayer.h"
 
@@ -13,10 +14,15 @@
  * Put a rectangle on the side with the player's health
  *
  * PRIVATE DATA MEMBERS
- * @include player_health: Pointer to player's health
+ * @include shooter: Pointer to player (to get health)
+ * @include powerup_text: stores the corresponding power up message
  *
  * PUBLIC MEMBER FUNCTIONS
- * @include show_info(): Call this upon initialization to show info
+ * @include show_general_info(): Call this upon initialization to show general info (eg. players health)
+ *
+ * PUBLIC SLOTS
+ * @include show_powerup_info(int event): sets and displays the powerup_text to scene
+ * @include clear_powerup_info(): clears the powerup_text
  */
 
 class InfoBox : public QObject, public QGraphicsRectItem
@@ -24,11 +30,16 @@ class InfoBox : public QObject, public QGraphicsRectItem
     Q_OBJECT
 
 private:
-    Health* player_health;
+    ShooterPlayer* shooter;
+    QGraphicsTextItem* powerup_text;
 
 public:
-    InfoBox(Health*);
-    void show_info();
+    InfoBox(ShooterPlayer*);
+    void show_general_info();
+
+public slots:
+    void show_powerup_info(int event);
+    void clear_powerup_info();
 
 };
 

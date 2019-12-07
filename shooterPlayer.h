@@ -26,6 +26,7 @@
  * PUBLIC MEMBER FUNCITONS
  * @include create_health(): write health
  * @include get_pos(): return the player's position
+ * @include process_powerup(BulletPowerUp*): handles power-up tasks when ShooterPlayer/BulletPlayer collided with BulletPowerUp
  *
  * SIGNALS
  * @include pause_all(), unpause_all(): signals to send to the main game
@@ -41,6 +42,7 @@
  */
 
 #define DEFAULT_SPEED 10
+class BulletPowerUp;
 
 class ShooterPlayer: public ShooterBase{
     Q_OBJECT
@@ -65,6 +67,7 @@ signals:
     void pause_all();
     void unpause_all();
     void player_dead();
+    void powerup_text(int type); //TODO: how to change to enum??
 
 public slots:
     virtual void move() override;
@@ -72,7 +75,6 @@ public slots:
     virtual void shoot() override;
     void reset_shooter();
     void reset_immunity();
-
 };
 
 #endif // SHOOTERPLAYER_H

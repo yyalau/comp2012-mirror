@@ -1,14 +1,24 @@
 #include "health.h"
 
-Health::Health(const QString& name, int max_health, QGraphicsItem *parent): name(name)
+Health::Health(const QString& name, int max_health, bool show_name, QGraphicsItem *parent):
+    name(name), show_name(show_name)
 {
     health = max_health;
 
-    setPlainText(QString(this->name)+QString(" Health: ")+ QString::number(health));
-    setDefaultTextColor(Qt::yellow);
+    set_text();
+    setDefaultTextColor(Qt::red);
     setFont(QFont("Times, 16"));
 
 }
+
+void Health::set_text()
+{
+    if (show_name)
+        setPlainText(QString(name)+QString(" Health: ")+ QString::number(health));
+    else
+        setPlainText(QString::number(health));
+}
+
 int Health::get_health()
 {
     return health;
@@ -17,13 +27,13 @@ int Health::get_health()
 void Health::increase_health()
 {
     ++health;
-    setPlainText(QString(name)+QString(" Health: ")+ QString::number(health));
+    set_text();
 }
 
 void Health::decrease_health()
 {
     if(health > 0) --health;
-    setPlainText(QString(name)+QString(" Health: ")+ QString::number(health));
+    set_text();
 }
 
 bool Health::is_dead()

@@ -4,7 +4,7 @@
 
 ShooterPlayer::ShooterPlayer(int hp, int dx, int dy, int shoot_freq,  bool shoot,
                              int size_x, int size_y, int move_freq, int coll_freq) :
-         ShooterBase("Player", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq)
+         ShooterBase("Player", hp, true, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq)
 {
     QPixmap shooterimage(":/image/images/shooter.png");
     setPixmap(shooterimage.scaled(size_x, size_y, Qt::KeepAspectRatio));
@@ -90,12 +90,7 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
         case(BulletPowerUp::Breakpoint): //health increase
             health->increase_health();
             qDebug()<<"increase health";
-            break;
-
-        case(BulletPowerUp::CoutTestEndl): //increase shooter strength
-            qDebug()<<"increase shooter strength";
-            powerup_shooter=true;
-            QTimer::singleShot(10000, this, SLOT(reset_shooter()));
+            emit powerup_text(0);
             break;
 
         case(BulletPowerUp::StackOverflow): //clear field
@@ -109,9 +104,16 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
                     REMOVE_ENTITY(scene_items[i]);
 
             }
+            emit powerup_text(1);
             break;
         }
 
+        case(BulletPowerUp::CoutTestEndl): //increase shooter strength
+            qDebug()<<"increase shooter strength";
+            powerup_shooter=true;
+            QTimer::singleShot(10000, this, SLOT(reset_shooter()));
+            emit powerup_text(2);
+            break;
 
          default: break;
     }
@@ -126,9 +128,17 @@ void ShooterPlayer::move()
 
 void ShooterPlayer::collision()
 {
-    if (immune) return;
-
     QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
+
+    //power up bullet should not be affected by immunity?
+    for (int i=0;i<colliding_items.size(); ++i ){
+    if(typeid(*(colliding_items[i]))==typeid (BulletPowerUp)){
+                process_powerup(dynamic_cast<BulletPowerUp*>(colliding_items[i]));
+                REMOVE_ENTITY(colliding_items[i])
+            }
+    }
+
+    if (immune) return;
 
     for(int i=0; i<colliding_items.size(); ++i){
         if (typeid(*(colliding_items[i]))==typeid (BulletEnemy))
@@ -164,13 +174,7 @@ void ShooterPlayer::collision()
                 QTimer::singleShot(1000, this, SLOT(reset_immunity()));
             }
         }
-        else if(typeid(*(colliding_items[i]))==typeid (BulletPowerUp)){
-
-            process_powerup(dynamic_cast<BulletPowerUp*>(colliding_items[i]));
-            REMOVE_ENTITY(colliding_items[i])
-        }
     }
-
 }
 
 void ShooterPlayer::shoot()
@@ -183,7 +187,6 @@ void ShooterPlayer::shoot()
         shoot_bullet(new BulletPlayer(10, -20));
         shoot_bullet(new BulletPlayer(-10, -20));
     }
-
 }
 
 void ShooterPlayer::reset_shooter()

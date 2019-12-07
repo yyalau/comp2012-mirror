@@ -1,5 +1,6 @@
 #include "bulletEnemy.h"
 #include "bulletPlayer.h"
+#include "bulletPowerUp.h"
 
 BulletPlayer::BulletPlayer(int dx, int dy, int size_x, int size_y, int move_freq):
     BulletBase(dx, dy, size_x, size_y, move_freq)
