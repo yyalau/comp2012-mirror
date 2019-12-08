@@ -49,6 +49,9 @@ void ShooterPlayer::keyPressEvent(QKeyEvent* event)
             emit (paused ? unpause_all() : pause_all());
             paused = !paused;
             break;
+        case Qt::Key_R:
+            emit clear_field(true);
+            break;
         default:
             break;
     }
@@ -90,33 +93,23 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
         case(BulletPowerUp::Breakpoint): //health increase
             health->increase_health();
             qDebug()<<"increase health";
-            emit powerup_text(0);
             break;
 
         case(BulletPowerUp::StackOverflow): //clear field
-            qDebug()<<"clear field";    //TODO: Put as separate function in gameEvent, in case we need field clear for restart?
-        {
-            QList<QGraphicsItem*> scene_items = scene()->items();
-
-            for(int i=0; i<scene_items.size(); i++)
-            {
-                if (typeid(*(scene_items[i]))==typeid (BulletEnemy)||typeid(*(scene_items[i]))==typeid (ShooterEnemy))
-                    REMOVE_ENTITY(scene_items[i]);
-
-            }
-            emit powerup_text(1);
+            qDebug()<<"clear field";
+            emit clear_field(false);
             break;
-        }
 
         case(BulletPowerUp::CoutTestEndl): //increase shooter strength
             qDebug()<<"increase shooter strength";
             powerup_shooter=true;
             QTimer::singleShot(10000, this, SLOT(reset_shooter()));
-            emit powerup_text(2);
             break;
 
          default: break;
     }
+
+    emit powerup_text(BulletPowerUp::PowerUpType (bullet->get_power_type()));
 }
 
 void ShooterPlayer::move()

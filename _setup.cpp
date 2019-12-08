@@ -45,7 +45,6 @@ _SetUp::_SetUp()
     window = new QWidget();
     window->setLayout(layout);
     window->show();
-
 }
 
 

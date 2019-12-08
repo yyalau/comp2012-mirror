@@ -32,6 +32,7 @@ class InfoBox : public QObject, public QGraphicsRectItem
 private:
     ShooterPlayer* shooter;
     QGraphicsTextItem* powerup_text;
+    QFont font {"Times", 12};
 
 public:
     InfoBox(ShooterPlayer*);

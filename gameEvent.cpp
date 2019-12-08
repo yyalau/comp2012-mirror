@@ -14,6 +14,9 @@ GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter) :
     connect(shooter, SIGNAL(pause_all()), this, SLOT(pause_game()));
     connect(shooter, SIGNAL(unpause_all()), this, SLOT(unpause_game()));
 
+    //powerup clearfield/ restart
+    connect(shooter, SIGNAL(clear_field(bool)), this, SLOT(trigger_clear_field(bool)));
+
     //for handling game over
     connect(shooter, SIGNAL(player_dead()), this, SLOT(trigger_game_over()));
 
@@ -39,7 +42,7 @@ void GameEvent::increment_time()
         emit time_reached((game_timer/200) % 5);
         //emit time_reached(6);
     }
-    if ((game_timer % 300)==0)
+    if (game_timer>5000 && (game_timer % 300)==0)
     {
         emit time_reached(5);
     }
@@ -174,6 +177,30 @@ void GameEvent::unpause_game()
         if (try_unpause<ShooterBoss>(scene_items[i])) continue;
     }
     event_timer->start(MIN_FREQ);
+}
+
+void GameEvent::trigger_clear_field(bool restart)
+{
+    if (restart)
+    {
+        game_timer=0;
+        shooter->get_health_var()->reset_health();
+    }
+
+    QList<QGraphicsItem*> scene_items = parent_scene->items();
+    for(int i=0; i<scene_items.size(); i++)
+    {
+        if (typeid(*(scene_items[i]))==typeid (BulletEnemy)||typeid(*(scene_items[i]))==typeid (ShooterEnemy))
+        {
+            parent_scene->removeItem(scene_items[i]);
+            delete scene_items[i];
+        }
+
+        if (restart&& typeid(*(scene_items[i]))==typeid (BulletPowerUp)){
+            parent_scene->removeItem(scene_items[i]);
+            delete scene_items[i];
+        }
+    }
 }
 
 //gameover part

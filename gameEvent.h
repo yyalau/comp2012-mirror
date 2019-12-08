@@ -33,6 +33,7 @@
  * @include increment_time(): Increase game_timer by 1 when triggered
  * @include trigger_event(): Trigger time-based game events, such as spawning enemies, when called
  * @include pause_game(), unpause_game(): Pause/Unpause the game, connect with signals sent by shooterPlayer
+ * @include trigger_clear_field(): delete all the enemies in the screen, connect with clear_field signal sent by shooterPlayer
  * @include trigger_game_over(): Start the game over sequence, connect with player_dead() signal sent by shooterPlayer
  *
  * SIGNALS:
@@ -61,6 +62,7 @@ public slots:
     void trigger_event(int event_id);
     void pause_game();
     void unpause_game();
+    void trigger_clear_field(bool restart);
     void trigger_game_over();
 
 signals:

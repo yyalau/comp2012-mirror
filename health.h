@@ -25,6 +25,7 @@ class Health: public QGraphicsTextItem{
 
 private:
     int health;
+    int max_health;
     QString name;
     bool show_name;
 
@@ -35,6 +36,7 @@ public:
     void increase_health();
     void decrease_health();
     bool is_dead();
+    void reset_health();
 };
 
 #endif // HEALTH_H

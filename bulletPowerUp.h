@@ -16,6 +16,7 @@ public:
         CoutTestEndl    //increase shooter strength
     };
 
+
 private:
     PowerUpType power_type;
 

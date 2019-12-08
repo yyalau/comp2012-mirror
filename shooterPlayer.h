@@ -31,7 +31,8 @@
  * SIGNALS
  * @include pause_all(), unpause_all(): signals to send to the main game
  * @include player_dead(): signal triggered when health reaches 0
- * @include powerup(): signal to send to gameEvent, indicating that the shooter hits Bullet_PowerUp
+ * @include powerup_text(int): signal to send to infoBox, to display the correct power-up message in infoBox
+ * @include clear_field(bool): signal triggered when player pressed 'R' key or hit BulletPowerUp with clear field function
  *
  * PUBLIC SLOTS
  * @include move(): overrides shooterBase's function, prevents going out of bound
@@ -67,7 +68,8 @@ signals:
     void pause_all();
     void unpause_all();
     void player_dead();
-    void powerup_text(int type); //TODO: how to change to enum??
+    void powerup_text(int type);
+    void clear_field(bool restart);
 
 public slots:
     virtual void move() override;
