@@ -6,9 +6,10 @@
   * TODO: change to const int and templates?
   */
 
-#define INFOBOX_LENGTH  300
-#define SCREEN_LENGTH   800
-#define SCREEN_HEIGHT   600
+#define INFOBOX_LENGTH      300
+#define GAMEAREA_LENGTH     800
+#define SCREEN_HEIGHT       600
+#define SCREEN_LENGTH       GAMEAREA_LENGTH+INFOBOX_LENGTH
 
 //for out of bound checking
 #define INSCREEN_LEFT(X)        (X) >= 0

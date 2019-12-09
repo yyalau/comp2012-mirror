@@ -20,15 +20,12 @@ ShooterPlayer::ShooterPlayer(int hp, int dx, int dy, int shoot_freq,  bool shoot
 
     shoot_timer= new QTimer();
     connect(shoot_timer, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
-
-    //start the timers
-    unpause();
 }
 
 
 void ShooterPlayer::keyPressEvent(QKeyEvent* event)
 {
-    static bool paused = false;
+    static bool paused = true;
     switch (event->key()) {
         case Qt::Key_Left:
             dx = -speed;

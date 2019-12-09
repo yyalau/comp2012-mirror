@@ -35,7 +35,8 @@ class PopUpDialogue : public QObject
 public:
     enum PopUpType
     {
-        FullScreen, //for pausing/game over screens
+        GameArea, //for pausing/game over screens, the dialogue covers 800*600
+        FullScreen, //the dialogue covers 1100*600
         Dialogue,   //for dialogue messages
         BossHealth  //for drawing boss's health bar
     };

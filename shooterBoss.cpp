@@ -66,7 +66,7 @@ void ShooterBoss::show_health()
     health_bar = new PopUpDialogue(scene(), "", PopUpDialogue::BossHealth);
 
     //for debug
-    health->setPos(SCREEN_LENGTH, 40);
+    health->setPos(GAMEAREA_LENGTH, 40);
     scene()->addItem(health);
     health->setDefaultTextColor(Qt::green);
 }
@@ -156,7 +156,7 @@ void ShooterBoss::collision()
 
             //TODO: change 1000 to max_hp
             //TODO: show health for individual phases?
-            health_bar->set_width(static_cast<int>(static_cast<double>(health->get_health())/1000 * SCREEN_LENGTH));
+            health_bar->set_width(static_cast<int>(static_cast<double>(health->get_health())/1000 * GAMEAREA_LENGTH));
 
             //TODO: do something when health reaches checkpoint, activate next phase
             if (phase == Phase3) continue;

@@ -25,7 +25,6 @@ SOURCES += \
     health.cpp \
     infoBox.cpp \
     main.cpp \
-    mainwindow.cpp \
     popUpDialogue.cpp \
     shooterBase.cpp \
     shooterBoss.cpp \
@@ -42,7 +41,6 @@ HEADERS += \
     gameEvent.h \
     health.h \
     infoBox.h \
-    mainwindow.h \
     popUpDialogue.h \
     shooterBase.h \
     shooterBoss.h \

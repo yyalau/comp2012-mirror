@@ -52,7 +52,7 @@ private:
     int game_timer {0};
 
 public:
-    GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter);
+    GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QString instructions);
     ~GameEvent();
 
     int get_time();

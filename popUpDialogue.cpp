@@ -12,14 +12,18 @@ PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, QString message, PopU
 {
     switch (popup_type)
     {
+        case GameArea:
+            create_dialogue(message, Qt::gray, 0.5, 0, 0, GAMEAREA_LENGTH, SCREEN_HEIGHT);
+            break;
         case FullScreen:
             create_dialogue(message, Qt::gray, 0.5, 0, 0, SCREEN_LENGTH, SCREEN_HEIGHT);
+            popup_text->setPos(100,100);
             break;
         case Dialogue:
-            create_dialogue(message, Qt::gray, 0.5, 0, SCREEN_HEIGHT/3, SCREEN_LENGTH, SCREEN_HEIGHT/3);
+            create_dialogue(message, Qt::gray, 0.5, 0, SCREEN_HEIGHT/3, GAMEAREA_LENGTH, SCREEN_HEIGHT/3);
             break;
         case BossHealth:
-            create_dialogue(message, Qt::red, 1, 0, SCREEN_HEIGHT-10, SCREEN_LENGTH, 10); //TODO: 10?
+            create_dialogue(message, Qt::red, 1, 0, SCREEN_HEIGHT-10, GAMEAREA_LENGTH, 10); //TODO: 10?
             break;
     }
 }

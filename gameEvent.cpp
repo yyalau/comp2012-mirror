@@ -1,14 +1,16 @@
 #include "gameEvent.h"
 
-GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter) :
+GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QString instructions) :
     parent_scene(parent_scene), shooter(shooter)
 {
 
     event_timer= new QTimer();
     connect(event_timer, SIGNAL(timeout()), this, SLOT(increment_time())); //connect the timer and time increase slot
-    event_timer->start(MIN_FREQ);
 
     connect(this, SIGNAL(time_reached(int)), this, SLOT(trigger_event(int))); //when time is reached, trigger game events
+
+    //start game dialogue
+    dialogue= new PopUpDialogue(parent_scene,instructions, PopUpDialogue::FullScreen);
 
     //for pausing/unpausing the game
     connect(shooter, SIGNAL(pause_all()), this, SLOT(pause_game()));
@@ -42,7 +44,7 @@ void GameEvent::increment_time()
         emit time_reached((game_timer/200) % 5);
         //emit time_reached(6);
     }
-    if (game_timer>5000 && (game_timer % 300)==0)
+    if (game_timer>1000 && (game_timer % 300)==0)
     {
         emit time_reached(5);
     }
@@ -100,7 +102,7 @@ void GameEvent::trigger_event(int event_id)
         case 5:
         {
             BulletPowerUp* bullet_powerup=new BulletPowerUp(rand()%10+1, rand()%10+1);
-            bullet_powerup->setPos(rand()%SCREEN_LENGTH/2,0);
+            bullet_powerup->setPos(rand()%GAMEAREA_LENGTH/2,0);
             parent_scene->addItem(bullet_powerup);
             break;
         }
@@ -147,7 +149,7 @@ void GameEvent::pause_game()
     //TODO: make it more interesting
     if(!shooter->get_health_var()->is_dead())
     {
-        dialogue = new PopUpDialogue(parent_scene, "\t Press P to continue", PopUpDialogue::FullScreen);
+        dialogue = new PopUpDialogue(parent_scene, "\t Press P to continue", PopUpDialogue::GameArea);
     }
 }
 
@@ -166,7 +168,7 @@ void GameEvent::unpause_game()
 {
     if (dialogue != nullptr) delete dialogue;
 
-    QList<QGraphicsItem*> scene_items = parent_scene->items(); //pause all items
+    QList<QGraphicsItem*> scene_items = parent_scene->items(); //unpause all items
 
     for(int i=0; i<scene_items.size(); ++i){
         if (try_unpause<BulletEnemy>(scene_items[i])) continue;
@@ -207,6 +209,6 @@ void GameEvent::trigger_clear_field(bool restart)
 void GameEvent::trigger_game_over()
 {
     pause_game(); //TODO: if we want to do like death animation or something, add it under here
-    dialogue = new PopUpDialogue(parent_scene, "\t YOU LOSE! RUNTIME ERROR!!", PopUpDialogue::FullScreen);
+    dialogue = new PopUpDialogue(parent_scene, "\t YOU LOSE! RUNTIME ERROR!!", PopUpDialogue::GameArea);
 }
 
