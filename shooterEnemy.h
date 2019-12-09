@@ -52,10 +52,9 @@ public:
         NoShooting,
         Forward,
         Triple,
-        Double
+        Double,
         Circle,             //Shoot bullets in every directions
         ExplodeOnDeath,     //For Boss's 3rd phase
-        NoShooting
         //TODO
     };
 

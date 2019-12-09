@@ -206,29 +206,28 @@ void ShooterEnemy::shoot()
         }
         case Forward:
         {
-            bullet_dx = 0;
-            bullet_dy = 10;
-            bullet_type = BulletEnemy::Normal;
-            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
+            int bullet_dx = 0;
+            int bullet_dy = 10;
+
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
             break;
         }
         case Triple:
         {
-            bullet_dx = 0;
-            bullet_dy = 10;
-            bullet_type = BulletEnemy::Normal;
-            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
-            shoot_bullet(new BulletEnemy(5, bullet_dy, bullet_type));
-            shoot_bullet(new BulletEnemy(-5, bullet_dy, bullet_type));
+            int bullet_dx = 0;
+            int bullet_dy = 10;
+
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
+            shoot_bullet(new BulletEnemy(5, bullet_dy, BulletEnemy::Normal));
+            shoot_bullet(new BulletEnemy(-5, bullet_dy, BulletEnemy::Normal));
             break;
         }
         case Double:
         {
-            bullet_dx = 5;
-            bullet_dy = 10;
-            bullet_type = BulletEnemy::Normal;
-            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
-            shoot_bullet(new BulletEnemy(-bullet_dx, bullet_dy, bullet_type));
+            int bullet_dx = 5;
+            int bullet_dy = 10;
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
+            shoot_bullet(new BulletEnemy(-bullet_dx, bullet_dy, BulletEnemy::Normal));
       
             break;
         }

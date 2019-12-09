@@ -51,6 +51,7 @@ void GameEvent::increment_time()
         case 33: time_reached(5); break;
         case 43: time_reached(6); break;
         case 53: time_reached(7); break;
+        case 63: time_reached(9); break;
 
         }
 
