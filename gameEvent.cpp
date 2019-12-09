@@ -10,7 +10,7 @@ GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QStri
     connect(this, SIGNAL(time_reached(int)), this, SLOT(trigger_event(int))); //when time is reached, trigger game events
 
     //start game dialogue
-    dialogue= new PopUpDialogue(parent_scene,instructions, PopUpDialogue::FullScreen);
+    dialogue = new PopUpDialogue(parent_scene, instructions, NO_DURATION, PopUpDialogue::FullScreen);
 
     //for pausing/unpausing the game
     connect(shooter, SIGNAL(pause_all()), this, SLOT(pause_game()));
@@ -39,15 +39,15 @@ void GameEvent::increment_time()
 {
     ++game_timer;
     //game_timer/50 = seconds that have passed in-game
-    if ((game_timer % 200) == 0) //means every 4 seconds
-    {
-        emit time_reached((game_timer/200) % 5);
-        //emit time_reached(6);
-    }
-    if (game_timer>1000 && (game_timer % 300)==0)
-    {
-        emit time_reached(5);
-    }
+    //if ((game_timer % 200) == 0) //means every 4 seconds
+    //{
+        //emit time_reached((game_timer/200) % 5);
+    //}
+    //if (game_timer>1000 && (game_timer % 300)==0)
+    //{
+        //emit time_reached(5);
+    //}
+    if (game_timer == 100) emit time_reached(6);
 }
 
 void GameEvent::trigger_event(int event_id)
@@ -55,6 +55,7 @@ void GameEvent::trigger_event(int event_id)
     switch (event_id)
     {
         //TODO: create macro or template for enemy creation
+        //if macro put it in define? shooterBoss also needs it
         case 0:
         {
             ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::Random, 2, 0, 3);
@@ -112,6 +113,8 @@ void GameEvent::trigger_event(int event_id)
             boss->setPos(250, -200);
             parent_scene->addItem(boss);
             boss->show_health();
+            //boss emits a signal at phase 3 to player
+            connect(boss, SIGNAL(start_phase3()), shooter, SLOT(begin_phase3()));
             break;
         }
         default:
@@ -149,7 +152,7 @@ void GameEvent::pause_game()
     //TODO: make it more interesting
     if(!shooter->get_health_var()->is_dead())
     {
-        dialogue = new PopUpDialogue(parent_scene, "\t Press P to continue", PopUpDialogue::GameArea);
+        dialogue = new PopUpDialogue(parent_scene, "\t Press P to continue", NO_DURATION, PopUpDialogue::GameArea);
     }
 }
 
@@ -183,10 +186,12 @@ void GameEvent::unpause_game()
 
 void GameEvent::trigger_clear_field(bool restart)
 {
+    //TODO: DELETE THE BOSS LMAO I FORGOT
     if (restart)
     {
         game_timer=0;
         shooter->get_health_var()->reset_health();
+        shooter->setPos(START_POS_X, START_POS_Y);
     }
 
     QList<QGraphicsItem*> scene_items = parent_scene->items();
@@ -209,6 +214,6 @@ void GameEvent::trigger_clear_field(bool restart)
 void GameEvent::trigger_game_over()
 {
     pause_game(); //TODO: if we want to do like death animation or something, add it under here
-    dialogue = new PopUpDialogue(parent_scene, "\t YOU LOSE! RUNTIME ERROR!!", PopUpDialogue::GameArea);
+    dialogue = new PopUpDialogue(parent_scene, "\t YOU LOSE! RUNTIME ERROR!!", NO_DURATION, PopUpDialogue::GameArea);
 }
 

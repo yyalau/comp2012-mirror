@@ -46,6 +46,8 @@ public:
     {
         Random,             //Bullet's dy = 10; dx = random from -20 to 20
         AimAtPlayer,        //Aimed at the player's position when shot
+        Circle,             //Shoot bullets in every directions
+        ExplodeOnDeath,     //For Boss's 3rd phase
         NoShooting
         //TODO
     };
@@ -54,6 +56,8 @@ private:
     EnemyPathingType pathing_type;
     EnemyShootingType shooting_type;
     static ShooterPlayer* player;
+    //"static" variables for each enemy movement
+    double circular_angle {0.0};
 
 public:
     ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,

@@ -23,7 +23,7 @@ _SetUp::_SetUp()
     GameScene->addItem(shooter);
     shooter->setFlag(QGraphicsItem::ItemIsFocusable); // setfocus1
     shooter->setFocus(); //setfocus2
-    shooter->setPos(400, 500);// set the initial position of the shooter
+    shooter->setPos(START_POS_X, START_POS_Y);// set the initial position of the shooter
     ShooterEnemy::set_player(shooter);
 
     //------------------------------------------------InfoBoxSetting-------------------------------------------
@@ -44,7 +44,7 @@ _SetUp::_SetUp()
     window->show();
 
     //set the instructions of the game
-    //should i move this to somewhere else?
+    //should i move this to somewhere else? (nah here is ok, it's for setup)
     QString instructions{
         "\t COMP2012H-ShootTheBugs \n\n"
         "Some instructions \n"

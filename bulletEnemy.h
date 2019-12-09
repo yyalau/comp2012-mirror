@@ -1,6 +1,8 @@
 #ifndef BULLETENEMY_H
 #define BULLETENEMY_H
 
+#include <cmath>
+
 #include "bulletBase.h"
 
 /**
@@ -24,16 +26,19 @@ class BulletEnemy:public BulletBase{
 public:
     enum BulletType {
         Normal,     //dx, dy are constant
-        OutOfBound, //ignores left, right boundaries
+        OutOfBound, //ignores left, right boundaries        //FOR BOSS PHASE 1
         Falling,    //dy increases with time
         Homing,     //always aim at the player (DOES NOT WORK CURRENTLY)
-        Explode     //when reaching the bottom, explodes into multiple Falling bullets
+        Explode     //when reaching the bottom, explodes into multiple Falling bullets      //FOR BOSS PHASE 3
         //TODO
     };
 
 private:
     BulletType bullet_type;
     bool bounced {false};
+    //"static" variable for bullet movement
+    int fall_counter{0};
+    const int FALL_COUNTER_MAX {3};
 
 public:
     BulletEnemy(int dx = 0, int dy = 0, BulletType bullet_type = Normal,

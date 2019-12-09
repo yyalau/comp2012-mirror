@@ -1,4 +1,5 @@
 #include "shooterBoss.h"
+#include "shooterEnemy.h"
 
 ShooterBoss::ShooterBoss(int hp, int dx, int dy, int shoot_freq, bool shoot,
                          int size_x, int size_y, int move_freq, int coll_freq) :
@@ -27,7 +28,6 @@ ShooterBoss::ShooterBoss(int hp, int dx, int dy, int shoot_freq, bool shoot,
 ShooterBoss::~ShooterBoss()
 {
     if (health_bar != nullptr) delete health_bar;
-    if (pattern_name != nullptr) delete pattern_name;
     //TODO: add delete for timers? i forgot if overriden destructor calls base destructor
 }
 
@@ -55,15 +55,18 @@ void ShooterBoss::set_phase(BossPhase phase)
         case PhasePre2:
             break;
         case Phase2:
+            set_shoot_freq(20*MIN_FREQ);
             break;
         case Phase3:
+            set_shoot_freq(40*MIN_FREQ);
+            emit start_phase3();
             break;
     }
 }
 
 void ShooterBoss::show_health()
 {
-    health_bar = new PopUpDialogue(scene(), "", PopUpDialogue::BossHealth);
+    health_bar = new PopUpDialogue(scene(), "", NO_DURATION, PopUpDialogue::BossHealth);
 
     //for debug
     health->setPos(GAMEAREA_LENGTH, 40);
@@ -83,7 +86,7 @@ void ShooterBoss::move()
     {
         case Entrance:
             setPos(x()+dx, y()+dy);
-            if (y() >= 0) set_phase(Dialogue);
+            if (y() >= 0) set_phase(PhasePre1);
             break;
         case Dialogue:
         {
@@ -125,11 +128,10 @@ void ShooterBoss::move()
             break;
         case PhasePre1:
         {
-            static int x_dir = 1;
             dy = 0;
-            dx = x_dir * 3;
-            if (x()+dx > 350) x_dir = -1;
-            else if (x()+dx < 150) x_dir = 1;
+            dx = pre1_x_dir * 3;
+            if (x()+dx > 350) pre1_x_dir = -1;
+            else if (x()+dx < 150) pre1_x_dir = 1;
             setPos(x()+dx, y());
             break;
         }
@@ -166,12 +168,19 @@ void ShooterBoss::collision()
                 switch (phase)
                 {
                     case PhasePre1: //show Phase1's pattern name
-                        pattern_name = new PopUpDialogue(scene(), "IndexOutOfBoundException", PopUpDialogue::Dialogue);
-                        QTimer::singleShot(1000, this, SLOT(remove_pattern_name()));
+                        new PopUpDialogue(scene(), "IndexOutOfBoundException", 1500, PopUpDialogue::Dialogue);
+                        QTimer::singleShot(2000, this, SLOT(enable_flag()));
+                        break;
+                    case Phase1:    //just enable flag after 1 second
+                        QTimer::singleShot(1000, this, SLOT(enable_flag()));
                         break;
                     case PhasePre2: //show Phase2's pattern name
+                        new PopUpDialogue(scene(), "ERROR: LEAK 108 DIRECT BYTES", 1500, PopUpDialogue::Dialogue);
+                        QTimer::singleShot(2000, this, SLOT(enable_flag()));
                         break;
                     case Phase2:    //show Phase3's pattern name
+                        new PopUpDialogue(scene(), "NullPointerException\nYou cannot move in this phase!", 2500, PopUpDialogue::Dialogue);
+                        QTimer::singleShot(3000, this, SLOT(enable_flag()));
                         break;
                     default:
                         break;
@@ -200,39 +209,52 @@ void ShooterBoss::shoot()
         {
             int bullet_dx = rand()%20 - rand()%20;
             int bullet_dy = 10;
-            BulletEnemy::BulletType bullet_type = BulletEnemy::Normal;
-            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
             break;
         }
         case Phase1:
         {
-            static double angle = 0;
-            static int dir = 1;
+            int bullet_dx = static_cast<int>(sin(phase1_angle)*12);
+            int bullet_dy = static_cast<int>(cos(phase1_angle)*12);
 
-            int bullet_dx = static_cast<int>(sin(angle)*12);
-            int bullet_dy = static_cast<int>(cos(angle)*12);
-            BulletEnemy::BulletType bullet_type = BulletEnemy::OutOfBound;
+            if (phase1_angle > 1.1) phase1_dir = -1;  //PI/2 = 1.57
+            else if (phase1_angle < 0.1) phase1_dir = 1;
+            phase1_angle += phase1_dir * 0.08;
 
-            if (angle > 1.1) dir = -1;  //PI/2 = 1.57
-            else if (angle < 0.1) dir = 1;
-            angle += dir * 0.08;
-
-            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
-            shoot_bullet(new BulletEnemy(-bullet_dx, bullet_dy, bullet_type));
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::OutOfBound));
+            shoot_bullet(new BulletEnemy(-bullet_dx, bullet_dy, BulletEnemy::OutOfBound));
             break;
         }
         case PhasePre2:
+        {
+            //TODO
             break;
+        }
         case Phase2:
+        {
+            int bullet_x = 100 + rand()%600;
+            BulletEnemy* bullet = new BulletEnemy(0, 3, BulletEnemy::Explode);
+            bullet->setPos(bullet_x, -20);
+            scene()->addItem(bullet);
             break;
+        }
         case Phase3:
+        {
+            int dummy_dir_x = (rand()%2) * 2 - 1; //1 or -1
+            int dummy_x = (dummy_dir_x == 1) ? 0 : GAMEAREA_LENGTH-ENEMY_SIZE;
+            int dummy_y = 200 + rand()%150;
+
+            ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::ExplodeOnDeath, 1, 7*dummy_dir_x, 0);
+            enemy->setPos(dummy_x, dummy_y);
+            scene()->addItem(enemy);
+            scene()->addItem(enemy->get_health_var());
             break;
+        }
     }
 
 }
 
-void ShooterBoss::remove_pattern_name()
+void ShooterBoss::enable_flag()
 {
-    delete pattern_name;
-    boss_to_next_phase = true; //set flag to true for move() to switch to next phase
+    boss_to_next_phase = true;
 }

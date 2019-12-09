@@ -55,11 +55,10 @@ void ShooterEnemy::move()
         case Circular:
             QPainterPath circularpath;
             circularpath.addEllipse(100,50,400,200);
-            static double i=0.0;
-            QPoint temp=circularpath.pointAtPercent(i).toPoint();
+            QPoint temp=circularpath.pointAtPercent(circular_angle).toPoint();
             setPos(temp);
-            i+=0.007;
-            if(i>1){i=0;}
+            circular_angle+=0.007;
+            if(circular_angle>1){circular_angle=0;}
         break;
     }
 
@@ -89,7 +88,20 @@ void ShooterEnemy::collision()
 
             //remove if dead
             if (health->is_dead()) {
+                if (shooting_type == ExplodeOnDeath)
+                {
+                    double x_diff = player->get_pos().x()-pos().x();
+                    double y_diff = player->get_pos().y()-pos().y();
+                    int bullet_dx = ((x_diff > 0) ? 1 : -1) *
+                            static_cast<int>(cos(atan(abs(y_diff/x_diff)))*20);
+                    int bullet_dy = ((y_diff > 0) ? 1 : -1) *
+                            static_cast<int>(sin(atan(abs(y_diff/x_diff)))*20);
+
+                    shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
+                }
+
                 REMOVE_ENTITY(this)
+
                 return;
             }
         }
@@ -100,31 +112,47 @@ void ShooterEnemy::shoot()
 {
     if (!is_shooting) return;
 
-    int bullet_dx, bullet_dy;
-    BulletEnemy::BulletType bullet_type;
-
     switch (shooting_type)
     {
         case Random:
-            bullet_dx = rand()%20 - rand()%20;
-            bullet_dy = 10;
-            bullet_type = BulletEnemy::OutOfBound;
+        {
+            int bullet_dx = rand()%20 - rand()%20;
+            int bullet_dy = 12;
+
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
             break;
+        }
         case AimAtPlayer:
         {
             double x_diff = player->get_pos().x()-pos().x();
             double y_diff = player->get_pos().y()-pos().y();
-            bullet_dx = ((x_diff > 0) ? 1 : -1) *
-                    static_cast<int>(cos(atan(abs(y_diff/x_diff)))*20);
-            bullet_dy = ((y_diff > 0) ? 1 : -1) *
-                    static_cast<int>(sin(atan(abs(y_diff/x_diff)))*20);
-            bullet_type = BulletEnemy::Normal;
+            int bullet_dx = ((x_diff > 0) ? 1 : -1) *
+                    static_cast<int>(cos(atan(abs(y_diff/x_diff)))*16);
+            int bullet_dy = ((y_diff > 0) ? 1 : -1) *
+                    static_cast<int>(sin(atan(abs(y_diff/x_diff)))*16);
+
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
             break;
         }
+        case Circle:
+        {
+            double angle = 0.0;
+            while (angle < 6.2831)
+            {
+                int bullet_dx = static_cast<int>(cos(angle)*8);
+                int bullet_dy = static_cast<int>(sin(angle)*8);
+
+                shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
+
+                angle += 0.5236;    //shoot in 12 directions
+            }
+            break;
+        }
+        case ExplodeOnDeath:    //this type does not shoot in boss's 3rd phase
+        case NoShooting:
+            break;
         default:
             break;
     }
-
-    shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
 
 }

@@ -5,7 +5,6 @@
 
 #include "bulletBase.h"
 #include "bulletPlayer.h"
-#include "shooterPlayer.h"
 
 class BulletPowerUp: public BulletBase{
 public:

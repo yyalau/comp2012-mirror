@@ -18,7 +18,6 @@
  * @include PHASE_HEALTH: Health when the boss switches to next state. PHASE_HEALTH[X] -> go to state X
  * @include boss_to_next_phase: flag for allowing boss to switch from Dialogue to other phases
  * @include health_bar: PopUpDialogue for displaying the health bar
- * @include pattern_name: PopUpDialogue for displaying pattern name at the beginning of phase
  * @include set_shoot_freq(): change the shooting frequency (for each pattern)
  * @include set_phase(): change to a certain phase. handles specific configuration when entering phase
  *
@@ -26,11 +25,14 @@
  * @include show_health(): Show the boss's remaining health. ONLY CALL AFTER parent_scene->addItem()
  * @include start_bossfight(): Call this after the intro dialogue finishes
  *
+ * SIGNALS
+ * @include start_phase3(): sent to the shooterPlayer
+ *
  * PUBLIC SLOTS
  * @include move(): overrides shooterBase's function, handles going out of bound
  * @include collision(): overrides shooterBase's function
  * @include shoot(): overrides shooterBase's function
- * @include remove_pattern_name(): remove the pattern_name dialogue after 1 second
+ * @include enable_flag(): set flag to true after the pattern name finishes showing
  */
 
 #define BOSS_HP 1000
@@ -59,9 +61,12 @@ private:
     const int PHASE_HEALTH[4] {850, 650, 500, 300};
     bool boss_to_next_phase {false};
     PopUpDialogue* health_bar;
-    PopUpDialogue* pattern_name;
     void set_shoot_freq(int shoot_freq);
     void set_phase(BossPhase phase);
+    //"static" variables for boss movement and shooting
+    int pre1_x_dir {1};
+    double phase1_angle {0.0};
+    double phase1_dir {1};
 
 public:
     ShooterBoss(int hp = BOSS_HP, int dx = 0, int dy = 1,
@@ -72,11 +77,14 @@ public:
     void show_health();
     void start_bossfight();
 
+signals:
+    void start_phase3();
+
 public slots:
     virtual void move() override;
     virtual void collision() override;
     virtual void shoot() override;
-    void remove_pattern_name();
+    void enable_flag();
 };
 
 #endif // SHOOTERBOSS_H

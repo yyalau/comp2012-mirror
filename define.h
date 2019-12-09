@@ -19,6 +19,10 @@
 #define INSCREEN_UP(Y)          (Y) >= 0
 #define INSCREEN_DOWN(Y)        (Y)+boundingRect().height() <= scene()->height()
 
+//player's starting position
+#define START_POS_X         400
+#define START_POS_Y         500
+
 //timer update duration (= 1000/frame per sec)
 //MIN_FREQ: ensures the slots are triggered in sync
 #define MIN_FREQ            20
