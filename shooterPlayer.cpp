@@ -8,7 +8,7 @@ ShooterPlayer::ShooterPlayer(int hp, int dx, int dy, int shoot_freq,  bool shoot
 {
     QPixmap shooterimage(":/image/images/shooter.png");
     setPixmap(shooterimage.scaled(size_x, size_y, Qt::KeepAspectRatio));
-    setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
+    setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.3);
 

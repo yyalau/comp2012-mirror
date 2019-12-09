@@ -25,6 +25,8 @@
  * @include event_timer: QTimer for triggering increment_time()
  * @include game_timer: Goes up by 1 every MIN_TIME ms
  *
+ * PRIVATE MEMBER FUNCTIONS:
+ * @include spawn_enemy: convenience function for spawning enemy
  * PUBLIC MEMBER FUNCTIONS:
  * @include get_time(): Returns the value of game_timer
  *
@@ -49,6 +51,7 @@ private:
     ShooterPlayer* shooter;
     QTimer* event_timer;
     int game_timer {0};
+    ShooterEnemy* spawn_enemy(ShooterEnemy::EnemyPathingType pathing_type, ShooterEnemy::EnemyShootingType shooting_type, int hp, int dx, int dy,int initX, int initY, int shoot_freq = 2*DEFAULT_SHOOT_FREQ);
 
 public:
     GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter);

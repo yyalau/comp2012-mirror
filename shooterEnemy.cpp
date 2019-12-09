@@ -11,10 +11,17 @@ ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shoo
 {
     QPixmap enemyimage(":/image/images/computer.png");
     setPixmap(enemyimage.scaled(size_x, size_y, Qt::KeepAspectRatio));
-    setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
+    setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.5);
 
+    cirPathCounter=0.00;
+
+    target_pos.setX(pos().toPoint().x());
+    target_pos.setY(pos().toPoint().y());
+
+    //if(pathing_type==Wave)
+      //  dy=1;
     move_timer= new QTimer();
     connect(move_timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
 
@@ -31,6 +38,16 @@ ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shoo
 void ShooterEnemy::set_player(ShooterPlayer* shooter)
 {
     player = shooter;
+}
+
+void ShooterEnemy::set_targetPos(int x, int y)
+{
+    target_pos.setX(x);
+    target_pos.setY(y);
+}
+
+void ShooterEnemy::set_pathing_type(EnemyPathingType pathingType){
+    pathing_type = pathingType;
 }
 
 void ShooterEnemy::move()
@@ -53,14 +70,66 @@ void ShooterEnemy::move()
             setPos(x()+dx,y()+dy);
         break;
         case Circular:
+          {
             QPainterPath circularpath;
-            circularpath.addEllipse(100,50,400,200);
-            static double i=0.0;
-            QPoint temp=circularpath.pointAtPercent(i).toPoint();
+            circularpath.addEllipse(100,50,600,200);
+
+            if(pos().toPoint().x()==699&&pos().toPoint().y()==157)
+                cirPathCounter=0.01;
+            else if(pos().toPoint().x()==254&&pos().toPoint().y()==237)
+                cirPathCounter=0.33;
+            else if(pos().toPoint().x()==238&&pos().toPoint().y()==66)
+            cirPathCounter=0.67;
+
+            cirPathCounter+=0.004;
+            if(cirPathCounter>1){cirPathCounter=0;}
+            QPoint temp=circularpath.pointAtPercent(cirPathCounter).toPoint();
             setPos(temp);
-            i+=0.007;
-            if(i>1){i=0;}
+
+          }
         break;
+        case GotoTarget:
+            {
+                int x_diff = target_pos.x() - pos().toPoint().x();
+                int y_diff = target_pos.y() - pos().toPoint().y();
+                if(abs(x_diff)>=10){
+                    dx = (x_diff>0?1:-1) * static_cast<int>(cos(atan(abs(y_diff/x_diff)))*5);
+                } else dx=0;
+                if(abs(y_diff)>10){
+                    dy = (y_diff>0?1:-1) * static_cast<int>(sin(atan(abs(y_diff/x_diff)))*5);
+                } else dy=0;
+                setPos(x()+dx,y()+dy);
+                break;
+            }
+        case LeaveScreen:
+          {
+                //if(x()>=400){dx=10;}
+                //else{dx=-10;}
+                 //is_shooting = false;
+                break;
+          }
+        case Wave:
+            {
+                QPainterPath test;
+                if(target_pos.x()<400){
+                    test.moveTo(target_pos);
+                    test.quadTo(target_pos.x()+133,target_pos.y()-100,target_pos.x()+266,target_pos.y());
+                    test.quadTo(target_pos.x()+399,target_pos.y()+100,target_pos.x()+532,target_pos.y());
+                    test.quadTo(target_pos.x()+660,target_pos.y()-100,target_pos.x()+750,target_pos.y());
+                }else{
+                    test.moveTo(target_pos);
+                    test.quadTo(target_pos.x()-133,target_pos.y()+100,target_pos.x()-266,target_pos.y());
+                    test.quadTo(target_pos.x()-399,target_pos.y()-100,target_pos.x()-532,target_pos.y());
+                    test.quadTo(target_pos.x()-660,target_pos.y()+100,target_pos.x()-750,target_pos.y());
+                }
+                cirPathCounter+=(dy/120.000);
+                if (cirPathCounter>=0.99){dy=-1;}
+                else if(cirPathCounter<=0.01){dy=1;}
+
+                setPos(test.pointAtPercent(cirPathCounter).toPoint().x(),test.pointAtPercent(cirPathCounter).toPoint().y());
+                break;
+
+            }
     }
 
     //show and move health
@@ -109,6 +178,7 @@ void ShooterEnemy::shoot()
             bullet_dx = rand()%20 - rand()%20;
             bullet_dy = 10;
             bullet_type = BulletEnemy::OutOfBound;
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
             break;
         case AimAtPlayer:
         {
@@ -119,12 +189,40 @@ void ShooterEnemy::shoot()
             bullet_dy = ((y_diff > 0) ? 1 : -1) *
                     static_cast<int>(sin(atan(abs(y_diff/x_diff)))*20);
             bullet_type = BulletEnemy::Normal;
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
+            break;
+        }
+        case Forward:
+        {
+            bullet_dx = 0;
+            bullet_dy = 10;
+            bullet_type = BulletEnemy::Normal;
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
+            break;
+        }
+        case Triple:
+        {
+            bullet_dx = 0;
+            bullet_dy = 10;
+            bullet_type = BulletEnemy::Normal;
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
+            shoot_bullet(new BulletEnemy(5, bullet_dy, bullet_type));
+            shoot_bullet(new BulletEnemy(-5, bullet_dy, bullet_type));
+            break;
+        }
+        case Double:
+        {
+            bullet_dx = 5;
+            bullet_dy = 10;
+            bullet_type = BulletEnemy::Normal;
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
+            shoot_bullet(new BulletEnemy(-bullet_dx, bullet_dy, bullet_type));
             break;
         }
         default:
             break;
     }
 
-    shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, bullet_type));
+
 
 }

@@ -38,7 +38,10 @@ public:
     {
         Linear,             //Move in straight line, disappears when out of bound
         BorderBounce,        //Move in straight line, reverse direction when hitting border
-        Circular
+        Circular,
+        GotoTarget,
+        LeaveScreen,
+        Wave
         //TODO
     };
 
@@ -46,7 +49,10 @@ public:
     {
         Random,             //Bullet's dy = 10; dx = random from -20 to 20
         AimAtPlayer,        //Aimed at the player's position when shot
-        NoShooting
+        NoShooting,
+        Forward,
+        Triple,
+        Double
         //TODO
     };
 
@@ -54,6 +60,8 @@ private:
     EnemyPathingType pathing_type;
     EnemyShootingType shooting_type;
     static ShooterPlayer* player;
+    QPoint target_pos;
+    double cirPathCounter;
 
 public:
     ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,
@@ -62,6 +70,8 @@ public:
                  int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
                  int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
     static void set_player(ShooterPlayer* shooter);
+    void set_targetPos(int x, int y);
+    void set_pathing_type(EnemyPathingType pathingType);
 
 public slots:
     virtual void move() override;
