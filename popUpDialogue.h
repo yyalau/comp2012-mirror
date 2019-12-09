@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
+#include <QTimer>
 
 #include "define.h"
 
@@ -21,12 +22,18 @@
  * @include message: Dialogue's message
  * @include color, opacity: Dialogue's color properties
  * @include x, y, width, height: Dialogue's position and size
- * @include create_dialogue(): For constructors' use
+ * @include duration: Time that the dialogue remains active
+ * @include create_dialogue(), set_duration(): For constructors' use
  *
  * PUBLIC MEMBER FUNCTIONS:
  * @include set_message(): Change the current message (for game dialogues)
  * @include set_width(): Change the popup box's width (for boss health)
+ *
+ * PUBLIC SLOTS:
+ * @include remove():
  */
+
+#define NO_DURATION 0
 
 class PopUpDialogue : public QObject
 {
@@ -35,7 +42,8 @@ class PopUpDialogue : public QObject
 public:
     enum PopUpType
     {
-        FullScreen, //for pausing/game over screens
+        GameArea, //for pausing/game over screens, the dialogue covers 800*600
+        FullScreen, //the dialogue covers 1100*600
         Dialogue,   //for dialogue messages
         BossHealth  //for drawing boss's health bar
     };
@@ -51,17 +59,22 @@ private:
     double opacity;
     int x, y;
     int width, height;
+    int duration;
 
     void create_dialogue(QString message, QColor color, double opacity,
                          int x, int y, int width, int height);
+    void set_duration(int duration);
 
 public:
-    PopUpDialogue(QGraphicsScene* parent_scene, QString message, QColor color, double opacity,
+    PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, QColor color, double opacity,
                   int x, int y, int width, int height);
-    PopUpDialogue(QGraphicsScene* parent_scene, QString message, PopUpType popup_type);
+    PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, PopUpType popup_type);
     ~PopUpDialogue();
     void set_message(QString message);
     void set_width(int width);
+
+public slots:
+    void remove();
 
 
 };

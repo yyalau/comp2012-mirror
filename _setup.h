@@ -36,6 +36,9 @@ public:
     InfoBox* infoBox;
     QHBoxLayout* layout;
     QWidget* window;
+
+signals:
+    void create_start_scene();
 };
 
 

@@ -1,27 +1,33 @@
 #include "popUpDialogue.h"
 
-PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, QString message, QColor color, double opacity,
+PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, QColor color, double opacity,
                              int x, int y, int width, int height):
     parent_scene(parent_scene)
 {
     create_dialogue(message, color, opacity, x, y, width, height);
+    set_duration(duration);
 }
 
-PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, QString message, PopUpType popup_type):
+PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, PopUpType popup_type):
     parent_scene(parent_scene), popup_type(popup_type)
 {
     switch (popup_type)
     {
+        case GameArea:
+            create_dialogue(message, Qt::gray, 0.5, 0, 0, GAMEAREA_LENGTH, SCREEN_HEIGHT);
+            break;
         case FullScreen:
             create_dialogue(message, Qt::gray, 0.5, 0, 0, SCREEN_LENGTH, SCREEN_HEIGHT);
+            popup_text->setPos(100,100);
             break;
         case Dialogue:
-            create_dialogue(message, Qt::gray, 0.5, 0, SCREEN_HEIGHT/3, SCREEN_LENGTH, SCREEN_HEIGHT/3);
+            create_dialogue(message, Qt::gray, 0.5, 0, SCREEN_HEIGHT/3, GAMEAREA_LENGTH, SCREEN_HEIGHT/3);
             break;
         case BossHealth:
-            create_dialogue(message, Qt::red, 1, 0, SCREEN_HEIGHT-10, SCREEN_LENGTH, 10); //TODO: 10?
+            create_dialogue(message, Qt::red, 1, 0, SCREEN_HEIGHT-10, GAMEAREA_LENGTH, 10); //TODO: 10?
             break;
     }
+    set_duration(duration);
 }
 
 void PopUpDialogue::create_dialogue(QString message, QColor color, double opacity, int x, int y, int width, int height)
@@ -50,6 +56,13 @@ void PopUpDialogue::create_dialogue(QString message, QColor color, double opacit
     parent_scene->addItem(popup_text);
 }
 
+void PopUpDialogue::set_duration(int duration)
+{
+    if (duration == NO_DURATION) return;
+    this->duration = duration;
+    QTimer::singleShot(duration, this, SLOT(remove()));
+}
+
 PopUpDialogue::~PopUpDialogue()
 {
     parent_scene->removeItem(popup_scene);
@@ -67,4 +80,9 @@ void PopUpDialogue::set_width(int width)
 {
     this->width = width;
     popup_scene->setRect(x,y,width,height);
+}
+
+void PopUpDialogue::remove()
+{
+    delete this;
 }

@@ -53,6 +53,9 @@ public:
         Forward,
         Triple,
         Double
+        Circle,             //Shoot bullets in every directions
+        ExplodeOnDeath,     //For Boss's 3rd phase
+        NoShooting
         //TODO
     };
 
@@ -62,6 +65,8 @@ private:
     static ShooterPlayer* player;
     QPoint target_pos;
     double cirPathCounter;
+    //"static" variables for each enemy movement
+    double circular_angle {0.0};
 
 public:
     ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,

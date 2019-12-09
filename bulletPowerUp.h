@@ -5,7 +5,6 @@
 
 #include "bulletBase.h"
 #include "bulletPlayer.h"
-#include "shooterPlayer.h"
 
 class BulletPowerUp: public BulletBase{
 public:
@@ -15,6 +14,7 @@ public:
         StackOverflow,  //clear field
         CoutTestEndl    //increase shooter strength
     };
+
 
 private:
     PowerUpType power_type;

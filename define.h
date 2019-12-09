@@ -6,9 +6,10 @@
   * TODO: change to const int and templates?
   */
 
-#define INFOBOX_LENGTH  300
-#define SCREEN_LENGTH   800
-#define SCREEN_HEIGHT   600
+#define INFOBOX_LENGTH      300
+#define GAMEAREA_LENGTH     800
+#define SCREEN_HEIGHT       600
+#define SCREEN_LENGTH       GAMEAREA_LENGTH+INFOBOX_LENGTH
 
 //for out of bound checking
 #define INSCREEN_LEFT(X)        (X) >= 0
@@ -17,6 +18,10 @@
 #define INSCREEN_RIGHT_OOB(X)   (X)+boundingRect().width() <= scene()->width()
 #define INSCREEN_UP(Y)          (Y) >= 0
 #define INSCREEN_DOWN(Y)        (Y)+boundingRect().height() <= scene()->height()
+
+//player's starting position
+#define START_POS_X         400
+#define START_POS_Y         500
 
 //timer update duration (= 1000/frame per sec)
 //MIN_FREQ: ensures the slots are triggered in sync
@@ -31,7 +36,7 @@
 #define PLAYER_SIZE 70
 
 //player and enemy's health
-#define DEFAULT_PLAYER_HP   100
+#define DEFAULT_PLAYER_HP   50
 #define DEFAULT_ENEMY_HP    3
 
 //for removing a bullet/enemy out of the screen (lmao can we do this?)

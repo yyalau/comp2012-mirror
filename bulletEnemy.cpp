@@ -22,6 +22,7 @@ void BulletEnemy::move()
     switch (bullet_type)
     {
         case Normal:
+            BulletBase::move();
             break;
         case OutOfBound:
         {
@@ -42,21 +43,52 @@ void BulletEnemy::move()
             {
                 REMOVE_ENTITY(this)
             }
-            return; //in other cases, move() using base class after the switch case statement
+            break;
         }
         case Falling:
-            dy += 1;
+            ++fall_counter;
+            if (fall_counter == FALL_COUNTER_MAX)
+            {
+                dy += 1;
+                fall_counter = 0;
+            }
+
+            BulletBase::move();
             break;
         case Explode:
+            if (INSCREEN_UP(pos().y())) //starts falling after reaching the screen
+            {
+                ++fall_counter;
+                if (fall_counter == FALL_COUNTER_MAX)
+                {
+                    dy += 1;
+                    fall_counter = 0;
+                }
+            }
+
+            setPos(x()+dx,y()+dy);
+
             if (!(INSCREEN_DOWN(pos().y()+dy)))
             {
-                //TODO: REMOVE_ENTITY, spawn a bunch of Falling bullets in different directions
+                double angle = 3.1415;
+                while (angle < 6.2832)
+                {
+                    int bullet_dx = static_cast<int>(cos(angle)*10);
+                    int bullet_dy = static_cast<int>(sin(angle)*10);
+
+                    BulletEnemy* small_bullet = new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Falling);
+                    small_bullet->setPos(x(), y());
+                    scene()->addItem(small_bullet);
+
+                    angle += 0.3927;    //shoot in 9 directions
+                }
+
+                REMOVE_ENTITY(this)
             }
             break;
         default:
             break;
     }
 
-    BulletBase::move();
 }
 

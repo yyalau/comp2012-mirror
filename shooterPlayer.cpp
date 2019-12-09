@@ -1,6 +1,9 @@
 #include "shooterPlayer.h"
 #include "shooterEnemy.h"
-#include "bulletEnemy.h"
+#include "shooterBoss.h"
+
+//static member declaration
+bool ShooterPlayer::paused = true;
 
 ShooterPlayer::ShooterPlayer(int hp, int dx, int dy, int shoot_freq,  bool shoot,
                              int size_x, int size_y, int move_freq, int coll_freq) :
@@ -21,14 +24,11 @@ ShooterPlayer::ShooterPlayer(int hp, int dx, int dy, int shoot_freq,  bool shoot
     shoot_timer= new QTimer();
     connect(shoot_timer, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
 
-    //start the timers
-    unpause();
 }
 
 
 void ShooterPlayer::keyPressEvent(QKeyEvent* event)
 {
-    static bool paused = false;
     switch (event->key()) {
         case Qt::Key_Left:
             dx = -speed;
@@ -48,6 +48,11 @@ void ShooterPlayer::keyPressEvent(QKeyEvent* event)
         case Qt::Key_P:
             emit (paused ? unpause_all() : pause_all());
             paused = !paused;
+            break;
+        case Qt::Key_R:
+            //only enable this at pause/gameover, also resets the player's position
+            if (!paused) break;
+            emit clear_field(true);
             break;
         default:
             break;
@@ -86,41 +91,50 @@ QPointF ShooterPlayer::get_pos()
 void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
 {
     switch(bullet->get_power_type()){
-
+        //TODO: dialogue (just call new PopUpDialogue and put the dialogue lifetime in)
         case(BulletPowerUp::Breakpoint): //health increase
             health->increase_health();
             qDebug()<<"increase health";
-            emit powerup_text(0);
             break;
 
         case(BulletPowerUp::StackOverflow): //clear field
-            qDebug()<<"clear field";    //TODO: Put as separate function in gameEvent, in case we need field clear for restart?
-        {
-            QList<QGraphicsItem*> scene_items = scene()->items();
-
-            for(int i=0; i<scene_items.size(); i++)
-            {
-                if (typeid(*(scene_items[i]))==typeid (BulletEnemy)||typeid(*(scene_items[i]))==typeid (ShooterEnemy))
-                    REMOVE_ENTITY(scene_items[i]);
-
-            }
-            emit powerup_text(1);
+            qDebug()<<"clear field";
+            emit clear_field(false);
             break;
-        }
 
         case(BulletPowerUp::CoutTestEndl): //increase shooter strength
             qDebug()<<"increase shooter strength";
             powerup_shooter=true;
             QTimer::singleShot(10000, this, SLOT(reset_shooter()));
-            emit powerup_text(2);
             break;
 
          default: break;
     }
+
+    emit powerup_text(BulletPowerUp::PowerUpType (bullet->get_power_type()));
 }
 
 void ShooterPlayer::move()
 {
+    if (nullptr_phase)   //move to initial position
+    {
+        double x_diff = START_POS_X - pos().x();
+        double y_diff = START_POS_Y - pos().y();
+        if (x_diff*x_diff + y_diff*y_diff < 25)
+        {
+            dx = dy = 0;
+            setPos(START_POS_X, START_POS_Y);
+        }
+        else
+        {
+            dx = ((x_diff > 0) ? 1 : -1) *
+                    static_cast<int>(cos(atan(abs(y_diff/x_diff)))*5);
+            dy = ((y_diff > 0) ? 1 : -1) *
+                    static_cast<int>(sin(atan(abs(y_diff/x_diff)))*5);
+            setPos(x()+dx, y()+dy);
+        }
+        return;
+    }
     double new_x = x() + (INSCREEN_LEFT(pos().x()+dx) && INSCREEN_RIGHT(pos().x()+dx) ? dx : 0);
     double new_y = y() + (INSCREEN_UP(pos().y()+dy) && INSCREEN_DOWN(pos().y()+dy) ? dy : 0);
     setPos(new_x, new_y);
@@ -159,7 +173,7 @@ void ShooterPlayer::collision()
                 QTimer::singleShot(1000, this, SLOT(reset_immunity()));
             }
         }
-        else if (typeid(*(colliding_items[i]))==typeid (ShooterEnemy))
+        else if (typeid(*(colliding_items[i]))==typeid (ShooterEnemy) || typeid(*(colliding_items[i]))==typeid (ShooterBoss))
         {
             //decrease own health
             health->decrease_health();
@@ -197,4 +211,9 @@ void ShooterPlayer::reset_shooter()
 void ShooterPlayer::reset_immunity()
 {
     immune = false;
+}
+
+void ShooterPlayer::begin_phase3()
+{
+    nullptr_phase = true;
 }

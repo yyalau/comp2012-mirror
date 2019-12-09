@@ -1,18 +1,23 @@
 #include "gameEvent.h"
 
-GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter) :
+GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QString instructions) :
     parent_scene(parent_scene), shooter(shooter)
 {
 
     event_timer= new QTimer();
     connect(event_timer, SIGNAL(timeout()), this, SLOT(increment_time())); //connect the timer and time increase slot
-    event_timer->start(MIN_FREQ);
 
     connect(this, SIGNAL(time_reached(int)), this, SLOT(trigger_event(int))); //when time is reached, trigger game events
+
+    //start game dialogue
+    dialogue = new PopUpDialogue(parent_scene, instructions, NO_DURATION, PopUpDialogue::FullScreen);
 
     //for pausing/unpausing the game
     connect(shooter, SIGNAL(pause_all()), this, SLOT(pause_game()));
     connect(shooter, SIGNAL(unpause_all()), this, SLOT(unpause_game()));
+
+    //powerup clearfield/ restart
+    connect(shooter, SIGNAL(clear_field(bool)), this, SLOT(trigger_clear_field(bool)));
 
     //for handling game over
     connect(shooter, SIGNAL(player_dead()), this, SLOT(trigger_game_over()));
@@ -63,6 +68,7 @@ void GameEvent::trigger_event(int event_id)
     switch (event_id)
     {
         //TODO: create macro or template for enemy creation
+        //if macro put it in define? shooterBoss also needs it
         case 0:
         {
             QList<QGraphicsItem*> itemsInScreen=parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder);
@@ -201,7 +207,7 @@ void GameEvent::trigger_event(int event_id)
         case 8:
         {
             BulletPowerUp* bullet_powerup=new BulletPowerUp(rand()%10+1, rand()%10+1);
-            bullet_powerup->setPos(rand()%SCREEN_LENGTH/2,0);
+            bullet_powerup->setPos(rand()%GAMEAREA_LENGTH/2,0);
             parent_scene->addItem(bullet_powerup);
             break;
         }
@@ -211,6 +217,8 @@ void GameEvent::trigger_event(int event_id)
             boss->setPos(250, -200);
             parent_scene->addItem(boss);
             boss->show_health();
+            //boss emits a signal at phase 3 to player
+            connect(boss, SIGNAL(start_phase3()), shooter, SLOT(begin_phase3()));
             break;
         }
         default:
@@ -256,7 +264,7 @@ void GameEvent::pause_game()
     //TODO: make it more interesting
     if(!shooter->get_health_var()->is_dead())
     {
-        dialogue = new PopUpDialogue(parent_scene, "\t Press P to continue", PopUpDialogue::FullScreen);
+        dialogue = new PopUpDialogue(parent_scene, "\t Press P to continue", NO_DURATION, PopUpDialogue::GameArea);
     }
 }
 
@@ -275,7 +283,7 @@ void GameEvent::unpause_game()
 {
     if (dialogue != nullptr) delete dialogue;
 
-    QList<QGraphicsItem*> scene_items = parent_scene->items(); //pause all items
+    QList<QGraphicsItem*> scene_items = parent_scene->items(); //unpause all items
 
     for(int i=0; i<scene_items.size(); ++i){
         if (try_unpause<BulletEnemy>(scene_items[i])) continue;
@@ -288,10 +296,36 @@ void GameEvent::unpause_game()
     event_timer->start(MIN_FREQ);
 }
 
+void GameEvent::trigger_clear_field(bool restart)
+{
+    //TODO: DELETE THE BOSS LMAO I FORGOT
+    if (restart)
+    {
+        game_timer=0;
+        shooter->get_health_var()->reset_health();
+        shooter->setPos(START_POS_X, START_POS_Y);
+    }
+
+    QList<QGraphicsItem*> scene_items = parent_scene->items();
+    for(int i=0; i<scene_items.size(); i++)
+    {
+        if (typeid(*(scene_items[i]))==typeid (BulletEnemy)||typeid(*(scene_items[i]))==typeid (ShooterEnemy))
+        {
+            parent_scene->removeItem(scene_items[i]);
+            delete scene_items[i];
+        }
+
+        if (restart&& typeid(*(scene_items[i]))==typeid (BulletPowerUp)){
+            parent_scene->removeItem(scene_items[i]);
+            delete scene_items[i];
+        }
+    }
+}
+
 //gameover part
 void GameEvent::trigger_game_over()
 {
     pause_game(); //TODO: if we want to do like death animation or something, add it under here
-    dialogue = new PopUpDialogue(parent_scene, "\t YOU LOSE! RUNTIME ERROR!!", PopUpDialogue::FullScreen);
+    dialogue = new PopUpDialogue(parent_scene, "\t YOU LOSE! RUNTIME ERROR!!", NO_DURATION, PopUpDialogue::GameArea);
 }
 
