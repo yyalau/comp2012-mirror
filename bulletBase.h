@@ -5,11 +5,11 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
-#include <QTimer>
 #include <QDebug>
 #include <QList>
 
 #include "define.h"
+#include "customTimer.h"
 
 /**
  * @brief The BulletBase class
@@ -18,7 +18,7 @@
  * PROTECTED DATA MEMBERS
  * @include dx, dy: velocity of bullet
  * @include move_freq: milliseconds between times move() is called
- * @include move_timer: QTimer for triggering move()
+ * @include move_timer: CustomTimer for triggering move()
  *
  * PUBLIC FUNCTIONS
  * @include pause(), unpause(): stopping/restarting the timers
@@ -33,7 +33,7 @@ protected:
     int dx, dy;
     int size_x, size_y;
     int move_freq;
-    QTimer *move_timer;
+    CustomTimer *move_timer;
 
 public:
     BulletBase(int dx = 0, int dy = 0, int size_x = BULLET_SIZE, int size_y = BULLET_SIZE,

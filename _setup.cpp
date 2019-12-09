@@ -25,6 +25,7 @@ _SetUp::_SetUp()
     shooter->setFocus(); //setfocus2
     shooter->setPos(START_POS_X, START_POS_Y);// set the initial position of the shooter
     ShooterEnemy::set_player(shooter);
+    ShooterBoss::set_player(shooter);
 
     //------------------------------------------------InfoBoxSetting-------------------------------------------
 

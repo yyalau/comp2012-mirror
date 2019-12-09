@@ -21,7 +21,6 @@
  * @include player: Pointer to the player. Use set_player() when initializing the player in SetUp
  *
  * PUBLIC MEMBER FUNCTIONS
- * @include create_health(): write health //TODO: remove?
  * @include set_player(): Set the shooter to point to the player
  *
  * PUBLIC SLOTS
@@ -62,9 +61,9 @@ private:
     EnemyPathingType pathing_type;
     EnemyShootingType shooting_type;
     static ShooterPlayer* player;
+
     QPoint target_pos;
     double cirPathCounter;
-    //"static" variables for each enemy movement
     double circular_angle {0.0};
 
 public:

@@ -4,9 +4,9 @@
 #include <QObject>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
-#include <QTimer>
 
 #include "define.h"
+#include "customTimer.h"
 
 /**
  * @brief The PopUpDialogue class
@@ -18,6 +18,7 @@
  *
  * PRIVATE DATA MEMBERS:
  * @include parent_scene, popup_scene, popup_text: Handles creating the popup box
+ * @include popup_timer: Keep track of time that popup dialogue is active
  * @include popup_type: See enum above
  * @include message: Dialogue's message
  * @include color, opacity: Dialogue's color properties
@@ -26,6 +27,7 @@
  * @include create_dialogue(), set_duration(): For constructors' use
  *
  * PUBLIC MEMBER FUNCTIONS:
+ * @include pause(), unpause(): Pause/Unpause the popup_timer
  * @include set_message(): Change the current message (for game dialogues)
  * @include set_width(): Change the popup box's width (for boss health)
  *
@@ -53,6 +55,7 @@ private:
     QGraphicsRectItem* popup_scene;
     QGraphicsTextItem* popup_text;
 
+    CustomTimer* popup_timer {nullptr};
     PopUpType popup_type;
     QString message;
     QColor color;
@@ -70,6 +73,8 @@ public:
                   int x, int y, int width, int height);
     PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, PopUpType popup_type);
     ~PopUpDialogue();
+    void pause();
+    void unpause();
     void set_message(QString message);
     void set_width(int width);
 

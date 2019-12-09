@@ -1,40 +1,44 @@
 #include "shooterBoss.h"
 #include "shooterEnemy.h"
 
+//static member declaration
+ShooterPlayer* ShooterBoss::player = nullptr;
+
 ShooterBoss::ShooterBoss(int hp, int dx, int dy, int shoot_freq, bool shoot,
                          int size_x, int size_y, int move_freq, int coll_freq) :
      ShooterBase("Boss", hp, true, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq)
 {
     //TODO: use another sprite
     QPixmap enemyimage(":/image/images/computer.png");
-    setPixmap(enemyimage.scaled(size_x, size_y, Qt::KeepAspectRatio));
-    setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
+    setPixmap(enemyimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
+    setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.5);
 
-    move_timer= new QTimer();
-    connect(move_timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
+    move_timer= new CustomTimer(move_freq, false, this, SLOT(move()));
+    //connect the timer and move slot
 
-    coll_timer= new QTimer();
-    connect(coll_timer, SIGNAL(timeout()), this, SLOT(collision())); //connect the timer and collision slot
+    coll_timer= new CustomTimer(coll_freq, false, this, SLOT(collision()));
+    //connect the timer and collision slot
 
-    shoot_timer= new QTimer();
-    connect(shoot_timer, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
+    shoot_timer= new CustomTimer(shoot_freq, false, this, SLOT(shoot()));
+    //connect the timer and bullet slot
 
-    //start the timers
-    unpause();
+    flag_timer = new CustomTimer();
 }
 
 ShooterBoss::~ShooterBoss()
 {
+    //base destructor should be automatically called
     if (health_bar != nullptr) delete health_bar;
-    //TODO: add delete for timers? i forgot if overriden destructor calls base destructor
+    delete flag_timer;
 }
+
 
 inline void ShooterBoss::set_shoot_freq(int shoot_freq)
 {
     this->shoot_freq= shoot_freq;
-    shoot_timer->start(shoot_freq);
+    shoot_timer->set_interval(shoot_freq);
 }
 
 void ShooterBoss::set_phase(BossPhase phase)
@@ -50,9 +54,10 @@ void ShooterBoss::set_phase(BossPhase phase)
             set_shoot_freq(4*MIN_FREQ);
             break;
         case Phase1:
-            set_shoot_freq(12*MIN_FREQ);
+            set_shoot_freq(15*MIN_FREQ);
             break;
         case PhasePre2:
+            set_shoot_freq(2*MIN_FREQ);
             break;
         case Phase2:
             set_shoot_freq(20*MIN_FREQ);
@@ -62,6 +67,23 @@ void ShooterBoss::set_phase(BossPhase phase)
             emit start_phase3();
             break;
     }
+}
+
+void ShooterBoss::set_player(ShooterPlayer* shooter)
+{
+    player = shooter;
+}
+
+void ShooterBoss::pause()
+{
+    ShooterBase::pause();
+    flag_timer->pause();
+}
+
+void ShooterBoss::unpause()
+{
+    ShooterBase::unpause();
+    flag_timer->unpause();
 }
 
 void ShooterBoss::show_health()
@@ -86,20 +108,19 @@ void ShooterBoss::move()
     {
         case Entrance:
             setPos(x()+dx, y()+dy);
-            if (y() >= 0) set_phase(PhasePre1);
+            if (y() >= 0) set_phase(Dialogue);
             break;
         case Dialogue:
         {
-        //TODO: #define 250, 0 or something, basically boss's initial position (top center)
-            double x_diff = 250 - pos().x();
-            double y_diff = 0 - pos().y();
+            double x_diff = BOSS_POS_X - pos().x();
+            double y_diff = BOSS_POS_Y - pos().y();
             if (x_diff*x_diff + y_diff*y_diff < 25)
             {
                 dx = dy = 0;
-                setPos(250, 0);
+                setPos(BOSS_POS_X, BOSS_POS_Y);
                 if (boss_to_next_phase)
                 {
-                    for (int i=0; i<4; ++i)
+                    for (int i=1; i<5; ++i)
                     {
                         if (health->get_health() == PHASE_HEALTH[i])
                         {
@@ -122,22 +143,27 @@ void ShooterBoss::move()
             break;
         }
         case Phase1:
-        case Phase2:
         case Phase3:
             //dont move in these phases
             break;
         case PhasePre1:
+        case PhasePre2:
+        case Phase2:
         {
-            dy = 0;
-            dx = pre1_x_dir * 3;
-            if (x()+dx > 350) pre1_x_dir = -1;
-            else if (x()+dx < 150) pre1_x_dir = 1;
-            setPos(x()+dx, y());
+            dx = pre1_x_dir * (phase == PhasePre1 ? 4 : 2);
+            if (x()+dx > BOSS_POS_X+100) pre1_x_dir = -1;
+            else if (x()+dx < BOSS_POS_X-100) pre1_x_dir = 1;
+
+            if (phase == Phase2)
+            {
+                dy = static_cast<int>(5*sin(phase2_y_angle));
+                phase2_y_angle += 0.1;
+            }
+            else dy = 0;
+
+            setPos(x()+dx, y()+dy);
             break;
         }
-        case PhasePre2:
-            //TODO
-            break;
     }
 }
 
@@ -156,31 +182,39 @@ void ShooterBoss::collision()
             //decrease own health
             health->decrease_health();
 
-            //TODO: change 1000 to max_hp
-            //TODO: show health for individual phases?
-            health_bar->set_width(static_cast<int>(static_cast<double>(health->get_health())/1000 * GAMEAREA_LENGTH));
+            //change the health bar's width
+            double current_phase_hp = 0.0;
+            for (int i=1; i<6; ++i)
+            {
+                if (health->get_health() >= PHASE_HEALTH[i])
+                {
+                    current_phase_hp = static_cast<double>(health->get_health()-PHASE_HEALTH[i])/(PHASE_HEALTH[i-1]-PHASE_HEALTH[i]);
+                    break;
+                }
+            }
+            health_bar->set_width(static_cast<int>(current_phase_hp * GAMEAREA_LENGTH));
 
-            //TODO: do something when health reaches checkpoint, activate next phase
+            //do something when health reaches checkpoint, activate next phase
             if (phase == Phase3) continue;
-            //phase should be from -1 to 2
+            //phase should be from 0 to 3
             if (health->get_health() == PHASE_HEALTH[phase+1]) // use <= if decrease_health is > 1
             {
                 switch (phase)
                 {
                     case PhasePre1: //show Phase1's pattern name
                         new PopUpDialogue(scene(), "IndexOutOfBoundException", 1500, PopUpDialogue::Dialogue);
-                        QTimer::singleShot(2000, this, SLOT(enable_flag()));
+                        flag_timer->start_timer(2000, true, this, SLOT(enable_flag()));
                         break;
                     case Phase1:    //just enable flag after 1 second
-                        QTimer::singleShot(1000, this, SLOT(enable_flag()));
+                        flag_timer->start_timer(1000, true, this, SLOT(enable_flag()));
                         break;
                     case PhasePre2: //show Phase2's pattern name
                         new PopUpDialogue(scene(), "ERROR: LEAK 108 DIRECT BYTES", 1500, PopUpDialogue::Dialogue);
-                        QTimer::singleShot(2000, this, SLOT(enable_flag()));
+                        flag_timer->start_timer(2000, true, this, SLOT(enable_flag()));
                         break;
                     case Phase2:    //show Phase3's pattern name
                         new PopUpDialogue(scene(), "NullPointerException\nYou cannot move in this phase!", 2500, PopUpDialogue::Dialogue);
-                        QTimer::singleShot(3000, this, SLOT(enable_flag()));
+                        flag_timer->start_timer(3000, true, this, SLOT(enable_flag()));
                         break;
                     default:
                         break;
@@ -191,6 +225,8 @@ void ShooterBoss::collision()
             }
 
             //TODO: when health reach 0
+            emit boss_dead();
+            REMOVE_ENTITY(this)
         }
     }
 }
@@ -214,10 +250,10 @@ void ShooterBoss::shoot()
         }
         case Phase1:
         {
-            int bullet_dx = static_cast<int>(sin(phase1_angle)*12);
-            int bullet_dy = static_cast<int>(cos(phase1_angle)*12);
+            int bullet_dx = static_cast<int>(sin(phase1_angle)*16);
+            int bullet_dy = 5;
 
-            if (phase1_angle > 1.1) phase1_dir = -1;  //PI/2 = 1.57
+            if (phase1_angle > 1.5) phase1_dir = -1;  //PI/2 = 1.57
             else if (phase1_angle < 0.1) phase1_dir = 1;
             phase1_angle += phase1_dir * 0.08;
 
@@ -227,7 +263,29 @@ void ShooterBoss::shoot()
         }
         case PhasePre2:
         {
-            //TODO
+            int x_increase = static_cast<int>(50*sin(pre2_x_angle));
+
+            BulletEnemy* bullet_left = new BulletEnemy(0, 10, BulletEnemy::Normal);
+            bullet_left->setPos(x()+x_increase, y()+size_y);
+            scene()->addItem(bullet_left);
+
+            BulletEnemy* bullet_right = new BulletEnemy(0, 10, BulletEnemy::Normal);
+            bullet_right->setPos(x()+size_x-x_increase, y()+size_y);
+            scene()->addItem(bullet_right);
+
+            pre2_x_angle += 0.3141;
+            if (pre2_x_angle > 6.2832)
+            {
+                pre2_x_angle -= 6.2832;
+                double x_diff = player->get_pos().x()-pos().x()-size_x/2;
+                double y_diff = player->get_pos().y()-pos().y()-size_y/2;
+                int bullet_dx = ((x_diff > 0) ? 1 : -1) *
+                        static_cast<int>(cos(atan(abs(y_diff/x_diff)))*16);
+                int bullet_dy = ((y_diff > 0) ? 1 : -1) *
+                        static_cast<int>(sin(atan(abs(y_diff/x_diff)))*16);
+
+                shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
+            }
             break;
         }
         case Phase2:
@@ -248,6 +306,9 @@ void ShooterBoss::shoot()
             enemy->setPos(dummy_x, dummy_y);
             scene()->addItem(enemy);
             scene()->addItem(enemy->get_health_var());
+
+            //randomize the enemy spawn rate
+            set_shoot_freq((40+rand()%50)*MIN_FREQ);
             break;
         }
     }

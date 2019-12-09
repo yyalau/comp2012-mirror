@@ -15,15 +15,17 @@ ShooterPlayer::ShooterPlayer(int hp, int dx, int dy, int shoot_freq,  bool shoot
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.3);
 
-    move_timer= new QTimer();
-    connect(move_timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
+    move_timer= new CustomTimer(move_freq, false, this, SLOT(move()));
+    //connect the timer and move slot
 
-    coll_timer= new QTimer();
-    connect(coll_timer, SIGNAL(timeout()), this, SLOT(collision())); //connect the timer and collision slot
+    coll_timer= new CustomTimer(coll_freq, false, this, SLOT(collision()));
+    //connect the timer and collision slot
 
-    shoot_timer= new QTimer();
-    connect(shoot_timer, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
+    shoot_timer= new CustomTimer(shoot_freq, false, this, SLOT(shoot()));
+    //connect the timer and bullet slot
 
+    powerup_timer = new CustomTimer();
+    immune_timer = new CustomTimer();
 }
 
 
@@ -88,27 +90,38 @@ QPointF ShooterPlayer::get_pos()
     return pos();
 }
 
+void ShooterPlayer::pause()
+{
+    ShooterBase::pause();
+    powerup_timer->pause();
+    immune_timer->pause();
+}
+
+void ShooterPlayer::unpause()
+{
+    ShooterBase::unpause();
+    powerup_timer->unpause();
+    immune_timer->unpause();
+}
+
 void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
 {
     switch(bullet->get_power_type()){
-        //TODO: dialogue (just call new PopUpDialogue and put the dialogue lifetime in)
         case(BulletPowerUp::Breakpoint): //health increase
             health->increase_health();
-            qDebug()<<"increase health";
             break;
 
         case(BulletPowerUp::StackOverflow): //clear field
-            qDebug()<<"clear field";
             emit clear_field(false);
             break;
 
         case(BulletPowerUp::CoutTestEndl): //increase shooter strength
-            qDebug()<<"increase shooter strength";
             powerup_shooter=true;
-            QTimer::singleShot(10000, this, SLOT(reset_shooter()));
+            powerup_timer->start_timer(10000, true, this, SLOT(reset_shooter()));
             break;
 
-         default: break;
+        default:
+            break;
     }
 
     emit powerup_text(BulletPowerUp::PowerUpType (bullet->get_power_type()));
@@ -120,7 +133,7 @@ void ShooterPlayer::move()
     {
         double x_diff = START_POS_X - pos().x();
         double y_diff = START_POS_Y - pos().y();
-        if (x_diff*x_diff + y_diff*y_diff < 25)
+        if (x_diff*x_diff + y_diff*y_diff < 100)
         {
             dx = dy = 0;
             setPos(START_POS_X, START_POS_Y);
@@ -128,9 +141,9 @@ void ShooterPlayer::move()
         else
         {
             dx = ((x_diff > 0) ? 1 : -1) *
-                    static_cast<int>(cos(atan(abs(y_diff/x_diff)))*5);
+                    static_cast<int>(cos(atan(abs(y_diff/x_diff)))*10);
             dy = ((y_diff > 0) ? 1 : -1) *
-                    static_cast<int>(sin(atan(abs(y_diff/x_diff)))*5);
+                    static_cast<int>(sin(atan(abs(y_diff/x_diff)))*10);
             setPos(x()+dx, y()+dy);
         }
         return;
@@ -144,12 +157,16 @@ void ShooterPlayer::collision()
 {
     QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
 
-    //power up bullet should not be affected by immunity?
-    for (int i=0;i<colliding_items.size(); ++i ){
-    if(typeid(*(colliding_items[i]))==typeid (BulletPowerUp)){
-                process_powerup(dynamic_cast<BulletPowerUp*>(colliding_items[i]));
-                REMOVE_ENTITY(colliding_items[i])
-            }
+    //power up bullet should not be affected by immunity? yea
+    for (int i=0; i<colliding_items.size(); ++i)
+    {
+        if(typeid(*(colliding_items[i]))==typeid (BulletPowerUp))
+        {
+            process_powerup(dynamic_cast<BulletPowerUp*>(colliding_items[i]));
+            BulletPowerUp::PowerUpType temp = dynamic_cast<BulletPowerUp*>(colliding_items[i])->get_power_type();
+            REMOVE_ENTITY(colliding_items[i])
+            if (temp == BulletPowerUp::StackOverflow) return; //protect the case of hitting powerup AND bullet at the same time
+        }
     }
 
     if (immune) return;
@@ -165,13 +182,13 @@ void ShooterPlayer::collision()
             if (health->is_dead())
             {
                 emit player_dead();
-                return;
             }
             else
             {
                 immune = true;
-                QTimer::singleShot(1000, this, SLOT(reset_immunity()));
+                immune_timer->start_timer(1000, true, this, SLOT(reset_immunity()));
             }
+            return;
         }
         else if (typeid(*(colliding_items[i]))==typeid (ShooterEnemy) || typeid(*(colliding_items[i]))==typeid (ShooterBoss))
         {
@@ -180,13 +197,13 @@ void ShooterPlayer::collision()
             if (health->is_dead())
             {
                 emit player_dead();
-                return;
             }
             else
             {
                 immune = true;
-                QTimer::singleShot(1000, this, SLOT(reset_immunity()));
+                immune_timer->start_timer(1000, true, this, SLOT(reset_immunity()));
             }
+            return;
         }
     }
 }
@@ -197,15 +214,15 @@ void ShooterPlayer::shoot()
 
     shoot_bullet(new BulletPlayer(0, -20));
 
-    if (powerup_shooter==true){
-        shoot_bullet(new BulletPlayer(10, -20));
-        shoot_bullet(new BulletPlayer(-10, -20));
+    if (powerup_shooter){
+        shoot_bullet(new BulletPlayer(8, -17));
+        shoot_bullet(new BulletPlayer(-8, -17));
     }
 }
 
 void ShooterPlayer::reset_shooter()
 {
-    powerup_shooter=false;
+    powerup_shooter = false;
 }
 
 void ShooterPlayer::reset_immunity()

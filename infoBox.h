@@ -5,9 +5,9 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsScene>
 #include <QGraphicsTextItem>
-#include <QTimer>
 
 #include "shooterPlayer.h"
+#include "customTimer.h"
 
 /**
  * @brief The InfoBox class
@@ -16,9 +16,11 @@
  * PRIVATE DATA MEMBERS
  * @include shooter: Pointer to player (to get health)
  * @include powerup_text: stores the corresponding power up message
+ * @include powerup_timer: Keep track of time the powerup text is shown
  *
  * PUBLIC MEMBER FUNCTIONS
  * @include show_general_info(): Call this upon initialization to show general info (eg. players health)
+ * @include pause(), unpause(): Pause/Unpause the powerup_timer
  *
  * PUBLIC SLOTS
  * @include show_powerup_info(int event): sets and displays the powerup_text to scene
@@ -33,10 +35,14 @@ private:
     ShooterPlayer* shooter;
     QGraphicsTextItem* powerup_text;
     QFont font {"Times", 12};
+    CustomTimer* powerup_timer {nullptr};
 
 public:
     InfoBox(ShooterPlayer*);
+    //TODO: Destructor for timer?
     void show_general_info();
+    void pause();
+    void unpause();
 
 public slots:
     void show_powerup_info(int event);

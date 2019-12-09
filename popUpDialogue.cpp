@@ -30,6 +30,14 @@ PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, QString message, int 
     set_duration(duration);
 }
 
+PopUpDialogue::~PopUpDialogue()
+{
+    parent_scene->removeItem(popup_scene);
+    delete popup_scene;
+    parent_scene->removeItem(popup_text);
+    delete popup_text;
+}
+
 void PopUpDialogue::create_dialogue(QString message, QColor color, double opacity, int x, int y, int width, int height)
 {
     //similar part of constructors
@@ -60,15 +68,17 @@ void PopUpDialogue::set_duration(int duration)
 {
     if (duration == NO_DURATION) return;
     this->duration = duration;
-    QTimer::singleShot(duration, this, SLOT(remove()));
+    popup_timer = new CustomTimer(duration, true, this, SLOT(remove()));
 }
 
-PopUpDialogue::~PopUpDialogue()
+void PopUpDialogue::pause()
 {
-    parent_scene->removeItem(popup_scene);
-    delete popup_scene;
-    parent_scene->removeItem(popup_text);
-    delete popup_text;
+    if (popup_timer != nullptr) popup_timer->pause();
+}
+
+void PopUpDialogue::unpause()
+{
+    if (popup_timer != nullptr) popup_timer->unpause();
 }
 
 void PopUpDialogue::set_message(QString message)

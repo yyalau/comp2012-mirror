@@ -3,16 +3,17 @@
 
 #include <QObject>
 #include <QGraphicsScene>
-#include <QTimer>
 #include <QList>
 
 #include "define.h"
+#include "customTimer.h"
 #include "bulletEnemy.h"
 #include "bulletPlayer.h"
 #include "bulletPowerUp.h"
 #include "shooterEnemy.h"
 #include "shooterPlayer.h"
 #include "shooterBoss.h"
+#include "infoBox.h"
 #include "popUpDialogue.h"
 
 /**
@@ -22,8 +23,9 @@
  * PRIVATE DATA MEMBERS
  * @include parentScene: //TODO, see setup.h (need this to call addItem)
  * @include shooter: Pointer to the player (for receiving signals)
- * @include event_timer: QTimer for triggering increment_time()
+ * @include event_timer: CustomTimer for triggering increment_time()
  * @include game_timer: Goes up by 1 every MIN_TIME ms
+ * @include game_begin: Static bool for the first pause_game() called in constructor to avoid pause screen
  *
  * PRIVATE MEMBER FUNCTIONS:
  * @include spawn_enemy: convenience function for spawning enemy
@@ -50,14 +52,14 @@ private:
     QGraphicsScene* parent_scene;
     PopUpDialogue* dialogue;
     ShooterPlayer* shooter;
-    QTimer* event_timer;
+    CustomTimer* event_timer;
     int game_timer {0};
+    static bool game_begin;
     ShooterEnemy* spawn_enemy(ShooterEnemy::EnemyPathingType pathing_type, ShooterEnemy::EnemyShootingType shooting_type, int hp, int dx, int dy,int initX, int initY, int shoot_freq = 2*DEFAULT_SHOOT_FREQ);
 
 public:
     GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QString instructions);
     ~GameEvent();
-
     int get_time();
 
 public slots:

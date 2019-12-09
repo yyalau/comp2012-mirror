@@ -13,8 +13,6 @@ BulletEnemy::BulletEnemy(int dx, int dy, BulletType bullet_type,
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1);
 
-    //start timers
-    unpause();
 }
 
 void BulletEnemy::move()
@@ -38,8 +36,7 @@ void BulletEnemy::move()
             setPos(x()+dx,y()+dy);
 
             //remove the bullets once its out of bound
-            if (!(INSCREEN_LEFT_OOB(pos().x())) || !(INSCREEN_RIGHT_OOB(pos().x())) ||
-                    !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y())))
+            if (!(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y())))
             {
                 REMOVE_ENTITY(this)
             }
@@ -73,8 +70,8 @@ void BulletEnemy::move()
                 double angle = 3.1415;
                 while (angle < 6.2832)
                 {
-                    int bullet_dx = static_cast<int>(cos(angle)*10);
-                    int bullet_dy = static_cast<int>(sin(angle)*10);
+                    int bullet_dx = static_cast<int>(cos(angle)*12);
+                    int bullet_dy = static_cast<int>(sin(angle)*12+0.01);
 
                     BulletEnemy* small_bullet = new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Falling);
                     small_bullet->setPos(x(), y());

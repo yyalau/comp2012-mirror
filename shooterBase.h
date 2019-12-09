@@ -4,10 +4,10 @@
 #include <QObject>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
-#include <QTimer>
 #include <QDebug>
 
 #include "define.h"
+#include "customTimer.h"
 #include "health.h"
 #include "bulletPlayer.h"
 #include "bulletEnemy.h"
@@ -21,14 +21,13 @@
  * @include dx, dy: entity's velocity
  * @include size_x, size_y: entity's size
  * @include move_freq, coll_freq, shoot_freq: milliseconds between times move(), collision(), shoot() are called
- * @include move_timer, coll_timer, shoot_timer: QTimer for triggering move(), collision(), shoot()
+ * @include move_timer, coll_timer, shoot_timer: CustomTimer for triggering move(), collision(), shoot()
  * @include is_shooting: set to true if the entity will shoot bullet (called automatically)
- * @include shoot_bullet(): convenient function for creating a bullet
  *
  * PUBLIC MEMBER FUNCTIONS
- * @include create_health(int, int): write entity's health on screen //TODO: remove? just need this for player
  * @include get_health_var(): return pointer to this entity's health
- * @include pause(), unpause(): functions for stopping/restarting the timers
+ * @include pause(), unpause(): virtual functions for stopping/restarting the timers
+ * @include shoot_bullet(): convenient function for creating a bullet
  *
  * PUBLIC SLOTS
  * @include move(): pure virtual slot for updating entity's position
@@ -44,17 +43,18 @@ protected:
     int dx, dy;
     int size_x, size_y;
     int move_freq, coll_freq, shoot_freq;
-    QTimer *move_timer, *coll_timer, *shoot_timer;
+    CustomTimer *move_timer, *coll_timer, *shoot_timer;
     bool is_shooting;
 
 public:
-    ShooterBase(QString, int hp, bool health_title, int dx = 0, int dy = 0, int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false,
+    ShooterBase(QString, int hp, bool health_title, int dx = 0, int dy = 0,
+                int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false,
                 int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
                 int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
     ~ShooterBase();
     Health* get_health_var();
-    void pause();
-    void unpause();
+    virtual void pause();
+    virtual void unpause();
     void shoot_bullet(BulletBase* bullet);
 
 public slots:

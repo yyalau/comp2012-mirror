@@ -13,9 +13,7 @@
 
 //for out of bound checking
 #define INSCREEN_LEFT(X)        (X) >= 0
-#define INSCREEN_LEFT_OOB(X)    (X) >= 0-INFOBOX_LENGTH
 #define INSCREEN_RIGHT(X)       (X)+boundingRect().width() <= scene()->width()-INFOBOX_LENGTH
-#define INSCREEN_RIGHT_OOB(X)   (X)+boundingRect().width() <= scene()->width()
 #define INSCREEN_UP(Y)          (Y) >= 0
 #define INSCREEN_DOWN(Y)        (Y)+boundingRect().height() <= scene()->height()
 
@@ -38,6 +36,13 @@
 //player and enemy's health
 #define DEFAULT_PLAYER_HP   50
 #define DEFAULT_ENEMY_HP    3
+
+//boss
+#define BOSS_HP             1000
+#define BOSS_SIZE_X         300
+#define BOSS_SIZE_Y         200
+#define BOSS_POS_X          (GAMEAREA_LENGTH-BOSS_SIZE_X)/2      //250
+#define BOSS_POS_Y          10
 
 //for removing a bullet/enemy out of the screen (lmao can we do this?)
 #define REMOVE_ENTITY(X) { scene()->removeItem(X); delete (X); }

@@ -1,10 +1,13 @@
 #include "infoBox.h"
+#include "bulletPowerUp.h"
 
 InfoBox::InfoBox(ShooterPlayer* shooter) :
     shooter(shooter)
 {
     setBrush(Qt::gray);
     setRect(0, 0, INFOBOX_LENGTH, SCREEN_HEIGHT);
+
+    powerup_timer = new CustomTimer();
 
     connect(shooter, SIGNAL(powerup_text(int)), this, SLOT(show_powerup_info(int)));
 }
@@ -25,34 +28,42 @@ void InfoBox::show_general_info()
     scene()->addItem(general_text);
 }
 
+void InfoBox::pause()
+{
+    powerup_timer->pause();
+}
+
+void InfoBox::unpause()
+{
+    powerup_timer->unpause();
+}
+
 void InfoBox::clear_powerup_info()
 {
     scene()->removeItem(powerup_text);
-    delete  powerup_text;
+    delete powerup_text;
 }
 
 void InfoBox::show_powerup_info(int event)
 {
-    qDebug()<<"event: "<< event;
-
     switch(event){
-    case 0:
-        powerup_text=new QGraphicsTextItem("Breakpoint: Added Health!");
-        break;
-    case 1:
-        powerup_text=new QGraphicsTextItem("StackOverflow: Cleared field!");
-        break;
-    case 2:
-        powerup_text=new QGraphicsTextItem("CoutTestEndl: \nPowered up your shooter!");
-        break;
-    default:
-        return;
+        case BulletPowerUp::Breakpoint:
+            powerup_text = new QGraphicsTextItem("Breakpoint: Added Health!");
+            break;
+        case BulletPowerUp::StackOverflow:
+            powerup_text = new QGraphicsTextItem("StackOverflow: Cleared field!");
+            break;
+        case BulletPowerUp::CoutTestEndl:
+            powerup_text = new QGraphicsTextItem("CoutTestEndl: \nPowered up your shooter!");
+            break;
+        default:
+            return;
     }
 
     powerup_text->setFont(font);
-    powerup_text->setDefaultTextColor(Qt:: cyan);
-    powerup_text->setPos(GAMEAREA_LENGTH,100);
+    powerup_text->setDefaultTextColor(Qt::cyan);
+    powerup_text->setPos(GAMEAREA_LENGTH, 100);
     scene()->addItem(powerup_text);
 
-    QTimer::singleShot(3000, this, SLOT(clear_powerup_info()));
+    powerup_timer->start_timer(3000, true, this, SLOT(clear_powerup_info()));
 }

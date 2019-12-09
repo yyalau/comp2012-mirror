@@ -19,15 +19,16 @@
  * @include immune: set to true if the player is immune (for 1 second after being hit)
  * @include powerup_shooter: return true if the shooter has been improved
  * @include paused: static variable storing the pause state of the game, changed with keyboard P
- * @include null_pointer: for boss's phase 3, remove the player's ability to move;
+ * @include nullptr_phase: for boss's phase 3, remove the player's ability to move
+ * @include powerup_timer, immune_timer: CustomTimer for keeping track of StackOverflow powerup and immunity's time
  *
  * PRIVATE MEMBER FUNCTION RE-IMPLEMENTATIONS
  * @implements keyPressEvent(QKeyEvent*): handles keyboard input, updates player velocity and is_shooting
  * @implements keyReleaseEvent(QKeyEvent*): handles keyboard input, resets player velocity and is_shooting
  * @implements focusOutEvent(QFocusEvent*): keeps the shooter to be focused
  *
- * PUBLIC MEMBER FUNCITONS
- * @include create_health(): write health
+ * PUBLIC MEMBER FUNCTIONS
+ * @include pause(), unpause(): Overrides ShooterBase's functions
  * @include get_pos(): return the player's position
  * @include process_powerup(BulletPowerUp*): handles power-up tasks when ShooterPlayer/BulletPlayer collided with BulletPowerUp
  *
@@ -58,6 +59,7 @@ private:
     bool powerup_shooter {false};
     static bool paused;
     bool nullptr_phase {false};
+    CustomTimer *powerup_timer {nullptr}, *immune_timer {nullptr};
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void focusOutEvent(QFocusEvent* event) override;
@@ -67,7 +69,10 @@ public:
                   int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false,
                   int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
                   int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
+    //TODO: Destructor for the timer? Probably not needed actually, we dont delete the player
     QPointF get_pos();
+    virtual void pause() override;
+    virtual void unpause() override;
     void process_powerup(BulletPowerUp* bullet);
 
 signals:

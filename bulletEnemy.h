@@ -36,7 +36,7 @@ public:
 private:
     BulletType bullet_type;
     bool bounced {false};
-    //"static" variable for bullet movement
+
     int fall_counter{0};
     const int FALL_COUNTER_MAX {3};
 

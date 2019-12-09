@@ -23,16 +23,16 @@ Health* ShooterBase::get_health_var()
 
 void ShooterBase::pause()
 {
-    move_timer->stop();
-    coll_timer->stop();
-    shoot_timer->stop();
+    move_timer->pause();
+    coll_timer->pause();
+    shoot_timer->pause();
 }
 
 void ShooterBase::unpause()
 {
-    move_timer->start(move_freq);
-    coll_timer->start(coll_freq);
-    shoot_timer->start(shoot_freq);
+    move_timer->unpause();
+    coll_timer->unpause();
+    shoot_timer->unpause();
 }
 
 void ShooterBase::shoot_bullet(BulletBase *bullet)

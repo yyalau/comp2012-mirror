@@ -22,17 +22,14 @@ ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shoo
 
     //if(pathing_type==Wave)
       //  dy=1;
-    move_timer= new QTimer();
-    connect(move_timer, SIGNAL(timeout()), this, SLOT(move())); //connect the timer and move slot
+    move_timer= new CustomTimer(move_freq, false, this, SLOT(move()));
+    //connect the timer and move slot
 
-    coll_timer= new QTimer();
-    connect(coll_timer, SIGNAL(timeout()), this, SLOT(collision())); //connect the timer and collision slot
+    coll_timer= new CustomTimer(coll_freq, false, this, SLOT(collision()));
+    //connect the timer and collision slot
 
-    shoot_timer= new QTimer();
-    connect(shoot_timer, SIGNAL(timeout()), this, SLOT(shoot())); //connect the timer and bullet slot
-
-    //start the timers
-    unpause();
+    shoot_timer= new CustomTimer(shoot_freq, false, this, SLOT(shoot()));
+    //connect the timer and bullet slot
 }
 
 void ShooterEnemy::set_player(ShooterPlayer* shooter)
@@ -160,8 +157,8 @@ void ShooterEnemy::collision()
             if (health->is_dead()) {
                 if (shooting_type == ExplodeOnDeath)
                 {
-                    double x_diff = player->get_pos().x()-pos().x();
-                    double y_diff = player->get_pos().y()-pos().y();
+                    double x_diff = player->get_pos().x()-pos().x()-size_x/2;
+                    double y_diff = player->get_pos().y()-pos().y()-size_y/2;
                     int bullet_dx = ((x_diff > 0) ? 1 : -1) *
                             static_cast<int>(cos(atan(abs(y_diff/x_diff)))*20);
                     int bullet_dy = ((y_diff > 0) ? 1 : -1) *

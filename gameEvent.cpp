@@ -1,11 +1,14 @@
 #include "gameEvent.h"
 
+//static member declaration
+bool GameEvent::game_begin = false;
+
 GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QString instructions) :
     parent_scene(parent_scene), shooter(shooter)
 {
 
-    event_timer= new QTimer();
-    connect(event_timer, SIGNAL(timeout()), this, SLOT(increment_time())); //connect the timer and time increase slot
+    event_timer = new CustomTimer(MIN_FREQ, false, this, SLOT(increment_time()));
+    //connect the timer and time increase slot
 
     connect(this, SIGNAL(time_reached(int)), this, SLOT(trigger_event(int))); //when time is reached, trigger game events
 
@@ -22,6 +25,8 @@ GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QStri
     //for handling game over
     connect(shooter, SIGNAL(player_dead()), this, SLOT(trigger_game_over()));
 
+    //Game is paused at the beginning
+    pause_game();
 }
 
 GameEvent::~GameEvent()
@@ -239,7 +244,7 @@ ShooterEnemy* GameEvent::spawn_enemy(ShooterEnemy::EnemyPathingType pathing_type
 template <typename T>
 bool try_pause(QGraphicsItem* item)
 {
-    if (typeid(*item) == typeid(T))
+    if (/*typeid(*item) == typeid(T)*/dynamic_cast<T*>(item) != nullptr)
     {
         (dynamic_cast<T*>(item))->pause();
         return true;
@@ -252,18 +257,20 @@ void GameEvent::pause_game()
     QList<QGraphicsItem*> scene_items = parent_scene->items(); //pause all items
 
     for(int i=0; i<scene_items.size(); ++i){
-        if (try_pause<BulletEnemy>(scene_items[i])) continue;
-        if (try_pause<BulletPlayer>(scene_items[i])) continue;
-        if (try_pause<BulletPowerUp>(scene_items[i])) continue;
-        if (try_pause<ShooterEnemy>(scene_items[i])) continue;
-        if (try_pause<ShooterPlayer>(scene_items[i])) continue;
-        if (try_pause<ShooterBoss>(scene_items[i])) continue;
+        if (try_pause<BulletBase>(scene_items[i])) continue;
+        if (try_pause<ShooterBase>(scene_items[i])) continue;
+        if (try_pause<InfoBox>(scene_items[i])) continue;
+        if (try_pause<PopUpDialogue>(scene_items[i])) continue;
     }
-    event_timer->stop();
+    event_timer->pause();
 
     //pause screen
-    //TODO: make it more interesting
-    if(!shooter->get_health_var()->is_dead())
+    //TODO: more info?
+    if (!game_begin)
+    {
+        game_begin = true;
+    }
+    else if (!shooter->get_health_var()->is_dead())
     {
         dialogue = new PopUpDialogue(parent_scene, "\t Press P to continue", NO_DURATION, PopUpDialogue::GameArea);
     }
@@ -273,7 +280,7 @@ void GameEvent::pause_game()
 template <typename T>
 bool try_unpause(QGraphicsItem* item)
 {
-    if (typeid(*item) == typeid(T))
+    if (/*typeid(*item) == typeid(T)*/dynamic_cast<T*>(item) != nullptr)
     {
         (dynamic_cast<T*>(item))->unpause();
         return true;
@@ -287,39 +294,40 @@ void GameEvent::unpause_game()
     QList<QGraphicsItem*> scene_items = parent_scene->items(); //unpause all items
 
     for(int i=0; i<scene_items.size(); ++i){
-        if (try_unpause<BulletEnemy>(scene_items[i])) continue;
-        if (try_unpause<BulletPlayer>(scene_items[i])) continue;
-        if (try_unpause<BulletPowerUp>(scene_items[i])) continue;
-        if (try_unpause<ShooterEnemy>(scene_items[i])) continue;
-        if (try_unpause<ShooterPlayer>(scene_items[i])) continue;
-        if (try_unpause<ShooterBoss>(scene_items[i])) continue;
+        if (try_unpause<BulletBase>(scene_items[i])) continue;
+        if (try_unpause<ShooterBase>(scene_items[i])) continue;
+        if (try_unpause<InfoBox>(scene_items[i])) continue;
+        if (try_unpause<PopUpDialogue>(scene_items[i])) continue;
     }
-    event_timer->start(MIN_FREQ);
+    event_timer->unpause();
 }
 
 void GameEvent::trigger_clear_field(bool restart)
 {
-    //TODO: DELETE THE BOSS LMAO I FORGOT
-    if (restart)
-    {
-        game_timer=0;
-        shooter->get_health_var()->reset_health();
-        shooter->setPos(START_POS_X, START_POS_Y);
-    }
-
     QList<QGraphicsItem*> scene_items = parent_scene->items();
     for(int i=0; i<scene_items.size(); i++)
     {
-        if (typeid(*(scene_items[i]))==typeid (BulletEnemy)||typeid(*(scene_items[i]))==typeid (ShooterEnemy))
+        if (typeid(*(scene_items[i]))==typeid (BulletEnemy)
+                || typeid(*(scene_items[i]))==typeid (ShooterEnemy))
         {
             parent_scene->removeItem(scene_items[i]);
             delete scene_items[i];
         }
 
-        if (restart&& typeid(*(scene_items[i]))==typeid (BulletPowerUp)){
+        if (restart && (typeid(*(scene_items[i]))==typeid (BulletPowerUp)
+                        || typeid(*(scene_items[i]))==typeid (BulletPlayer)
+                        || typeid(*(scene_items[i]))==typeid (ShooterBoss))){
             parent_scene->removeItem(scene_items[i]);
             delete scene_items[i];
         }
+    }
+
+    if (restart)
+    {
+        game_timer=0;
+        shooter->get_health_var()->reset_health();
+        shooter->setPos(START_POS_X, START_POS_Y);
+        unpause_game();
     }
 }
 

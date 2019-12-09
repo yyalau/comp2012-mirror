@@ -13,6 +13,4 @@ BulletPlayer::BulletPlayer(int dx, int dy, int size_x, int size_y, int move_freq
     setScale(1.2);
     setOffset(45,-15);
 
-    //start the timers
-    unpause();
 }

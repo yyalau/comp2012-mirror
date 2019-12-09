@@ -26,8 +26,6 @@ BulletPowerUp::BulletPowerUp(int dx, int dy, PowerUpType power_type, int size_x,
     default:
             break;
     }
-
-    unpause();
 }
 
 BulletPowerUp::PowerUpType BulletPowerUp::get_power_type()
