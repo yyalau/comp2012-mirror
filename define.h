@@ -34,7 +34,7 @@
 #define PLAYER_SIZE 70
 
 //player and enemy's health
-#define DEFAULT_PLAYER_HP   50
+#define DEFAULT_PLAYER_HP   5
 #define DEFAULT_ENEMY_HP    3
 
 //boss

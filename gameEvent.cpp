@@ -31,7 +31,7 @@ GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QStri
 
 GameEvent::~GameEvent()
 {
-    if (dialogue != nullptr) delete dialogue;
+    if (dialogue != nullptr) {delete dialogue; dialogue=nullptr;}
     delete event_timer;
 }
 
@@ -63,7 +63,7 @@ void GameEvent::increment_time()
         //emit time_reached((game_timer/200)-1 % 5);
         //emit time_reached(6);
     }
-    if ((game_timer % 300)==0)
+    if ((game_timer % 300)==0) //every 6 seconds
     {
         emit time_reached(8);
     }
@@ -289,7 +289,7 @@ bool try_unpause(QGraphicsItem* item)
 }
 void GameEvent::unpause_game()
 {
-    if (dialogue != nullptr) delete dialogue;
+    if (dialogue != nullptr) {delete dialogue; dialogue=nullptr;}
 
     QList<QGraphicsItem*> scene_items = parent_scene->items(); //unpause all items
 
@@ -324,6 +324,7 @@ void GameEvent::trigger_clear_field(bool restart)
 
     if (restart)
     {
+        if (dialogue != nullptr) {delete dialogue; dialogue=nullptr;}
         game_timer=0;
         shooter->get_health_var()->reset_health();
         shooter->setPos(START_POS_X, START_POS_Y);
