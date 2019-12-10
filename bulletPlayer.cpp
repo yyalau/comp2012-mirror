@@ -6,7 +6,7 @@ BulletPlayer::BulletPlayer(int dx, int dy, int size_x, int size_y, int move_freq
     BulletBase(dx, dy, size_x, size_y, move_freq)
 {
     QPixmap bulletimage(":/image/images/firebullet.png");
-    setPixmap(bulletimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
+    setPixmap(bulletimage.scaled(size_y, size_x, Qt::IgnoreAspectRatio)); //rotate 90 degrees
     setRotation(-90);
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);

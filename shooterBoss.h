@@ -42,6 +42,8 @@
  * @include shoot(): overrides shooterBase's function
  * @include enable_flag(): set flag to true after the pattern name finishes showing
  * @include show_dialogue(): display the dialogue before the battle
+ * @include boss_death_animation(): shows "animation" for 1 second before "deleting" itself
+ * @include boss_send_dead_signal(): sends the boss_dead() signals
  */
 
 class ShooterBoss : public ShooterBase
@@ -65,7 +67,8 @@ public:
         Phase1,         //IndexOutOfBoundException, shoot 2 rays of OutOfBound bullets (bulletEnemy handles the pattern)
         PhasePre2,      //2 rays of "spaghetti code"
         Phase2,         //LEAK X DIRECT BYTES, Explode bullets fall from the top
-        Phase3          //NullPointerException, disable moving?
+        Phase3,         //NullPointerException, disable moving?
+        Dead
     };
 
 private:
@@ -99,13 +102,14 @@ public:
 
 signals:
     void start_phase3();
-    void boss_dead();
+    void boss_dead(bool win);
 
 public slots:
     virtual void move() override;
     virtual void shoot() override;
     void enable_flag();
     void show_dialogue();
+    void boss_death_animation();
 };
 
 #endif // SHOOTERBOSS_H

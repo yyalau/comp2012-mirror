@@ -14,10 +14,10 @@
 #define SCREEN_LENGTH       GAMEAREA_LENGTH+INFOBOX_LENGTH
 
 //for out of bound checking
-#define INSCREEN_LEFT(X)        (X) >= -20
-#define INSCREEN_RIGHT(X)       (X)+boundingRect().width() <= scene()->width()-INFOBOX_LENGTH+20
-#define INSCREEN_UP(Y)          (Y) >= -20
-#define INSCREEN_DOWN(Y)        (Y)+boundingRect().height() <= scene()->height()+20
+#define INSCREEN_LEFT(X)        (X) >= -50
+#define INSCREEN_RIGHT(X)       (X)+boundingRect().width() <= scene()->width()-INFOBOX_LENGTH+15
+#define INSCREEN_UP(Y)          (Y) >= -50
+#define INSCREEN_DOWN(Y)        (Y)+boundingRect().height() <= scene()->height()+50
 
 #define INSCREEN_LEFT_RIGID(X)        (X) >= 0
 #define INSCREEN_RIGHT_RIGID(X)       (X)+boundingRect().width() <= scene()->width()-INFOBOX_LENGTH
@@ -36,7 +36,7 @@
 #define DEFAULT_SHOOT_FREQ  5*MIN_FREQ
 
 //player and enemy's health
-#define DEFAULT_PLAYER_HP   200
+#define DEFAULT_PLAYER_HP   25
 #define DEFAULT_ENEMY_HP    3
 
 //for removing a bullet/enemy out of the screen

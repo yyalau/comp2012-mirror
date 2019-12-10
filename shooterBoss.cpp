@@ -49,6 +49,7 @@ void ShooterBoss::set_phase(BossPhase phase)
     {
         case Entrance:
         case Dialogue:
+        case Dead:
             //do nothing
             return;
         case PhasePre1:
@@ -95,11 +96,6 @@ void ShooterBoss::unpause()
 void ShooterBoss::show_health()
 {
     health_bar = new PopUpDialogue(scene(), "", NO_DURATION, PopUpDialogue::BossHealth);
-
-    //for debug
-    health->setPos(GAMEAREA_LENGTH, 40);
-    scene()->addItem(health);
-    health->setDefaultTextColor(Qt::green);
 }
 
 inline void ShooterBoss::start_bossfight()
@@ -158,6 +154,7 @@ void ShooterBoss::move()
         }
         case Phase1:
         case Phase3:
+        case Dead:
             //dont move in these phases
             break;
         case PhasePre1:
@@ -170,7 +167,7 @@ void ShooterBoss::move()
 
             if (phase == Phase2)
             {
-                dy = static_cast<int>(5*sin(phase_angle));
+                dy = static_cast<int>(4.5*sin(phase_angle));
                 phase_angle += 0.1;
             }
             else dy = 0;
@@ -183,7 +180,7 @@ void ShooterBoss::move()
 
 bool ShooterBoss::collision()
 {
-    if (phase == Entrance || phase == Dialogue) return false;
+    if (phase == Entrance || phase == Dialogue || phase == Dead) return false;
 
     //decrease own health
     health->decrease_health();
@@ -199,6 +196,10 @@ bool ShooterBoss::collision()
         }
     }
     health_bar->set_width(static_cast<int>(current_phase_hp * GAMEAREA_LENGTH));
+
+    //for phase 2, increase shoot frequency
+    if (health->get_health() == (PHASE_HEALTH[Phase2]+PHASE_HEALTH[Phase3])/2)
+        set_shoot_freq(12*MIN_FREQ);
 
     //do something when health reaches checkpoint, activate next phase
     if (health->get_health() == PHASE_HEALTH[phase+1]) // use <= if decrease_health is > 1
@@ -224,16 +225,25 @@ bool ShooterBoss::collision()
                 break;
         }
 
-        set_phase(Dialogue);
-
         //drop a powerup bullet
-        shoot_bullet(new BulletPowerUp(0, 4));
+        if (phase != Phase3) shoot_bullet(new BulletPowerUp(0, 4));
+
+        set_phase(Dialogue);
     }
 
-    //TODO: when health reach 0
+    //when health reach 0
     if (health->get_health() == 0)
     {
-        emit boss_dead();
+        //TODO: use another image
+        QPixmap bulletimage(":/image/images/firebullet.png");
+        setPixmap(bulletimage.scaled(size_y, size_x, Qt::IgnoreAspectRatio)); //rotate 90 degrees
+        setRotation(90);
+        setShapeMode(QGraphicsPixmapItem::MaskShape);
+        setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
+        setScale(1.2);
+
+        //reuse flag_timer
+        flag_timer->start_timer(2000, false, this, SLOT(boss_death_animation()));
     }
 
     return true;
@@ -247,6 +257,7 @@ void ShooterBoss::shoot()
     {
         case Entrance:
         case Dialogue:
+        case Dead:
             //do nothing
             return;
         case PhasePre1:
@@ -352,4 +363,12 @@ void ShooterBoss::show_dialogue()
             return;
     }
     ++dialogue_counter;
+}
+
+void ShooterBoss::boss_death_animation()
+{
+    if (phase == Dead) emit boss_dead(true);
+    //set a null pixmap
+    setPixmap(QPixmap());
+    set_phase(Dead);
 }

@@ -84,7 +84,7 @@ public:
 signals:
     void pause_all();
     void unpause_all();
-    void player_dead();
+    void player_dead(bool win);
     void powerup_text(int type);
     void clear_field(bool restart);
 

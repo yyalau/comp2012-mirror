@@ -1,4 +1,5 @@
 #include "shooterEnemy.h"
+#include "bulletPowerUp.h"
 
 //static member declaration
 ShooterPlayer* ShooterEnemy::player = nullptr;
@@ -34,6 +35,11 @@ void ShooterEnemy::set_player(ShooterPlayer* shooter)
     player = shooter;
 }
 
+void ShooterEnemy::set_drop_powerup()
+{
+    drop_powerup = true;
+}
+
 void ShooterEnemy::set_targetPos(int x, int y)
 {
     target_pos.setX(x);
@@ -60,11 +66,11 @@ void ShooterEnemy::move()
             setPos(x()+dx,y()+dy);
             break;
         case BorderBounce:
-            if (!(INSCREEN_LEFT(pos().x()+dx)) || !(INSCREEN_RIGHT(pos().x()+dx)))
+            if (!(INSCREEN_LEFT_RIGID(pos().x()+dx)) || !(INSCREEN_RIGHT_RIGID(pos().x()+dx)))
             {
                 dx = -dx;
             }
-            if (!(INSCREEN_UP(pos().y()+dy)) || !(INSCREEN_DOWN(pos().y()+dy)))
+            if (!(INSCREEN_UP_RIGID(pos().y()+dy)) || !(INSCREEN_DOWN_RIGID(pos().y()+dy)))
             {
                 dy = -dy;
             }
@@ -145,9 +151,8 @@ bool ShooterEnemy::collision()
     //decrease own health
     health->decrease_health();
 
-    //remove if dead
-    if (health->is_dead()) {
-        //TODO: move to destructor
+    if (health->get_health() == 0)
+    {
         if (shooting_type == ExplodeOnDeath)
         {
             double x_diff = player->get_pos().x()-pos().x()-size_x/2;
@@ -158,6 +163,10 @@ bool ShooterEnemy::collision()
                     static_cast<int>(sin(atan(abs(y_diff/x_diff)))*20);
 
             shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
+        }
+        if (drop_powerup)
+        {
+            shoot_bullet(new BulletPowerUp(0, 4));
         }
     }
 

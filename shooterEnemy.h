@@ -19,9 +19,11 @@
  * PRIVATE DATA MEMBERS
  * @include pathing_type, shooting_type: See enum above
  * @include player: Pointer to the player. Use set_player() when initializing the player in SetUp
+ * @include drop_powerup: True if this enemy will drop a powerup upon death, false by default
  *
  * PUBLIC MEMBER FUNCTIONS
- * @include set_player(): Set the shooter to point to the player
+ * @include set_player(): Set the shooter to point to the playe
+ * @include set_drop_powerup(): Set drop_powerup to true
  *
  * PUBLIC SLOTS
  * @include move(): overrides shooterBase's function, handles going out of bound
@@ -64,6 +66,7 @@ private:
     EnemyPathingType pathing_type;
     EnemyShootingType shooting_type;
     static ShooterPlayer* player;
+    bool drop_powerup {false};
 
     QPoint target_pos;
     double cirPathCounter;
@@ -80,6 +83,7 @@ public:
     void set_pathing_type(EnemyPathingType pathingType);
     virtual bool collision() override;
     bool out_of_bound();
+    void set_drop_powerup();
 
 public slots:
     virtual void move() override;

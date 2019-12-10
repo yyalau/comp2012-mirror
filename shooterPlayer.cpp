@@ -51,13 +51,12 @@ void ShooterPlayer::keyPressEvent(QKeyEvent* event)
             break;
         case Qt::Key_P:
             emit (paused ? unpause_all() : pause_all());
-            paused = !paused;
             break;
         case Qt::Key_R:
             //only enable this at pause/gameover, also resets the player's position
-            if (!paused&&!health->is_dead()) break;
+            if (!paused) break;
             emit clear_field(true);
-            paused=false;
+            nullptr_phase = false;
             break;
         default:
             break;
@@ -98,6 +97,7 @@ void ShooterPlayer::pause()
     ShooterBase::pause();
     powerup_timer->pause();
     immune_timer->pause();
+    paused = true;
 }
 
 void ShooterPlayer::unpause()
@@ -105,6 +105,7 @@ void ShooterPlayer::unpause()
     ShooterBase::unpause();
     powerup_timer->unpause();
     immune_timer->unpause();
+    paused = false;
 }
 
 void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
@@ -175,7 +176,7 @@ bool ShooterPlayer::collision(QGraphicsItem* collision_item)
         health->decrease_health();
         if (health->is_dead())
         {
-            emit player_dead();
+            emit player_dead(false);
         }
         else
         {

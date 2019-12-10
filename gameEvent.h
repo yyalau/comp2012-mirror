@@ -56,7 +56,7 @@ private:
     int game_timer {0};
     static bool game_begin;
     ShooterEnemy* spawn_enemy(ShooterEnemy::EnemyPathingType pathing_type, ShooterEnemy::EnemyShootingType shooting_type,
-                              int hp, int dx, int dy,int initX, int initY, int shoot_freq = 2*DEFAULT_SHOOT_FREQ);
+                              int hp, int dx, int dy,int initX, int initY, int shoot_freq = DEFAULT_SHOOT_FREQ);
     void collision();
 
 public:
@@ -70,7 +70,7 @@ public slots:
     void pause_game();
     void unpause_game();
     void trigger_clear_field(bool restart);
-    void trigger_game_over();
+    void trigger_game_over(bool win);
 
 signals:
     void time_reached(int event_id);

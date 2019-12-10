@@ -28,7 +28,6 @@ public:
         Normal,     //dx, dy are constant
         OutOfBound, //ignores left, right boundaries        //FOR BOSS PHASE 1
         Falling,    //dy increases with time
-        Homing,     //always aim at the player (DOES NOT WORK CURRENTLY)
         Explode     //when reaching the bottom, explodes into multiple Falling bullets      //FOR BOSS PHASE 3
         //TODO
     };

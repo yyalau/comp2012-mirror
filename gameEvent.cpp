@@ -23,7 +23,7 @@ GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QStri
     connect(shooter, SIGNAL(clear_field(bool)), this, SLOT(trigger_clear_field(bool)));
 
     //for handling game over
-    connect(shooter, SIGNAL(player_dead()), this, SLOT(trigger_game_over()));
+    connect(shooter, SIGNAL(player_dead(bool)), this, SLOT(trigger_game_over(bool)));
 
     //Game is paused at the beginning
     pause_game();
@@ -100,7 +100,8 @@ void GameEvent::collision()
                     REMOVE_ENTITY(parent_scene, enemy_colliding_items[j]);
 
                 //Moved health == 0 check here as well, all REMOVE_ENTITY should be centralized
-                //Boss here as well?
+                //ignore boss
+                if (typeid(*enemy)==typeid(ShooterBoss)) continue;
                 if (enemy->get_health_var()->get_health() == 0)
                 {
                     REMOVE_ENTITY(parent_scene, enemy);
@@ -121,23 +122,25 @@ void GameEvent::increment_time()
         switch (game_timer/50-1) {
         case 3: time_reached(0); break;         //Game starts at 3s,
         case 8: time_reached(1); break;         //for first 5 waves of enemy, each lasts for 5s,
-        case 13: time_reached(2); break;        //after that, each lasts for 10s
+        case 13: time_reached(2); break;        //after that, each lasts for 8s
         case 18: time_reached(3); break;
         case 23: time_reached(4); break;
-        case 33: time_reached(5); break;
-        case 43: time_reached(6); break;
-        case 53: time_reached(7); break;
+        case 31: time_reached(5); break;
+        case 39: time_reached(6); break;
+        case 47: time_reached(7); break;
+        case 55: time_reached(8); break;
         case 63: time_reached(9); break;
+        default: break;
 
         }
 
         //emit time_reached((game_timer/200)-1 % 5);
         //emit time_reached(6);
     }
-    if ((game_timer % 300)==0) //every 6 seconds
-    {
-        emit time_reached(8);
-    }
+    //if ((game_timer % 300)==0) //every 6 seconds
+    //{
+    //    emit time_reached(8);
+    //}
 
     collision();
 }
@@ -150,144 +153,113 @@ void GameEvent::trigger_event(int event_id)
         //if macro put it in define? shooterBoss also needs it
         case 0:
         {
-            QList<QGraphicsItem*> itemsInScreen=parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder);
-            for(int i=0; i<itemsInScreen.size();++i){
-               if (typeid(*(itemsInScreen[i]))==typeid(ShooterEnemy)){
-                   parent_scene->removeItem(itemsInScreen[i]);
-                   delete itemsInScreen[i];
-               }
-            }
-            ShooterEnemy* enemy = spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::Random, 5, 0 ,0, 0, 0, DEFAULT_SHOOT_FREQ*4);
-            ShooterEnemy* enemy2 = spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::Random, 5, 0 ,0, 700, 0, DEFAULT_SHOOT_FREQ*4);
+            ShooterEnemy* enemy = spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::Random,
+                                              3, 0 ,0, 0, 0, DEFAULT_SHOOT_FREQ*8);
+            ShooterEnemy* enemy2 = spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::Random,
+                                               3, 0 ,0, 700, 0, DEFAULT_SHOOT_FREQ*8);
             enemy->set_targetPos(250, 150);
             enemy2->set_targetPos(450, 150);
             break;
         }
         case 1:
         {
-            QList<QGraphicsItem*> itemsInScreen=parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder);
-            for(int i=0; i<itemsInScreen.size();++i){
-               if (typeid(*(itemsInScreen[i]))==typeid(ShooterEnemy)){
-                   parent_scene->removeItem(itemsInScreen[i]);
-                   delete itemsInScreen[i];
-               }
-            }
-
-            spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Random, 2, 0, 2,100+rand()%200, 0);
-
-            spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Random, 2, 0, 2,400+rand()%200, 0);
+            spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Random,
+                        6, 0, 2, 100+rand()%200, 0, DEFAULT_SHOOT_FREQ*3);
+            spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Random,
+                        6, 0, 2, 400+rand()%200, 0, DEFAULT_SHOOT_FREQ*3);
             break;
         }
         case 2:
         {
-            //ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::BorderBounce, ShooterEnemy::Random, 5, -10, 0);
-            //enemy->setPos(800-ENEMY_SIZE, 50);
-            QList<QGraphicsItem*> itemsInScreen=parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder);
-            for(int i=0; i<itemsInScreen.size();++i){
-               if (typeid(*(itemsInScreen[i]))==typeid(ShooterEnemy)){
-                   parent_scene->removeItem(itemsInScreen[i]);
-                   delete itemsInScreen[i];
-               }
-            }
-            spawn_enemy(ShooterEnemy::BorderBounce, ShooterEnemy::Forward, 5, -4, 0, 800-ShooterEnemy::ENEMY_SIZE, 50,DEFAULT_SHOOT_FREQ*3);
-            spawn_enemy(ShooterEnemy::BorderBounce, ShooterEnemy::Forward, 5, 3, 0, 0, 120, DEFAULT_SHOOT_FREQ*3);
-            spawn_enemy(ShooterEnemy::BorderBounce, ShooterEnemy::Forward, 5, -4, 0, 800-ShooterEnemy::ENEMY_SIZE, 200,DEFAULT_SHOOT_FREQ*3);
+            spawn_enemy(ShooterEnemy::BorderBounce, ShooterEnemy::Forward,
+                        6, -4, 0, 800-ShooterEnemy::ENEMY_SIZE, 50,DEFAULT_SHOOT_FREQ*5);
+            spawn_enemy(ShooterEnemy::BorderBounce, ShooterEnemy::Forward,
+                        7, 3, 0, 0, 120, DEFAULT_SHOOT_FREQ*5);
+            spawn_enemy(ShooterEnemy::BorderBounce, ShooterEnemy::Forward,
+                        6, -4, 0, 800-ShooterEnemy::ENEMY_SIZE, 200,DEFAULT_SHOOT_FREQ*5);
             break;
         }
         case 3:
         {
-            QList<QGraphicsItem*> itemsInScreen=parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder);
-            for(int i=0; i<itemsInScreen.size();++i){
-               if (typeid(*(itemsInScreen[i]))==typeid(ShooterEnemy)){
-                   parent_scene->removeItem(itemsInScreen[i]);
-                   delete itemsInScreen[i];
-               }
-            }
             QPainterPath ellipse;
-            ellipse.addEllipse(100,50,600,200);
-            ShooterEnemy* enemy = spawn_enemy(ShooterEnemy::Circular, ShooterEnemy::Forward, 5, 0, 0,699,157);
-            ShooterEnemy* enemy2 = spawn_enemy(ShooterEnemy::Circular, ShooterEnemy::Forward, 5, 0, 0,254,237);
-            ShooterEnemy* enemy3 = spawn_enemy(ShooterEnemy::Circular, ShooterEnemy::Forward, 5, 0, 0,238,66);
-            //qDebug()<<ellipse.pointAtPercent(0.01).toPoint()<<ellipse.pointAtPercent(0.33).toPoint()<<ellipse.pointAtPercent(0.66).toPoint();
+            ellipse.addEllipse(100, 50, 600, 200);
+            ShooterEnemy* enemy = spawn_enemy(ShooterEnemy::Circular, ShooterEnemy::Forward,
+                                              7, 0, 0, 699, 157, DEFAULT_SHOOT_FREQ*6);
+            ShooterEnemy* enemy2 = spawn_enemy(ShooterEnemy::Circular, ShooterEnemy::Forward,
+                                               9, 0, 0, 254, 237, DEFAULT_SHOOT_FREQ*5);
+            ShooterEnemy* enemy3 = spawn_enemy(ShooterEnemy::Circular, ShooterEnemy::Forward,
+                                               5, 0, 0, 238, 66, DEFAULT_SHOOT_FREQ*7);
+            enemy2->set_drop_powerup();
             break;
         }
         case 4:
         {
-            QList<QGraphicsItem*> itemsInScreen=parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder);
-            for(int i=0; i<itemsInScreen.size();++i){
-               if (typeid(*(itemsInScreen[i]))==typeid(ShooterEnemy)){
-                   parent_scene->removeItem(itemsInScreen[i]);
-                   delete itemsInScreen[i];
-               }
-            }
             ShooterEnemy* enemy[6];
             for(int i=0; i<5;++i){
-                enemy[i]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::Random, 2,0,0,160*i,0,DEFAULT_SHOOT_FREQ*6);
+                enemy[i]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::Random,
+                                     4, 0, 0, 160*i, 0, DEFAULT_SHOOT_FREQ*7);
                 enemy[i]->set_targetPos(160*i+80,150+(i>2?(4-i)*50:i*50));
             }
-            ShooterEnemy* enemy2=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::Random, 3,0,0,450,0,DEFAULT_SHOOT_FREQ*4);
-            enemy2->set_targetPos(400,70);
+            enemy[4]->set_drop_powerup();
+            ShooterEnemy* enemy2=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::Random,
+                                             11, 0, 0, 450, 0, DEFAULT_SHOOT_FREQ*5);
+            enemy2->set_targetPos(400, 70);
             break;
         }
         case 5:
         {
-            QList<QGraphicsItem*> itemsInScreen=parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder);
-            for(int i=0; i<itemsInScreen.size();++i){
-               if (typeid(*(itemsInScreen[i]))==typeid(ShooterEnemy)){
-                   parent_scene->removeItem(itemsInScreen[i]);
-                   delete itemsInScreen[i];
-               }
-            }
-            spawn_enemy(ShooterEnemy::BorderBounce,ShooterEnemy::Double, 5,5,2,0,50,DEFAULT_SHOOT_FREQ*4);
-            spawn_enemy(ShooterEnemy::BorderBounce,ShooterEnemy::Double, 5,-5,2,800-ShooterEnemy::ENEMY_SIZE,50,DEFAULT_SHOOT_FREQ*4);
-            spawn_enemy(ShooterEnemy::BorderBounce,ShooterEnemy::Double, 5,5,-2,0,300,DEFAULT_SHOOT_FREQ*4);
-            spawn_enemy(ShooterEnemy::BorderBounce,ShooterEnemy::Double, 5,-5,-2,800-ShooterEnemy::ENEMY_SIZE,300,DEFAULT_SHOOT_FREQ*4);
+            spawn_enemy(ShooterEnemy::BorderBounce,ShooterEnemy::Double,
+                        7, 5, 2, 0, 50, DEFAULT_SHOOT_FREQ*6);
+            spawn_enemy(ShooterEnemy::BorderBounce,ShooterEnemy::Double,
+                        8, -5, 2, 800-ShooterEnemy::ENEMY_SIZE, 50, DEFAULT_SHOOT_FREQ*6);
+            spawn_enemy(ShooterEnemy::BorderBounce,ShooterEnemy::Double,
+                        6, 5, -2, 0, 300, DEFAULT_SHOOT_FREQ*6);
+            spawn_enemy(ShooterEnemy::BorderBounce,ShooterEnemy::Double,
+                        9, -5, -2, 800-ShooterEnemy::ENEMY_SIZE, 300, DEFAULT_SHOOT_FREQ*6);
             break;
         }
         case 6:
         {
-            QList<QGraphicsItem*> itemsInScreen=parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder);
-            for(int i=0; i<itemsInScreen.size();++i){
-               if (typeid(*(itemsInScreen[i]))==typeid(ShooterEnemy)){
-                   parent_scene->removeItem(itemsInScreen[i]);
-                   delete itemsInScreen[i];
-               }
-            }
             ShooterEnemy* enemy[4];
 
-            enemy[0]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer, 3,0,0,50,0,DEFAULT_SHOOT_FREQ*4);
-            enemy[1]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer, 3,0,0,750,0,DEFAULT_SHOOT_FREQ*4);
-            enemy[2]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer, 3,0,0,150,0,DEFAULT_SHOOT_FREQ*4);
-            enemy[3]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer, 3,0,0,650,0,DEFAULT_SHOOT_FREQ*4);
-            enemy[0]->set_targetPos(100,100);
+            enemy[0]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer,
+                                 4, 0, 0, 50, 0, DEFAULT_SHOOT_FREQ*5);
+            enemy[1]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer,
+                                 4, 0, 0, 750, 0, DEFAULT_SHOOT_FREQ*6);
+            enemy[2]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer,
+                                 7, 0, 0, 150, 0, DEFAULT_SHOOT_FREQ*7);
+            enemy[3]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer,
+                                 7, 0, 0, 650, 0, DEFAULT_SHOOT_FREQ*8);
+            enemy[0]->set_targetPos(100, 100);
             enemy[1]->set_targetPos(700, 100);
-            enemy[2]->set_targetPos(300,150);
-            enemy[3]->set_targetPos(500,150);
+            enemy[2]->set_targetPos(300, 150);
+            enemy[3]->set_targetPos(500, 150);
+            enemy[3]->set_drop_powerup();
             break;
         }
         case 7:
         {
-            QList<QGraphicsItem*> itemsInScreen=parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder);
-            for(int i=0; i<itemsInScreen.size();++i){
-               if (typeid(*(itemsInScreen[i]))==typeid(ShooterEnemy)){
-                   parent_scene->removeItem(itemsInScreen[i]);
-                   delete itemsInScreen[i];
-               }
-            }
             ShooterEnemy* enemy[3];
-            enemy[0]=spawn_enemy(ShooterEnemy::Wave,ShooterEnemy::Forward,5,0,1,0,200,DEFAULT_SHOOT_FREQ*3);
+            enemy[0]=spawn_enemy(ShooterEnemy::Wave, ShooterEnemy::Forward,
+                                 6, 0, 1, 0, 120, DEFAULT_SHOOT_FREQ*4);
             enemy[0]->set_targetPos(0,120);
-            enemy[1]=spawn_enemy(ShooterEnemy::Wave,ShooterEnemy::Forward,5,0,1,800-ShooterEnemy::ENEMY_SIZE,400,DEFAULT_SHOOT_FREQ*3);
+            enemy[1]=spawn_enemy(ShooterEnemy::Wave, ShooterEnemy::Forward,
+                                 6, 0, 1, 750, 120, DEFAULT_SHOOT_FREQ*4);
             enemy[1]->set_targetPos(750,120);
-            enemy[2]=spawn_enemy(ShooterEnemy::Wave,ShooterEnemy::Forward,3,10,0,400,300,DEFAULT_SHOOT_FREQ*3);
-            enemy[2]->set_targetPos(0,250);
-           break;
+            enemy[2]=spawn_enemy(ShooterEnemy::Wave, ShooterEnemy::Forward,
+                                 12, 1, 0, 0, 250, DEFAULT_SHOOT_FREQ*3);
+            enemy[2]->set_targetPos(0, 250);
+            enemy[0]->set_drop_powerup();
+            break;
         }
         case 8:
         {
-            BulletPowerUp* bullet_powerup=new BulletPowerUp(rand()%10+1, rand()%10+1);
-            bullet_powerup->setPos(rand()%GAMEAREA_LENGTH/2,0);
-            parent_scene->addItem(bullet_powerup);
+            spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Circle,
+                        8, 0, 1, 250, 0, DEFAULT_SHOOT_FREQ*7);
+            spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Circle,
+                        13, 0, 4, 400, 0, DEFAULT_SHOOT_FREQ*5);
+            spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Circle,
+                        8, 0, 1, 550, 0, DEFAULT_SHOOT_FREQ*7);
             break;
         }
         case 9:
@@ -298,6 +270,7 @@ void GameEvent::trigger_event(int event_id)
             boss->show_health();
             //boss emits a signal at phase 3 to player
             connect(boss, SIGNAL(start_phase3()), shooter, SLOT(begin_phase3()));
+            connect(boss, SIGNAL(boss_dead(bool)), this, SLOT(trigger_game_over(bool)));
             break;
         }
         default:
@@ -317,7 +290,7 @@ ShooterEnemy* GameEvent::spawn_enemy(ShooterEnemy::EnemyPathingType pathing_type
 template <typename T>
 bool try_pause(QGraphicsItem* item)
 {
-    if (/*typeid(*item) == typeid(T)*/dynamic_cast<T*>(item) != nullptr)
+    if (dynamic_cast<T*>(item) != nullptr)
     {
         (dynamic_cast<T*>(item))->pause();
         return true;
@@ -343,7 +316,7 @@ void GameEvent::pause_game()
     {
         game_begin = true;
     }
-    else if (!shooter->get_health_var()->is_dead())
+    else
     {
         dialogue = new PopUpDialogue(parent_scene, "\t Press P to continue", NO_DURATION, PopUpDialogue::GameArea);
     }
@@ -353,7 +326,7 @@ void GameEvent::pause_game()
 template <typename T>
 bool try_unpause(QGraphicsItem* item)
 {
-    if (/*typeid(*item) == typeid(T)*/dynamic_cast<T*>(item) != nullptr)
+    if (dynamic_cast<T*>(item) != nullptr)
     {
         (dynamic_cast<T*>(item))->unpause();
         return true;
@@ -406,9 +379,19 @@ void GameEvent::trigger_clear_field(bool restart)
 }
 
 //gameover part
-void GameEvent::trigger_game_over()
+void GameEvent::trigger_game_over(bool win)
 {
-    pause_game(); //TODO: if we want to do like death animation or something, add it under here
-    dialogue = new PopUpDialogue(parent_scene, "\t YOU LOSE! RUNTIME ERROR!!", NO_DURATION, PopUpDialogue::GameArea);
+    //prevent the case of winning and losing at the same time
+    if (dialogue != nullptr) return;
+    if (win)
+    {
+        dialogue = new PopUpDialogue(parent_scene, "\t YOU WON!!!", NO_DURATION, PopUpDialogue::GameArea);
+    }
+    else
+    {
+        dialogue = new PopUpDialogue(parent_scene, "\t YOU LOSE! RUNTIME ERROR!!", NO_DURATION, PopUpDialogue::GameArea);
+    }
+    game_begin = false;
+    pause_game();
 }
 
