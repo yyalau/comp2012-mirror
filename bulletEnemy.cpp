@@ -7,7 +7,7 @@ BulletEnemy::BulletEnemy(int dx, int dy, BulletType bullet_type,
 {
     //setRect(0, 0, size_x, size_y);
     QPixmap bulletimage(":/image/images/bugbullet2.png");
-    setPixmap(bulletimage.scaled(size_x, size_y, Qt::KeepAspectRatio));
+    setPixmap(bulletimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
     setRotation(180);
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);

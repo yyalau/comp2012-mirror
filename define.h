@@ -45,6 +45,6 @@
 #define BOSS_POS_Y          10
 
 //for removing a bullet/enemy out of the screen (lmao can we do this?)
-#define REMOVE_ENTITY(X) { scene()->removeItem(X); delete (X); }
+#define REMOVE_ENTITY(X) { scene()->removeItem(X); delete (X); (X) = nullptr; }
 
 #endif // DEFINE_H

@@ -15,10 +15,12 @@
  * @enum BossPhase: Name of the phase the boss is in
  *
  * PRIVATE DATA MEMBERS
- * @include phase: See enum above
  * @include PHASE_HEALTH: Health when the boss switches to next state. PHASE_HEALTH[X] -> go to state X
+ * @include phase: See enum above
  * @include boss_to_next_phase: flag for allowing boss to switch from Dialogue to other phases
  * @include health_bar: PopUpDialogue for displaying the health bar
+ * @include dialogue_counter: Counter to keep track of dialogues shown
+ * @include dialogue_timer: CustomTimer for displaying pre-battle dialogue
  * @include flag_timer: CustomTimer for setting flag to true after some time
  * @include player: Pointer to the player. Use set_player() when initializing the player in SetUp
  * @include set_shoot_freq(): change the shooting frequency (for each pattern)
@@ -28,7 +30,7 @@
  * @include set_player(): Set the shooter to point to the player
  * @include pause(), unpause(): Overrides ShooterBase's functions
  * @include show_health(): Show the boss's remaining health. ONLY CALL AFTER parent_scene->addItem()
- * @include start_bossfight(): Call this after the intro dialogue finishes
+ * @include start_bossfight(): Call this after the intro dialogue finishes //TODO: can remove
  *
  * SIGNALS
  * @include start_phase3(): sent to the shooterPlayer
@@ -39,6 +41,7 @@
  * @include collision(): overrides shooterBase's function
  * @include shoot(): overrides shooterBase's function
  * @include enable_flag(): set flag to true after the pattern name finishes showing
+ * @include show_dialogue(): display the dialogue before the battle
  */
 
 class ShooterBoss : public ShooterBase
@@ -55,24 +58,24 @@ public:
         PhasePre2,      //2 rays of "spaghetti code"
         Phase2,         //LEAK X DIRECT BYTES, Explode bullets fall from the top
         Phase3          //NullPointerException, disable moving?
-        //TODO
     };
 
 private:
-    BossPhase phase {Entrance};
     const int PHASE_HEALTH[6] {1000, 800, 650, 450, 250, 0};    //first number must be max_health, last number must be 0
+    const int DIALOGUE_FREQ {5000};         //each dialogue line lasts for 5 seconds
+
+    BossPhase phase {Entrance};
     bool boss_to_next_phase {false};
     PopUpDialogue* health_bar;
-    CustomTimer* flag_timer {nullptr};
+    CustomTimer *dialogue_timer {nullptr}, *flag_timer {nullptr};
+    int dialogue_counter {0};
     static ShooterPlayer* player;
     void set_shoot_freq(int shoot_freq);
     void set_phase(BossPhase phase);
 
-    int pre1_x_dir {1};
-    double phase1_angle {0.0};
-    double phase1_dir {1};
-    double phase2_y_angle {0.0};
-    double pre2_x_angle {0.0};    //combine with the other angles?
+    //phase-specific variables
+    int phase_dir {1};
+    double phase_angle {0.0};
 
 public:
     ShooterBoss(int hp = BOSS_HP, int dx = 0, int dy = 1,
@@ -95,6 +98,7 @@ public slots:
     virtual void collision() override;
     virtual void shoot() override;
     void enable_flag();
+    void show_dialogue();
 };
 
 #endif // SHOOTERBOSS_H

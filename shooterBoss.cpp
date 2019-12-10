@@ -24,6 +24,9 @@ ShooterBoss::ShooterBoss(int hp, int dx, int dy, int shoot_freq, bool shoot,
     shoot_timer= new CustomTimer(shoot_freq, false, this, SLOT(shoot()));
     //connect the timer and bullet slot
 
+    dialogue_timer = new CustomTimer(DIALOGUE_FREQ, false, this, SLOT(show_dialogue()));
+    //update dialogue every 5 seconds
+
     flag_timer = new CustomTimer();
 }
 
@@ -31,6 +34,7 @@ ShooterBoss::~ShooterBoss()
 {
     //base destructor should be automatically called
     if (health_bar != nullptr) delete health_bar;
+    delete dialogue_timer;
     delete flag_timer;
 }
 
@@ -67,6 +71,9 @@ void ShooterBoss::set_phase(BossPhase phase)
             emit start_phase3();
             break;
     }
+    //reset phase variables
+    phase_dir = 1;
+    phase_angle = 0.0;
 }
 
 void ShooterBoss::set_player(ShooterPlayer* shooter)
@@ -77,12 +84,14 @@ void ShooterBoss::set_player(ShooterPlayer* shooter)
 void ShooterBoss::pause()
 {
     ShooterBase::pause();
+    dialogue_timer->pause();
     flag_timer->pause();
 }
 
 void ShooterBoss::unpause()
 {
     ShooterBase::unpause();
+    dialogue_timer->unpause();
     flag_timer->unpause();
 }
 
@@ -96,7 +105,7 @@ void ShooterBoss::show_health()
     health->setDefaultTextColor(Qt::green);
 }
 
-void ShooterBoss::start_bossfight()
+inline void ShooterBoss::start_bossfight()
 {
     if (phase != Dialogue) return; //wrong phase to call
     set_phase(PhasePre1);
@@ -108,16 +117,24 @@ void ShooterBoss::move()
     {
         case Entrance:
             setPos(x()+dx, y()+dy);
-            if (y() >= 0) set_phase(Dialogue);
+            if (y() >= BOSS_POS_Y)
+            {
+                set_phase(Dialogue);
+                dialogue_counter = 1;
+            }
             break;
         case Dialogue:
         {
-            double x_diff = BOSS_POS_X - pos().x();
+            //chase after player before PhasePre2 begin, else just moves back to original position
+            double target_pos_x = (health->get_health() == PHASE_HEALTH[PhasePre2]) ?
+                        player->get_pos().x()-size_x/2 : BOSS_POS_X;
+            if (target_pos_x < 0) target_pos_x = 0;
+            double x_diff = target_pos_x - pos().x();
             double y_diff = BOSS_POS_Y - pos().y();
-            if (x_diff*x_diff + y_diff*y_diff < 25)
+            if (x_diff*x_diff + y_diff*y_diff < 100)
             {
                 dx = dy = 0;
-                setPos(BOSS_POS_X, BOSS_POS_Y);
+                setPos(target_pos_x, BOSS_POS_Y);
                 if (boss_to_next_phase)
                 {
                     for (int i=1; i<5; ++i)
@@ -134,9 +151,9 @@ void ShooterBoss::move()
             else
             {
                 dx = ((x_diff > 0) ? 1 : -1) *
-                        static_cast<int>(cos(atan(abs(y_diff/x_diff)))*5);
+                        static_cast<int>(cos(atan(abs(y_diff/x_diff)))*10);
                 dy = ((y_diff > 0) ? 1 : -1) *
-                        static_cast<int>(sin(atan(abs(y_diff/x_diff)))*5);
+                        static_cast<int>(sin(atan(abs(y_diff/x_diff)))*10);
                 setPos(x()+dx, y()+dy);
             }
 
@@ -150,14 +167,14 @@ void ShooterBoss::move()
         case PhasePre2:
         case Phase2:
         {
-            dx = pre1_x_dir * (phase == PhasePre1 ? 4 : 2);
-            if (x()+dx > BOSS_POS_X+100) pre1_x_dir = -1;
-            else if (x()+dx < BOSS_POS_X-100) pre1_x_dir = 1;
+            dx = phase_dir * (phase == PhasePre1 ? 4 : 2);
+            if (x()+dx > BOSS_POS_X+100) phase_dir = -1;
+            else if (x()+dx < BOSS_POS_X-100) phase_dir = 1;
 
             if (phase == Phase2)
             {
-                dy = static_cast<int>(5*sin(phase2_y_angle));
-                phase2_y_angle += 0.1;
+                dy = static_cast<int>(5*sin(phase_angle));
+                phase_angle += 0.1;
             }
             else dy = 0;
 
@@ -195,8 +212,6 @@ void ShooterBoss::collision()
             health_bar->set_width(static_cast<int>(current_phase_hp * GAMEAREA_LENGTH));
 
             //do something when health reaches checkpoint, activate next phase
-            if (phase == Phase3) continue;
-            //phase should be from 0 to 3
             if (health->get_health() == PHASE_HEALTH[phase+1]) // use <= if decrease_health is > 1
             {
                 switch (phase)
@@ -221,12 +236,18 @@ void ShooterBoss::collision()
                 }
 
                 set_phase(Dialogue);
+
+                //drop a powerup bullet
+                shoot_bullet(new BulletPowerUp(0, 4));
                 return;
             }
 
             //TODO: when health reach 0
-            emit boss_dead();
-            REMOVE_ENTITY(this)
+            if (health->get_health() == 0)
+            {
+                emit boss_dead();
+                REMOVE_ENTITY(this)
+            }
         }
     }
 }
@@ -250,12 +271,12 @@ void ShooterBoss::shoot()
         }
         case Phase1:
         {
-            int bullet_dx = static_cast<int>(sin(phase1_angle)*16);
+            int bullet_dx = static_cast<int>(sin(phase_angle)*16);
             int bullet_dy = 5;
 
-            if (phase1_angle > 1.5) phase1_dir = -1;  //PI/2 = 1.57
-            else if (phase1_angle < 0.1) phase1_dir = 1;
-            phase1_angle += phase1_dir * 0.08;
+            if (phase_angle > 1.5) phase_dir = -1;  //PI/2 = 1.57
+            else if (phase_angle < 0.1) phase_dir = 1;
+            phase_angle += phase_dir * 0.08;
 
             shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::OutOfBound));
             shoot_bullet(new BulletEnemy(-bullet_dx, bullet_dy, BulletEnemy::OutOfBound));
@@ -263,7 +284,7 @@ void ShooterBoss::shoot()
         }
         case PhasePre2:
         {
-            int x_increase = static_cast<int>(50*sin(pre2_x_angle));
+            int x_increase = static_cast<int>(40*sin(phase_angle));
 
             BulletEnemy* bullet_left = new BulletEnemy(0, 10, BulletEnemy::Normal);
             bullet_left->setPos(x()+x_increase, y()+size_y);
@@ -273,10 +294,10 @@ void ShooterBoss::shoot()
             bullet_right->setPos(x()+size_x-x_increase, y()+size_y);
             scene()->addItem(bullet_right);
 
-            pre2_x_angle += 0.3141;
-            if (pre2_x_angle > 6.2832)
+            phase_angle += 0.349;
+            if (phase_angle > 6.282)
             {
-                pre2_x_angle -= 6.2832;
+                phase_angle -= 6.282;
                 double x_diff = player->get_pos().x()-pos().x()-size_x/2;
                 double y_diff = player->get_pos().y()-pos().y()-size_y/2;
                 int bullet_dx = ((x_diff > 0) ? 1 : -1) *
@@ -318,4 +339,30 @@ void ShooterBoss::shoot()
 void ShooterBoss::enable_flag()
 {
     boss_to_next_phase = true;
+}
+
+void ShooterBoss::show_dialogue()
+{
+    if (dialogue_counter < 1 || dialogue_counter > 5) return;
+    switch (dialogue_counter)
+    {
+        case 1:
+            new PopUpDialogue(scene(), "This is dialogue 1", DIALOGUE_FREQ, PopUpDialogue::Dialogue);
+            break;
+        case 2:
+            new PopUpDialogue(scene(), "This is dialogue 2", DIALOGUE_FREQ, PopUpDialogue::Dialogue);
+            break;
+        case 3:
+            new PopUpDialogue(scene(), "This is dialogue 3", DIALOGUE_FREQ, PopUpDialogue::Dialogue);
+            break;
+        case 4:
+            new PopUpDialogue(scene(), "This is dialogue 4", DIALOGUE_FREQ, PopUpDialogue::Dialogue);
+            break;
+        case 5:
+            start_bossfight();
+            break;
+        default:
+            return;
+    }
+    ++dialogue_counter;
 }

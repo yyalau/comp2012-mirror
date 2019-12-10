@@ -10,7 +10,7 @@ ShooterPlayer::ShooterPlayer(int hp, int dx, int dy, int shoot_freq,  bool shoot
          ShooterBase("Player", hp, true, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq)
 {
     QPixmap shooterimage(":/image/images/shooter.png");
-    setPixmap(shooterimage.scaled(size_x, size_y, Qt::KeepAspectRatio));
+    setPixmap(shooterimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.3);
@@ -116,7 +116,7 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
             break;
 
         case(BulletPowerUp::CoutTestEndl): //increase shooter strength
-            powerup_shooter=true;
+            ++powerup_shooter;
             powerup_timer->start_timer(10000, true, this, SLOT(reset_shooter()));
             break;
 
@@ -214,7 +214,7 @@ void ShooterPlayer::shoot()
 
     shoot_bullet(new BulletPlayer(0, -20));
 
-    if (powerup_shooter){
+    if (powerup_shooter > 0){
         shoot_bullet(new BulletPlayer(8, -17));
         shoot_bullet(new BulletPlayer(-8, -17));
     }
@@ -222,7 +222,7 @@ void ShooterPlayer::shoot()
 
 void ShooterPlayer::reset_shooter()
 {
-    powerup_shooter = false;
+    --powerup_shooter;
 }
 
 void ShooterPlayer::reset_immunity()

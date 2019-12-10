@@ -10,7 +10,7 @@ ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shoo
        pathing_type(pathing_type), shooting_type(shooting_type)
 {
     QPixmap enemyimage(":/image/images/computer.png");
-    setPixmap(enemyimage.scaled(size_x, size_y, Qt::KeepAspectRatio));
+    setPixmap(enemyimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.5);

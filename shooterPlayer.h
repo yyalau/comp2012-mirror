@@ -17,7 +17,7 @@
  * PRIVATE DATA MEMBERS
  * @include speed: player's moving speed
  * @include immune: set to true if the player is immune (for 1 second after being hit)
- * @include powerup_shooter: return true if the shooter has been improved
+ * @include powerup_shooter: is greater than 0 if the shooter has been improved
  * @include paused: static variable storing the pause state of the game, changed with keyboard P
  * @include nullptr_phase: for boss's phase 3, remove the player's ability to move
  * @include powerup_timer, immune_timer: CustomTimer for keeping track of StackOverflow powerup and immunity's time
@@ -56,7 +56,7 @@ class ShooterPlayer: public ShooterBase{
 private:
     int speed {DEFAULT_SPEED};
     bool immune {false};
-    bool powerup_shooter {false};
+    int powerup_shooter {0};
     static bool paused;
     bool nullptr_phase {false};
     CustomTimer *powerup_timer {nullptr}, *immune_timer {nullptr};
