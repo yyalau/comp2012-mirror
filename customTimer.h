@@ -43,7 +43,6 @@ public:
     CustomTimer() = default;
     CustomTimer(int interval, bool singleShot,
                 const QObject* receiver = nullptr, const char* member = nullptr);
-    CustomTimer(int delay_ms);
     void start_timer(int interval, bool singleShot,
                 const QObject* receiver = nullptr, const char* member = nullptr);
     virtual ~CustomTimer();
