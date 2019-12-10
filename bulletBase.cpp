@@ -24,15 +24,14 @@ void BulletBase::unpause()
     move_timer->unpause();
 }
 
+bool BulletBase::out_of_bound()
+{
+    return !(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
+            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y()));
+}
+
 void BulletBase::move()
 {
     //move the bullets
     setPos(x()+dx,y()+dy);
-
-    //remove the bullets once its out of bound
-    if (!(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
-            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y())))
-    {
-        REMOVE_ENTITY(this)
-    }
 }

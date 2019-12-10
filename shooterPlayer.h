@@ -21,6 +21,7 @@
  * @include paused: static variable storing the pause state of the game, changed with keyboard P
  * @include nullptr_phase: for boss's phase 3, remove the player's ability to move
  * @include powerup_timer, immune_timer: CustomTimer for keeping track of StackOverflow powerup and immunity's time
+ * @include set_sprite(): Change the sprite to indicate immunity
  *
  * PRIVATE MEMBER FUNCTION RE-IMPLEMENTATIONS
  * @implements keyPressEvent(QKeyEvent*): handles keyboard input, updates player velocity and is_shooting
@@ -47,11 +48,13 @@
  * @include begin_phase3(): set null_pointer to true when boss's phase 3 starts
  */
 
-#define DEFAULT_SPEED 10
-class BulletPowerUp;
-
 class ShooterPlayer: public ShooterBase{
     Q_OBJECT
+
+public:
+    static const int DEFAULT_SPEED {10};
+    static const int PLAYER_SIZE_X {24};
+    static const int PLAYER_SIZE_Y {38};
 
 private:
     int speed {DEFAULT_SPEED};
@@ -63,17 +66,20 @@ private:
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void focusOutEvent(QFocusEvent* event) override;
+    void set_sprite(const char* sprite);
 
 public:
     ShooterPlayer(int hp = DEFAULT_PLAYER_HP, int dx = 0, int dy = 0,
                   int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false,
-                  int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
-                  int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
+                  int size_x = PLAYER_SIZE_X, int size_y = PLAYER_SIZE_Y,
+                  int move_freq = DEFAULT_FREQ);
     //TODO: Destructor for the timer? Probably not needed actually, we dont delete the player
     QPointF get_pos();
     virtual void pause() override;
     virtual void unpause() override;
     void process_powerup(BulletPowerUp* bullet);
+    virtual bool collision() override;
+    bool collision(QGraphicsItem* collision_item);
 
 signals:
     void pause_all();
@@ -84,7 +90,6 @@ signals:
 
 public slots:
     virtual void move() override;
-    virtual void collision() override;
     virtual void shoot() override;
     void reset_shooter();
     void reset_immunity();

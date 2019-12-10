@@ -53,9 +53,10 @@ private:
     PopUpDialogue* dialogue;
     ShooterPlayer* shooter;
     CustomTimer* event_timer;
-    int game_timer {0};
+    int game_timer {3000};
     static bool game_begin;
-    ShooterEnemy* spawn_enemy(ShooterEnemy::EnemyPathingType pathing_type, ShooterEnemy::EnemyShootingType shooting_type, int hp, int dx, int dy,int initX, int initY, int shoot_freq = 2*DEFAULT_SHOOT_FREQ);
+    ShooterEnemy* spawn_enemy(ShooterEnemy::EnemyPathingType pathing_type, ShooterEnemy::EnemyShootingType shooting_type,
+                              int hp, int dx, int dy,int initX, int initY, int shoot_freq = 2*DEFAULT_SHOOT_FREQ);
 
 public:
     GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QString instructions);

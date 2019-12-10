@@ -1,6 +1,8 @@
 #ifndef DEFINE_H
 #define DEFINE_H
 
+#include <QGraphicsScene>
+
 /**
   * Some defines to make the code easier to read
   * TODO: change to const int and templates?
@@ -27,24 +29,17 @@
 #define DEFAULT_FREQ        MIN_FREQ
 #define DEFAULT_SHOOT_FREQ  5*MIN_FREQ
 
-//hitbox sizes
-#define BULLET_SIZE 30
-#define ENTITY_SIZE 40
-#define ENEMY_SIZE 50
-#define PLAYER_SIZE 70
-
 //player and enemy's health
-#define DEFAULT_PLAYER_HP   5
+#define DEFAULT_PLAYER_HP   200
 #define DEFAULT_ENEMY_HP    3
 
-//boss
-#define BOSS_HP             1000
-#define BOSS_SIZE_X         300
-#define BOSS_SIZE_Y         200
-#define BOSS_POS_X          (GAMEAREA_LENGTH-BOSS_SIZE_X)/2      //250
-#define BOSS_POS_Y          10
+//for removing a bullet/enemy out of the screen
 
-//for removing a bullet/enemy out of the screen (lmao can we do this?)
-#define REMOVE_ENTITY(X) { scene()->removeItem(X); delete (X); (X) = nullptr; }
+template <typename T>
+void REMOVE_ENTITY(QGraphicsScene* scene, T* X)
+{
+    scene->removeItem(X);
+    delete (X);
+}
 
 #endif // DEFINE_H

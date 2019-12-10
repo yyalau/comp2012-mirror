@@ -5,8 +5,8 @@ ShooterPlayer* ShooterEnemy::player = nullptr;
 
 ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,
                            int hp, int dx, int dy, int shoot_freq, bool shoot,
-                           int size_x, int size_y, int move_freq, int coll_freq) :
-       ShooterBase("Enemy", hp, false, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq),
+                           int size_x, int size_y, int move_freq) :
+       ShooterBase("Enemy", hp, false, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq),
        pathing_type(pathing_type), shooting_type(shooting_type)
 {
     QPixmap enemyimage(":/image/images/computer.png");
@@ -25,9 +25,6 @@ ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shoo
     move_timer= new CustomTimer(move_freq, false, this, SLOT(move()));
     //connect the timer and move slot
 
-    coll_timer= new CustomTimer(coll_freq, false, this, SLOT(collision()));
-    //connect the timer and collision slot
-
     shoot_timer= new CustomTimer(shoot_freq, false, this, SLOT(shoot()));
     //connect the timer and bullet slot
 }
@@ -45,6 +42,13 @@ void ShooterEnemy::set_targetPos(int x, int y)
 
 void ShooterEnemy::set_pathing_type(EnemyPathingType pathingType){
     pathing_type = pathingType;
+}
+
+bool ShooterEnemy::out_of_bound()
+{
+    //remove once its out of bound
+    return !(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
+            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y()));
 }
 
 void ShooterEnemy::move()
@@ -131,48 +135,30 @@ void ShooterEnemy::move()
 
     //show and move health
     health->setPos(x()+size_x,y());
-
-    //remove once its out of bound
-    if (!(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
-            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y())))
-    {
-        REMOVE_ENTITY(this)
-    }
 }
 
-void ShooterEnemy::collision()
+bool ShooterEnemy::collision()
 {
-    QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
+    //decrease own health
+    health->decrease_health();
 
-    for(int i=0; i<colliding_items.size(); ++i){
-        if (typeid(*(colliding_items[i]))==typeid (BulletPlayer))
+    //remove if dead
+    if (health->is_dead()) {
+        //TODO: move to destructor
+        if (shooting_type == ExplodeOnDeath)
         {
-            //delete the other bullet
-            REMOVE_ENTITY(colliding_items[i])
+            double x_diff = player->get_pos().x()-pos().x()-size_x/2;
+            double y_diff = player->get_pos().y()-pos().y()-size_y/2;
+            int bullet_dx = ((x_diff > 0) ? 1 : -1) *
+                    static_cast<int>(cos(atan(abs(y_diff/x_diff)))*20);
+            int bullet_dy = ((y_diff > 0) ? 1 : -1) *
+                    static_cast<int>(sin(atan(abs(y_diff/x_diff)))*20);
 
-            //decrease own health
-            health->decrease_health();
-
-            //remove if dead
-            if (health->is_dead()) {
-                if (shooting_type == ExplodeOnDeath)
-                {
-                    double x_diff = player->get_pos().x()-pos().x()-size_x/2;
-                    double y_diff = player->get_pos().y()-pos().y()-size_y/2;
-                    int bullet_dx = ((x_diff > 0) ? 1 : -1) *
-                            static_cast<int>(cos(atan(abs(y_diff/x_diff)))*20);
-                    int bullet_dy = ((y_diff > 0) ? 1 : -1) *
-                            static_cast<int>(sin(atan(abs(y_diff/x_diff)))*20);
-
-                    shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
-                }
-
-                REMOVE_ENTITY(this)
-
-                return;
-            }
+            shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
         }
     }
+
+    return true;
 }
 
 void ShooterEnemy::shoot()

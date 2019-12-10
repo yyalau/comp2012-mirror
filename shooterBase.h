@@ -38,28 +38,31 @@
 class ShooterBase: public QObject, public QGraphicsPixmapItem{
     Q_OBJECT
 
+public:
+    static const int ENTITY_SIZE {40};
+
 protected:
     Health* health;
     int dx, dy;
     int size_x, size_y;
-    int move_freq, coll_freq, shoot_freq;
-    CustomTimer *move_timer, *coll_timer, *shoot_timer;
+    int move_freq, shoot_freq;
+    CustomTimer *move_timer, *shoot_timer;
     bool is_shooting;
 
 public:
     ShooterBase(QString, int hp, bool health_title, int dx = 0, int dy = 0,
                 int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false,
                 int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
-                int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
+                int move_freq = DEFAULT_FREQ);
     ~ShooterBase();
     Health* get_health_var();
     virtual void pause();
     virtual void unpause();
     void shoot_bullet(BulletBase* bullet);
+    virtual bool collision() = 0;
 
 public slots:
     virtual void move() = 0;
-    virtual void collision() = 0;
     virtual void shoot() = 0;
 
 };

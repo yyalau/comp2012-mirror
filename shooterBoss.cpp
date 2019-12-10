@@ -5,8 +5,8 @@
 ShooterPlayer* ShooterBoss::player = nullptr;
 
 ShooterBoss::ShooterBoss(int hp, int dx, int dy, int shoot_freq, bool shoot,
-                         int size_x, int size_y, int move_freq, int coll_freq) :
-     ShooterBase("Boss", hp, true, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq)
+                         int size_x, int size_y, int move_freq) :
+     ShooterBase("Boss", hp, true, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq)
 {
     //TODO: use another sprite
     QPixmap enemyimage(":/image/images/computer.png");
@@ -17,9 +17,6 @@ ShooterBoss::ShooterBoss(int hp, int dx, int dy, int shoot_freq, bool shoot,
 
     move_timer= new CustomTimer(move_freq, false, this, SLOT(move()));
     //connect the timer and move slot
-
-    coll_timer= new CustomTimer(coll_freq, false, this, SLOT(collision()));
-    //connect the timer and collision slot
 
     shoot_timer= new CustomTimer(shoot_freq, false, this, SLOT(shoot()));
     //connect the timer and bullet slot
@@ -184,72 +181,62 @@ void ShooterBoss::move()
     }
 }
 
-void ShooterBoss::collision()
+bool ShooterBoss::collision()
 {
-    if (phase == Entrance || phase == Dialogue) return;
+    if (phase == Entrance || phase == Dialogue) return false;
 
-    QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
+    //decrease own health
+    health->decrease_health();
 
-    for(int i=0; i<colliding_items.size(); ++i){
-        if (typeid(*(colliding_items[i]))==typeid (BulletPlayer))
+    //change the health bar's width
+    double current_phase_hp = 0.0;
+    for (int i=1; i<6; ++i)
+    {
+        if (health->get_health() >= PHASE_HEALTH[i])
         {
-            //delete the other bullet
-            REMOVE_ENTITY(colliding_items[i])
-
-            //decrease own health
-            health->decrease_health();
-
-            //change the health bar's width
-            double current_phase_hp = 0.0;
-            for (int i=1; i<6; ++i)
-            {
-                if (health->get_health() >= PHASE_HEALTH[i])
-                {
-                    current_phase_hp = static_cast<double>(health->get_health()-PHASE_HEALTH[i])/(PHASE_HEALTH[i-1]-PHASE_HEALTH[i]);
-                    break;
-                }
-            }
-            health_bar->set_width(static_cast<int>(current_phase_hp * GAMEAREA_LENGTH));
-
-            //do something when health reaches checkpoint, activate next phase
-            if (health->get_health() == PHASE_HEALTH[phase+1]) // use <= if decrease_health is > 1
-            {
-                switch (phase)
-                {
-                    case PhasePre1: //show Phase1's pattern name
-                        new PopUpDialogue(scene(), "IndexOutOfBoundException", 1500, PopUpDialogue::Dialogue);
-                        flag_timer->start_timer(2000, true, this, SLOT(enable_flag()));
-                        break;
-                    case Phase1:    //just enable flag after 1 second
-                        flag_timer->start_timer(1000, true, this, SLOT(enable_flag()));
-                        break;
-                    case PhasePre2: //show Phase2's pattern name
-                        new PopUpDialogue(scene(), "ERROR: LEAK 108 DIRECT BYTES", 1500, PopUpDialogue::Dialogue);
-                        flag_timer->start_timer(2000, true, this, SLOT(enable_flag()));
-                        break;
-                    case Phase2:    //show Phase3's pattern name
-                        new PopUpDialogue(scene(), "NullPointerException\nYou cannot move in this phase!", 2500, PopUpDialogue::Dialogue);
-                        flag_timer->start_timer(3000, true, this, SLOT(enable_flag()));
-                        break;
-                    default:
-                        break;
-                }
-
-                set_phase(Dialogue);
-
-                //drop a powerup bullet
-                shoot_bullet(new BulletPowerUp(0, 4));
-                return;
-            }
-
-            //TODO: when health reach 0
-            if (health->get_health() == 0)
-            {
-                emit boss_dead();
-                REMOVE_ENTITY(this)
-            }
+            current_phase_hp = static_cast<double>(health->get_health()-PHASE_HEALTH[i])/(PHASE_HEALTH[i-1]-PHASE_HEALTH[i]);
+            break;
         }
     }
+    health_bar->set_width(static_cast<int>(current_phase_hp * GAMEAREA_LENGTH));
+
+    //do something when health reaches checkpoint, activate next phase
+    if (health->get_health() == PHASE_HEALTH[phase+1]) // use <= if decrease_health is > 1
+    {
+        switch (phase)
+        {
+            case PhasePre1: //show Phase1's pattern name
+                new PopUpDialogue(scene(), "IndexOutOfBoundException", 1500, PopUpDialogue::Dialogue);
+                flag_timer->start_timer(2000, true, this, SLOT(enable_flag()));
+                break;
+            case Phase1:    //just enable flag after 1 second
+                flag_timer->start_timer(1000, true, this, SLOT(enable_flag()));
+                break;
+            case PhasePre2: //show Phase2's pattern name
+                new PopUpDialogue(scene(), "ERROR: LEAK 108 DIRECT BYTES", 1500, PopUpDialogue::Dialogue);
+                flag_timer->start_timer(2000, true, this, SLOT(enable_flag()));
+                break;
+            case Phase2:    //show Phase3's pattern name
+                new PopUpDialogue(scene(), "NullPointerException\nYou cannot move in this phase!", 2500, PopUpDialogue::Dialogue);
+                flag_timer->start_timer(3000, true, this, SLOT(enable_flag()));
+                break;
+            default:
+                break;
+        }
+
+        set_phase(Dialogue);
+
+        //drop a powerup bullet
+        shoot_bullet(new BulletPowerUp(0, 4));
+    }
+
+    //TODO: when health reach 0
+    if (health->get_health() == 0)
+    {
+        emit boss_dead();
+    }
+
+    return true;
 }
 
 void ShooterBoss::shoot()
@@ -320,7 +307,7 @@ void ShooterBoss::shoot()
         case Phase3:
         {
             int dummy_dir_x = (rand()%2) * 2 - 1; //1 or -1
-            int dummy_x = (dummy_dir_x == 1) ? 0 : GAMEAREA_LENGTH-ENEMY_SIZE;
+            int dummy_x = (dummy_dir_x == 1) ? 0 : GAMEAREA_LENGTH-ShooterEnemy::ENEMY_SIZE;
             int dummy_y = 200 + rand()%150;
 
             ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::ExplodeOnDeath, 1, 7*dummy_dir_x, 0);

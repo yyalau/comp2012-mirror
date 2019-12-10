@@ -15,7 +15,13 @@
 class BulletPlayer:public BulletBase{
 
 public:
-    BulletPlayer(int dx = 0, int dy = 0, int size_x = BULLET_SIZE, int size_y = BULLET_SIZE,
+    //bullet sprite is flipped 90 degrees
+    static const int BULLETPLAYER_SIZE_X {31};
+    static const int BULLETPLAYER_SIZE_Y {18};
+
+public:
+    BulletPlayer(int dx = 0, int dy = 0,
+                 int size_x = BULLETPLAYER_SIZE_X, int size_y = BULLETPLAYER_SIZE_Y,
                  int move_freq = DEFAULT_FREQ);
 
 public slots:

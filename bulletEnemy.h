@@ -44,6 +44,7 @@ public:
     BulletEnemy(int dx = 0, int dy = 0, BulletType bullet_type = Normal,
                 int size_x = BULLET_SIZE, int size_y = BULLET_SIZE,
                 int move_freq = DEFAULT_FREQ);
+    virtual bool out_of_bound() override;
 
 public slots:
     virtual void move() override;

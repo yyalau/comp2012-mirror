@@ -49,6 +49,14 @@ class ShooterBoss : public ShooterBase
     Q_OBJECT
 
 public:
+    static const int BOSS_HP {1000};
+    static const int BOSS_SIZE_X {300};
+    static const int BOSS_SIZE_Y {200};
+    static const int BOSS_POS_X {(GAMEAREA_LENGTH-BOSS_SIZE_X)/2};
+    static const int BOSS_POS_Y {10};
+    static const int DIALOGUE_FREQ {3000};       //each dialogue line lasts for 5 seconds
+
+public:
     enum BossPhase
     {
         Entrance = -2,  //for entering the screen only
@@ -61,8 +69,7 @@ public:
     };
 
 private:
-    const int PHASE_HEALTH[6] {1000, 800, 650, 450, 250, 0};    //first number must be max_health, last number must be 0
-    const int DIALOGUE_FREQ {5000};         //each dialogue line lasts for 5 seconds
+    const int PHASE_HEALTH[6] = {BOSS_HP, 825, 625, 400, 175, 0};
 
     BossPhase phase {Entrance};
     bool boss_to_next_phase {false};
@@ -81,13 +88,14 @@ public:
     ShooterBoss(int hp = BOSS_HP, int dx = 0, int dy = 1,
                 int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = true,
                 int size_x = BOSS_SIZE_X, int size_y = BOSS_SIZE_Y,
-                int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
+                int move_freq = DEFAULT_FREQ);
     ~ShooterBoss() override;
     static void set_player(ShooterPlayer* shooter);
     virtual void pause() override;
     virtual void unpause() override;
     void show_health();
     void start_bossfight();
+    virtual bool collision() override;
 
 signals:
     void start_phase3();
@@ -95,7 +103,6 @@ signals:
 
 public slots:
     virtual void move() override;
-    virtual void collision() override;
     virtual void shoot() override;
     void enable_flag();
     void show_dialogue();

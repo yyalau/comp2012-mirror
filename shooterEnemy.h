@@ -33,6 +33,9 @@ class ShooterEnemy:public ShooterBase{
     Q_OBJECT //implies an object can handle signals
 
 public:
+    static const int ENEMY_SIZE {40};
+
+public:
     enum EnemyPathingType
     {
         Linear,             //Move in straight line, disappears when out of bound
@@ -70,15 +73,16 @@ public:
     ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,
                  int hp = DEFAULT_ENEMY_HP, int dx = 0, int dy = 0,
                  int shoot_freq = 2*DEFAULT_SHOOT_FREQ, bool shoot = true,
-                 int size_x = ENTITY_SIZE, int size_y = ENTITY_SIZE,
-                 int move_freq = DEFAULT_FREQ, int coll_freq = DEFAULT_FREQ);
+                 int size_x = ENEMY_SIZE, int size_y = ENEMY_SIZE,
+                 int move_freq = DEFAULT_FREQ);
     static void set_player(ShooterPlayer* shooter);
     void set_targetPos(int x, int y);
     void set_pathing_type(EnemyPathingType pathingType);
+    virtual bool collision() override;
+    bool out_of_bound();
 
 public slots:
     virtual void move() override;
-    virtual void collision() override;
     virtual void shoot() override;
 };
 

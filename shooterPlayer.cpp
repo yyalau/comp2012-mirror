@@ -6,26 +6,28 @@
 bool ShooterPlayer::paused = true;
 
 ShooterPlayer::ShooterPlayer(int hp, int dx, int dy, int shoot_freq,  bool shoot,
-                             int size_x, int size_y, int move_freq, int coll_freq) :
-         ShooterBase("Player", hp, true, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, coll_freq)
+                             int size_x, int size_y, int move_freq) :
+         ShooterBase("Player", hp, true, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq)
 {
-    QPixmap shooterimage(":/image/images/shooter.png");
-    setPixmap(shooterimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
-    setShapeMode(QGraphicsPixmapItem::MaskShape);
-    setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
-    setScale(1.3);
+    set_sprite(":/image/images/shooter.png");
 
     move_timer= new CustomTimer(move_freq, false, this, SLOT(move()));
     //connect the timer and move slot
-
-    coll_timer= new CustomTimer(coll_freq, false, this, SLOT(collision()));
-    //connect the timer and collision slot
 
     shoot_timer= new CustomTimer(shoot_freq, false, this, SLOT(shoot()));
     //connect the timer and bullet slot
 
     powerup_timer = new CustomTimer();
     immune_timer = new CustomTimer();
+}
+
+inline void ShooterPlayer::set_sprite(const char *sprite)
+{
+    QPixmap shooterimage(sprite);
+    setPixmap(shooterimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
+    setShapeMode(QGraphicsPixmapItem::MaskShape);
+    setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
+    setScale(1.3);
 }
 
 
@@ -154,59 +156,36 @@ void ShooterPlayer::move()
     setPos(new_x, new_y);
 }
 
-void ShooterPlayer::collision()
+bool ShooterPlayer::collision()
 {
-    QList<QGraphicsItem*> colliding_items= scene()->collidingItems(this);
+    //do nothing, should not use this collision
+    return false;
+}
 
-    //power up bullet should not be affected by immunity? yea
-    for (int i=0; i<colliding_items.size(); ++i)
+bool ShooterPlayer::collision(QGraphicsItem* collision_item)
+{
+    if (typeid(*collision_item)==typeid(BulletPowerUp))
     {
-        if(typeid(*(colliding_items[i]))==typeid (BulletPowerUp))
+        process_powerup(dynamic_cast<BulletPowerUp*>(collision_item));
+    }
+    else //should be either BulletEnemy, ShooterEnemy or ShooterBoss
+    {
+        if (immune) return false;
+        //decrease own health
+        health->decrease_health();
+        if (health->is_dead())
         {
-            process_powerup(dynamic_cast<BulletPowerUp*>(colliding_items[i]));
-            BulletPowerUp::PowerUpType temp = dynamic_cast<BulletPowerUp*>(colliding_items[i])->get_power_type();
-            REMOVE_ENTITY(colliding_items[i])
-            if (temp == BulletPowerUp::StackOverflow) return; //protect the case of hitting powerup AND bullet at the same time
+            emit player_dead();
+        }
+        else
+        {
+            immune = true;
+            set_sprite(":/image/images/shooter_hurt.png");
+            immune_timer->start_timer(1000, true, this, SLOT(reset_immunity()));
         }
     }
-
-    if (immune) return;
-
-    for(int i=0; i<colliding_items.size(); ++i){
-        if (typeid(*(colliding_items[i]))==typeid (BulletEnemy))
-        {
-            //delete the enemies bullet
-            REMOVE_ENTITY(colliding_items[i])
-
-            //decrease own health
-            health->decrease_health();
-            if (health->is_dead())
-            {
-                emit player_dead();
-            }
-            else
-            {
-                immune = true;
-                immune_timer->start_timer(1000, true, this, SLOT(reset_immunity()));
-            }
-            return;
-        }
-        else if (typeid(*(colliding_items[i]))==typeid (ShooterEnemy) || typeid(*(colliding_items[i]))==typeid (ShooterBoss))
-        {
-            //decrease own health
-            health->decrease_health();
-            if (health->is_dead())
-            {
-                emit player_dead();
-            }
-            else
-            {
-                immune = true;
-                immune_timer->start_timer(1000, true, this, SLOT(reset_immunity()));
-            }
-            return;
-        }
-    }
+    //return true if item is a bullet (delete), false if item is an enemy
+    return (dynamic_cast<ShooterBase*>(collision_item) == nullptr);
 }
 
 void ShooterPlayer::shoot()
@@ -223,12 +202,13 @@ void ShooterPlayer::shoot()
 
 void ShooterPlayer::reset_shooter()
 {
-    --powerup_shooter;
+    if (powerup_shooter > 0) --powerup_shooter;
 }
 
 void ShooterPlayer::reset_immunity()
 {
     immune = false;
+    set_sprite(":/image/images/shooter.png");
 }
 
 void ShooterPlayer::begin_phase3()

@@ -12,7 +12,18 @@ BulletEnemy::BulletEnemy(int dx, int dy, BulletType bullet_type,
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1);
+}
 
+bool BulletEnemy::out_of_bound()
+{
+    if (bullet_type == OutOfBound)
+        return !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y()));
+    else if (bullet_type == Explode)
+        return !(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
+            !(INSCREEN_DOWN(pos().y()));
+    else
+        return !(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
+            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y()));
 }
 
 void BulletEnemy::move()
@@ -20,26 +31,18 @@ void BulletEnemy::move()
     switch (bullet_type)
     {
         case Normal:
-            BulletBase::move();
             break;
         case OutOfBound:
         {
             //this type is only used for the boss. the following segment handles creating the pattern
             //TODO
-            if (!bounced && y() > 350)
+            if (!bounced && y() > 320)
             {
                 bounced = true;
                 dx = -dx;
+                dy += 2;
             }
 
-            //move the bullets
-            setPos(x()+dx,y()+dy);
-
-            //remove the bullets once its out of bound
-            if (!(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y())))
-            {
-                REMOVE_ENTITY(this)
-            }
             break;
         }
         case Falling:
@@ -50,7 +53,6 @@ void BulletEnemy::move()
                 fall_counter = 0;
             }
 
-            BulletBase::move();
             break;
         case Explode:
             if (INSCREEN_UP(pos().y())) //starts falling after reaching the screen
@@ -62,8 +64,6 @@ void BulletEnemy::move()
                     fall_counter = 0;
                 }
             }
-
-            setPos(x()+dx,y()+dy);
 
             if (!(INSCREEN_DOWN(pos().y()+dy)))
             {
@@ -79,13 +79,12 @@ void BulletEnemy::move()
 
                     angle += 0.3927;    //shoot in 9 directions
                 }
-
-                REMOVE_ENTITY(this)
             }
             break;
         default:
             break;
     }
 
+    BulletBase::move();
 }
 
