@@ -49,6 +49,7 @@ public:
     void pause();
     void unpause();
     void set_interval(int interval);
+    void stop();
 
 public slots:
     void restart_timer();

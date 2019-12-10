@@ -56,6 +56,61 @@ QList<QGraphicsItem*> filter_items(QList<QGraphicsItem*> all_items)
     return all_items;
 }
 
+void GameEvent::collision()
+{
+    //10 DEC: COLLISION DETECTION IS NOW CENTRALISED HERE
+    //COLLISION IS DONE ON PLAYER FIRST, THEN BOSS AND ENEMY (depending on "Ascending Order")
+
+    //shooter
+    QList<QGraphicsItem*> shooter_colliding_items= parent_scene->collidingItems(shooter);
+
+    for(int i=0; i<shooter_colliding_items.size(); ++i)
+    {
+        if(typeid(*(shooter_colliding_items[i]))==typeid(BulletPowerUp)
+                    || typeid(*(shooter_colliding_items[i]))==typeid(BulletEnemy))
+        {
+            if (shooter->collision(shooter_colliding_items[i]))
+                REMOVE_ENTITY(parent_scene, shooter_colliding_items[i]);
+        }
+        else if(typeid(*(shooter_colliding_items[i]))==typeid(ShooterEnemy)
+                    || typeid(*(shooter_colliding_items[i]))==typeid(ShooterBoss))
+        {
+            shooter->collision(shooter_colliding_items[i]);
+        }
+    }
+
+    QList<QGraphicsItem*> boss = filter_items<ShooterBoss>(
+                parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder));
+    QList<QGraphicsItem*> enemies = filter_items<ShooterEnemy>(
+                parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder));
+    if (boss.size() > 0) enemies.push_back(boss[0]); //should be 1 boss only
+
+    for(int i=0; i<enemies.size();++i)
+    {
+        //boss and enemy
+        ShooterBase* enemy = dynamic_cast<ShooterBase*>(enemies[i]);
+        QList<QGraphicsItem*> enemy_colliding_items = parent_scene->collidingItems(enemy);
+
+        for(int j=0; j<enemy_colliding_items.size(); ++j)
+        {
+            if(typeid(*(enemy_colliding_items[j]))==typeid(BulletPlayer))
+            {
+                //TODO? have nullptr check for dynamic cast, although probably unnecessary
+                if (enemy->collision())
+                    REMOVE_ENTITY(parent_scene, enemy_colliding_items[j]);
+
+                //Moved health == 0 check here as well, all REMOVE_ENTITY should be centralized
+                //Boss here as well?
+                if (enemy->get_health_var()->get_health() == 0)
+                {
+                    REMOVE_ENTITY(parent_scene, enemy);
+                    break; //exit the enemy_colliding_items loop, continue with the itemsInScreen loop
+                }
+            }
+        }
+    }
+}
+
 void GameEvent::increment_time()
 {
     ++game_timer;
@@ -84,92 +139,7 @@ void GameEvent::increment_time()
         emit time_reached(8);
     }
 
-    //10 DEC: COLLISION DETECTION IS NOW CENTRALISED HERE
-    //COLLISION IS DONE ON PLAYER FIRST, THEN BOSS AND ENEMY (depending on "Ascending Order")
-
-    //shooter
-    QList<QGraphicsItem*> shooter_colliding_items= parent_scene->collidingItems(shooter);
-
-    for(int i=0; i<shooter_colliding_items.size(); ++i)
-    {
-        if(typeid(*(shooter_colliding_items[i]))==typeid(BulletPowerUp)
-                    || typeid(*(shooter_colliding_items[i]))==typeid(BulletEnemy))
-        {
-            if (shooter->collision(shooter_colliding_items[i]))
-                REMOVE_ENTITY(parent_scene, shooter_colliding_items[i]);
-        }
-        else if(typeid(*(shooter_colliding_items[i]))==typeid(ShooterEnemy)
-                    || typeid(*(shooter_colliding_items[i]))==typeid(ShooterBoss))
-        {
-            shooter->collision(shooter_colliding_items[i]);
-        }
-    }
-
-    //delete out-of-bound items
-    //TODO: maybe can just select items outside boundary, so we need 4 QLists
-    QList<QGraphicsItem*> all_items=parent_scene->items(-100,-100,900,700,Qt::IntersectsItemShape,Qt::AscendingOrder);
-    for(int i=0; i<all_items.size(); ++i)
-    {
-        if (dynamic_cast<ShooterEnemy*>(all_items[i]) != nullptr)
-            if (dynamic_cast<ShooterEnemy*>(all_items[i])->out_of_bound())
-                REMOVE_ENTITY(parent_scene, all_items[i]);
-
-        if (dynamic_cast<BulletBase*>(all_items[i]) != nullptr)
-            if (dynamic_cast<BulletBase*>(all_items[i])->out_of_bound())
-                REMOVE_ENTITY(parent_scene, all_items[i]);
-    }
-
-    QList<QGraphicsItem*> itemsInScreen=parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder);
-    QList<QGraphicsItem*> boss = filter_items<ShooterBoss>(itemsInScreen);
-    QList<QGraphicsItem*> enemies = filter_items<ShooterBoss>(itemsInScreen);
-    for(int i=0; i<enemies.size();++i)
-    {
-        //boss and enemy
-            ShooterBase* enemy = dynamic_cast<ShooterBase*>(enemies[i]);
-            QList<QGraphicsItem*> enemy_colliding_items = parent_scene->collidingItems(enemy);
-
-            for(int j=0; j<enemy_colliding_items.size(); ++j)
-            {
-                if(typeid(*(enemy_colliding_items[j]))==typeid(BulletPlayer))
-                {
-                    //TODO? have nullptr check for dynamic cast, although probably unnecessary
-                    if (enemy->collision())
-                        REMOVE_ENTITY(parent_scene, enemy_colliding_items[j]); //?????
-
-                    //Moved health == 0 check here as well, all REMOVE_ENTITY should be centralized
-                    //Boss here as well?
-                    if (enemy->get_health_var()->get_health() == 0)
-                    {
-                        REMOVE_ENTITY(parent_scene, enemy);
-                        break; //exit the enemy_colliding_items loop, continue with the itemsInScreen loop
-                    }
-                }
-            }
-    }
-    for(int i=0; i<boss.size();++i)
-    {
-        //boss and enemy
-            ShooterBase* enemy = dynamic_cast<ShooterBase*>(boss[i]);
-            QList<QGraphicsItem*> enemy_colliding_items = parent_scene->collidingItems(enemy);
-
-            for(int j=0; j<enemy_colliding_items.size(); ++j)
-            {
-                if(typeid(*(enemy_colliding_items[j]))==typeid(BulletPlayer))
-                {
-                    //TODO? have nullptr check for dynamic cast, although probably unnecessary
-                    if (enemy->collision())
-                        REMOVE_ENTITY(parent_scene, enemy_colliding_items[j]); //?????
-
-                    //Moved health == 0 check here as well, all REMOVE_ENTITY should be centralized
-                    //Boss here as well?
-                    if (enemy->get_health_var()->get_health() == 0)
-                    {
-                        REMOVE_ENTITY(parent_scene, enemy);
-                        break; //exit the enemy_colliding_items loop, continue with the itemsInScreen loop
-                    }
-                }
-            }
-    }
+    collision();
 }
 
 void GameEvent::trigger_event(int event_id)

@@ -151,8 +151,8 @@ void ShooterPlayer::move()
         }
         return;
     }
-    double new_x = x() + (INSCREEN_LEFT(pos().x()+dx) && INSCREEN_RIGHT(pos().x()+dx) ? dx : 0);
-    double new_y = y() + (INSCREEN_UP(pos().y()+dy) && INSCREEN_DOWN(pos().y()+dy) ? dy : 0);
+    double new_x = x() + (INSCREEN_LEFT_RIGID(pos().x()+dx) && INSCREEN_RIGHT_RIGID(pos().x()+dx) ? dx : 0);
+    double new_y = y() + (INSCREEN_UP_RIGID(pos().y()+dy) && INSCREEN_DOWN_RIGID(pos().y()+dy) ? dy : 0);
     setPos(new_x, new_y);
 }
 

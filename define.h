@@ -14,10 +14,16 @@
 #define SCREEN_LENGTH       GAMEAREA_LENGTH+INFOBOX_LENGTH
 
 //for out of bound checking
-#define INSCREEN_LEFT(X)        (X) >= 0
-#define INSCREEN_RIGHT(X)       (X)+boundingRect().width() <= scene()->width()-INFOBOX_LENGTH
-#define INSCREEN_UP(Y)          (Y) >= 0
-#define INSCREEN_DOWN(Y)        (Y)+boundingRect().height() <= scene()->height()
+#define INSCREEN_LEFT(X)        (X) >= -20
+#define INSCREEN_RIGHT(X)       (X)+boundingRect().width() <= scene()->width()-INFOBOX_LENGTH+20
+#define INSCREEN_UP(Y)          (Y) >= -20
+#define INSCREEN_DOWN(Y)        (Y)+boundingRect().height() <= scene()->height()+20
+
+#define INSCREEN_LEFT_RIGID(X)        (X) >= 0
+#define INSCREEN_RIGHT_RIGID(X)       (X)+boundingRect().width() <= scene()->width()-INFOBOX_LENGTH
+#define INSCREEN_UP_RIGID(Y)          (Y) >= 0
+#define INSCREEN_DOWN_RIGID(Y)        (Y)+boundingRect().height() <= scene()->height()
+
 
 //player's starting position
 #define START_POS_X         400

@@ -35,7 +35,6 @@ void BulletEnemy::move()
         case OutOfBound:
         {
             //this type is only used for the boss. the following segment handles creating the pattern
-            //TODO
             if (!bounced && y() > 320)
             {
                 bounced = true;

@@ -45,6 +45,11 @@ void CustomTimer::set_interval(int interval)
     timer->start(interval);
 }
 
+void CustomTimer::stop()
+{
+    timer->stop();
+}
+
 
 void CustomTimer::restart_timer()
 {

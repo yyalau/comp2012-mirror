@@ -58,7 +58,7 @@ void ShooterBoss::set_phase(BossPhase phase)
             set_shoot_freq(15*MIN_FREQ);
             break;
         case PhasePre2:
-            set_shoot_freq(2*MIN_FREQ);
+            set_shoot_freq(4*MIN_FREQ);
             break;
         case Phase2:
             set_shoot_freq(20*MIN_FREQ);
@@ -258,7 +258,7 @@ void ShooterBoss::shoot()
         }
         case Phase1:
         {
-            int bullet_dx = static_cast<int>(sin(phase_angle)*16);
+            int bullet_dx = static_cast<int>(sin(phase_angle)*15);
             int bullet_dy = 5;
 
             if (phase_angle > 1.5) phase_dir = -1;  //PI/2 = 1.57
@@ -281,10 +281,10 @@ void ShooterBoss::shoot()
             bullet_right->setPos(x()+size_x-x_increase, y()+size_y);
             scene()->addItem(bullet_right);
 
-            phase_angle += 0.349;
-            if (phase_angle > 6.282)
+            phase_angle += 0.6283;
+            if (phase_angle > 6.283)
             {
-                phase_angle -= 6.282;
+                phase_angle -= 6.283;
                 double x_diff = player->get_pos().x()-pos().x()-size_x/2;
                 double y_diff = player->get_pos().y()-pos().y()-size_y/2;
                 int bullet_dx = ((x_diff > 0) ? 1 : -1) *
@@ -307,7 +307,7 @@ void ShooterBoss::shoot()
         case Phase3:
         {
             int dummy_dir_x = (rand()%2) * 2 - 1; //1 or -1
-            int dummy_x = (dummy_dir_x == 1) ? 0 : GAMEAREA_LENGTH-ShooterEnemy::ENEMY_SIZE;
+            int dummy_x = (dummy_dir_x == 1) ? 10 : GAMEAREA_LENGTH-ShooterEnemy::ENEMY_SIZE-10;
             int dummy_y = 200 + rand()%150;
 
             ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::ExplodeOnDeath, 1, 7*dummy_dir_x, 0);

@@ -135,6 +135,9 @@ void ShooterEnemy::move()
 
     //show and move health
     health->setPos(x()+size_x,y());
+
+    if (out_of_bound())
+        REMOVE_ENTITY(scene(), this);
 }
 
 bool ShooterEnemy::collision()

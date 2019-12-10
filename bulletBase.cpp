@@ -34,4 +34,7 @@ void BulletBase::move()
 {
     //move the bullets
     setPos(x()+dx,y()+dy);
+
+    if (out_of_bound())
+        REMOVE_ENTITY(scene(), this);
 }

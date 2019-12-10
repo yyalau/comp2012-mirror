@@ -42,10 +42,13 @@ void InfoBox::clear_powerup_info()
 {
     scene()->removeItem(powerup_text);
     delete powerup_text;
+    powerup_text = nullptr;
+    powerup_timer->stop();
 }
 
 void InfoBox::show_powerup_info(int event)
 {
+    if (powerup_text != nullptr) clear_powerup_info();
     switch(event){
         case BulletPowerUp::Breakpoint:
             powerup_text = new QGraphicsTextItem("Breakpoint: Added Health!");
