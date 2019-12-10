@@ -53,8 +53,9 @@ void ShooterPlayer::keyPressEvent(QKeyEvent* event)
             break;
         case Qt::Key_R:
             //only enable this at pause/gameover, also resets the player's position
-            if (!paused) break;
+            if (!paused&&!health->is_dead()) break;
             emit clear_field(true);
+            paused=false;
             break;
         default:
             break;
@@ -116,6 +117,9 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
             break;
 
         case(BulletPowerUp::CoutTestEndl): //increase shooter strength
+            if (powerup_shooter==true){
+                powerup_timer->pause();
+            }
             powerup_shooter=true;
             powerup_timer->start_timer(10000, true, this, SLOT(reset_shooter()));
             break;
