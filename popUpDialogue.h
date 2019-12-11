@@ -47,7 +47,8 @@ public:
         GameArea, //for pausing/game over screens, the dialogue covers 800*600
         FullScreen, //the dialogue covers 1100*600
         Dialogue,   //for dialogue messages
-        BossHealth  //for drawing boss's health bar
+        BossHealth,  //for drawing boss's health bar
+        InfoBox     //show message on InfoBox
     };
 
 private:
@@ -61,25 +62,28 @@ private:
     QColor color;
     double opacity;
     int x, y;
+    int text_x, text_y;
     int width, height;
     int duration;
 
     void create_dialogue(QString message, QColor color, double opacity,
-                         int x, int y, int width, int height);
+                         int x, int y, int width, int height,int text_x, int text_y);
     void set_duration(int duration);
 
 public:
     PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, QColor color, double opacity,
-                  int x, int y, int width, int height);
-    PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, PopUpType popup_type);
+                  int x, int y, int width, int height, int text_x=100, int text_y=SCREEN_HEIGHT/2);
+    PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, PopUpType popup_type,
+                  int text_x=100, int text_y=SCREEN_HEIGHT/2);
     ~PopUpDialogue();
     void pause();
     void unpause();
     void set_message(QString message);
     void set_width(int width);
+    void set_font(QFont font={"Times", 16} , QColor Color=Qt::black);
 
 public slots:
-    void remove();
+    PopUpDialogue* remove();
 
 
 };

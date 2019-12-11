@@ -1,30 +1,32 @@
 #include "popUpDialogue.h"
 
 PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, QColor color, double opacity,
-                             int x, int y, int width, int height):
+                             int x, int y, int width, int height, int text_x, int text_y):
     parent_scene(parent_scene)
 {
-    create_dialogue(message, color, opacity, x, y, width, height);
+    create_dialogue(message, color, opacity, x, y, width, height, text_x, text_y);
     set_duration(duration);
 }
 
-PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, PopUpType popup_type):
+PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, PopUpType popup_type, int text_x, int text_y):
     parent_scene(parent_scene), popup_type(popup_type)
 {
     switch (popup_type)
     {
         case GameArea:
-            create_dialogue(message, Qt::gray, 0.5, 0, 0, GAMEAREA_LENGTH, SCREEN_HEIGHT);
+            create_dialogue(message, Qt::gray, 0.5, 0, 0, GAMEAREA_LENGTH, SCREEN_HEIGHT, text_x, text_y);
             break;
         case FullScreen:
-            create_dialogue(message, Qt::gray, 0.5, 0, 0, SCREEN_LENGTH, SCREEN_HEIGHT);
-            popup_text->setPos(100,100);
+            create_dialogue(message, Qt::gray, 0.5, 0, 0, SCREEN_LENGTH, SCREEN_HEIGHT, text_x, text_y);
             break;
         case Dialogue:
-            create_dialogue(message, Qt::gray, 0.5, 0, SCREEN_HEIGHT/3, GAMEAREA_LENGTH, SCREEN_HEIGHT/3);
+            create_dialogue(message, Qt::gray, 0.5, 0, SCREEN_HEIGHT/3, GAMEAREA_LENGTH, SCREEN_HEIGHT/3, text_x, text_y);
             break;
         case BossHealth:
-            create_dialogue(message, Qt::red, 1, 0, SCREEN_HEIGHT-10, GAMEAREA_LENGTH, 10); //TODO: 10?
+            create_dialogue(message, Qt::red, 1, 0, SCREEN_HEIGHT-10, GAMEAREA_LENGTH, 10, text_x, text_y); //TODO: 10?
+            break;
+        case InfoBox:
+            create_dialogue(message, Qt::red, 0, 0, 0, 0, 0, text_x, text_y);
             break;
     }
     set_duration(duration);
@@ -38,7 +40,7 @@ PopUpDialogue::~PopUpDialogue()
     delete popup_text;
 }
 
-void PopUpDialogue::create_dialogue(QString message, QColor color, double opacity, int x, int y, int width, int height)
+void PopUpDialogue::create_dialogue(QString message, QColor color, double opacity, int x, int y, int width, int height, int text_x, int text_y)
 {
     //similar part of constructors
     this->message = message;
@@ -48,6 +50,8 @@ void PopUpDialogue::create_dialogue(QString message, QColor color, double opacit
     this->y = y;
     this->width = width;
     this->height = height;
+    this->text_x=text_x;
+    this->text_y= text_y;
 
     //popup a new scene
     popup_scene = new QGraphicsRectItem(x,y,width,height);
@@ -57,10 +61,9 @@ void PopUpDialogue::create_dialogue(QString message, QColor color, double opacit
 
     //show the message
     popup_text = new QGraphicsTextItem(message);
-    QFont Font("Times", 16);
-    popup_text->setFont(Font);
+    set_font();
 
-    popup_text->setPos(0, SCREEN_HEIGHT/2);
+    popup_text->setPos(text_x, text_y);
     parent_scene->addItem(popup_text);
 }
 
@@ -92,7 +95,14 @@ void PopUpDialogue::set_width(int width)
     popup_scene->setRect(x,y,width,height);
 }
 
-void PopUpDialogue::remove()
+void PopUpDialogue::set_font(QFont font, QColor color)
+{
+    popup_text->setFont(font);
+    popup_text->setDefaultTextColor(color);
+}
+
+PopUpDialogue* PopUpDialogue::remove()
 {
     delete this;
+    return nullptr;
 }

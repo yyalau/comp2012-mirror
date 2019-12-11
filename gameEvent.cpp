@@ -8,12 +8,12 @@ GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QStri
 {
 
     event_timer = new CustomTimer(MIN_FREQ, false, this, SLOT(increment_time()));
-    //connect the timer and time increase slot
 
+    //connect the timer and time increase slot
     connect(this, SIGNAL(time_reached(int)), this, SLOT(trigger_event(int))); //when time is reached, trigger game events
 
     //start game dialogue
-    dialogue = new PopUpDialogue(parent_scene, instructions, NO_DURATION, PopUpDialogue::FullScreen);
+    dialogue = new PopUpDialogue(parent_scene, instructions, NO_DURATION, PopUpDialogue::FullScreen,100,100);
 
     //for pausing/unpausing the game
     connect(shooter, SIGNAL(pause_all()), this, SLOT(pause_game()));
@@ -137,11 +137,6 @@ void GameEvent::increment_time()
         //emit time_reached((game_timer/200)-1 % 5);
         //emit time_reached(6);
     }
-    //if ((game_timer % 300)==0) //every 6 seconds
-    //{
-    //    emit time_reached(8);
-    //}
-
     collision();
 }
 
@@ -318,7 +313,7 @@ void GameEvent::pause_game()
     }
     else
     {
-        dialogue = new PopUpDialogue(parent_scene, "\t Press P to continue", NO_DURATION, PopUpDialogue::GameArea);
+        dialogue = new PopUpDialogue(parent_scene, "Press P to continue. \nPress R to restart.", NO_DURATION, PopUpDialogue::GameArea);
     }
 }
 
@@ -385,11 +380,11 @@ void GameEvent::trigger_game_over(bool win)
     if (dialogue != nullptr) return;
     if (win)
     {
-        dialogue = new PopUpDialogue(parent_scene, "\t YOU WON!!!", NO_DURATION, PopUpDialogue::GameArea);
+        dialogue = new PopUpDialogue(parent_scene, "YOU WON!!!", NO_DURATION, PopUpDialogue::GameArea);
     }
     else
     {
-        dialogue = new PopUpDialogue(parent_scene, "\t YOU LOSE! RUNTIME ERROR!!", NO_DURATION, PopUpDialogue::GameArea);
+        dialogue = new PopUpDialogue(parent_scene, "YOU LOSE! RUNTIME ERROR!!", NO_DURATION, PopUpDialogue::GameArea);
     }
     game_begin = false;
     pause_game();

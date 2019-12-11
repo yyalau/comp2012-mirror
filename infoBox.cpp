@@ -10,6 +10,13 @@ InfoBox::InfoBox(ShooterPlayer* shooter) :
     powerup_timer = new CustomTimer();
 
     connect(shooter, SIGNAL(powerup_text(int)), this, SLOT(show_powerup_info(int)));
+    connect(shooter, SIGNAL(shooter_text(int)), this, SLOT(show_shooter_info(int)));
+}
+
+InfoBox::~InfoBox()
+{
+    if (powerup_timer!= nullptr) delete powerup_timer;
+    if (powerup_text!=nullptr) delete powerup_text;
 }
 
 void InfoBox::show_general_info()
@@ -20,11 +27,10 @@ void InfoBox::show_general_info()
     shooter->get_health_var()->setDefaultTextColor(Qt::yellow);
 
     //instructions
-    QGraphicsTextItem* general_text= new QGraphicsTextItem;
-    general_text->setPlainText("Press P to pause. \nPress R to restart.");
+    QGraphicsTextItem* general_text= new QGraphicsTextItem("Press P to pause.");
     general_text->setFont(font);
     general_text->setDefaultTextColor(Qt::black);
-    general_text->setPos(GAMEAREA_LENGTH,500);
+    general_text->setPos(GAMEAREA_LENGTH,550);
     scene()->addItem(general_text);
 }
 
@@ -38,35 +44,33 @@ void InfoBox::unpause()
     powerup_timer->unpause();
 }
 
-void InfoBox::clear_powerup_info()
+void InfoBox::show_shooter_info(int powerup_shooter)
 {
-    scene()->removeItem(powerup_text);
-    delete powerup_text;
-    powerup_text = nullptr;
-    powerup_timer->stop();
+    qDebug()<<"powerup_shooter: "<<powerup_shooter;
+    QString message=QString("Power-Up Shooter: ")+ QString::number(powerup_shooter)+ QString(" seconds");
+    shooter_text= new PopUpDialogue(scene(),message,1000,
+                                    PopUpDialogue::InfoBox,GAMEAREA_LENGTH,200);
+    shooter_text->set_font(font, Qt::blue);
 }
 
 void InfoBox::show_powerup_info(int event)
 {
-    if (powerup_text != nullptr) clear_powerup_info();
     switch(event){
         case BulletPowerUp::Breakpoint:
-            powerup_text = new QGraphicsTextItem("Breakpoint: Added Health!");
+            powerup_text= new PopUpDialogue(scene(),"StackOverflow: Cleared field!",3000,
+                                    PopUpDialogue::InfoBox,GAMEAREA_LENGTH,100);
             break;
         case BulletPowerUp::StackOverflow:
-            powerup_text = new QGraphicsTextItem("StackOverflow: Cleared field!");
+            powerup_text= new PopUpDialogue(scene(),"StackOverflow: Cleared field!",3000,
+                                        PopUpDialogue::InfoBox,GAMEAREA_LENGTH,100);
             break;
         case BulletPowerUp::CoutTestEndl:
-            powerup_text = new QGraphicsTextItem("CoutTestEndl: \nPowered up your shooter!");
+            powerup_text= new PopUpDialogue(scene(),"CoutTestEndl: \nPowered up your shooter!",3000,
+                                            PopUpDialogue::InfoBox,GAMEAREA_LENGTH,100);
             break;
         default:
             return;
     }
 
-    powerup_text->setFont(font);
-    powerup_text->setDefaultTextColor(Qt::cyan);
-    powerup_text->setPos(GAMEAREA_LENGTH, 100);
-    scene()->addItem(powerup_text);
-
-    powerup_timer->start_timer(3000, true, this, SLOT(clear_powerup_info()));
+    powerup_text->set_font(font, Qt::cyan);
 }

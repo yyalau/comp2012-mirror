@@ -5,6 +5,7 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsScene>
 #include <QGraphicsTextItem>
+#include <popUpDialogue.h>
 
 #include "shooterPlayer.h"
 #include "customTimer.h"
@@ -24,7 +25,6 @@
  *
  * PUBLIC SLOTS
  * @include show_powerup_info(int event): sets and displays the powerup_text to scene
- * @include clear_powerup_info(): clears the powerup_text
  */
 
 class InfoBox : public QObject, public QGraphicsRectItem
@@ -33,20 +33,21 @@ class InfoBox : public QObject, public QGraphicsRectItem
 
 private:
     ShooterPlayer* shooter;
-    QGraphicsTextItem* powerup_text {nullptr};
+    PopUpDialogue* powerup_text {nullptr};
+    PopUpDialogue* shooter_text {nullptr};
     QFont font {"Times", 12};
     CustomTimer* powerup_timer {nullptr};
 
 public:
     InfoBox(ShooterPlayer*);
-    //TODO: Destructor for timer?
+    ~InfoBox();
     void show_general_info();
     void pause();
     void unpause();
 
 public slots:
     void show_powerup_info(int event);
-    void clear_powerup_info();
+    void show_shooter_info(int powerup_shooter);
 
 };
 

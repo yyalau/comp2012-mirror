@@ -86,6 +86,7 @@ signals:
     void unpause_all();
     void player_dead(bool win);
     void powerup_text(int type);
+    void shooter_text(int powerup_shooter);
     void clear_field(bool restart);
 
 public slots:

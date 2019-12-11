@@ -112,7 +112,7 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
 {
     switch(bullet->get_power_type()){
         case(BulletPowerUp::Breakpoint): //health increase
-            health->increase_health();
+            health->set_health(+1);
             break;
 
         case(BulletPowerUp::StackOverflow): //clear field
@@ -120,8 +120,9 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
             break;
 
         case(BulletPowerUp::CoutTestEndl): //increase shooter strength
-            ++powerup_shooter;
-            powerup_timer->start_timer(10000, true, this, SLOT(reset_shooter()));
+            if(powerup_shooter>0) powerup_timer->stop(); //stop the previous powerup_timer call first
+            powerup_shooter+=10;
+            powerup_timer->start_timer(1000, false, this, SLOT(reset_shooter()));
             break;
 
         default:
@@ -173,7 +174,8 @@ bool ShooterPlayer::collision(QGraphicsItem* collision_item)
     {
         if (immune) return false;
         //decrease own health
-        health->decrease_health();
+        health->set_health(-1);
+
         if (health->is_dead())
         {
             emit player_dead(false);
@@ -203,7 +205,14 @@ void ShooterPlayer::shoot()
 
 void ShooterPlayer::reset_shooter()
 {
-    if (powerup_shooter > 0) --powerup_shooter;
+    if (powerup_shooter > 0)
+    {
+        emit shooter_text(--powerup_shooter);
+        qDebug()<<powerup_shooter;
+    }
+    else{
+        powerup_timer->stop();
+    }
 }
 
 void ShooterPlayer::reset_immunity()

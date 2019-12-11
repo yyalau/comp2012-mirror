@@ -149,7 +149,7 @@ void ShooterEnemy::move()
 bool ShooterEnemy::collision()
 {
     //decrease own health
-    health->decrease_health();
+    health->set_health(-1);
 
     if (health->get_health() == 0)
     {

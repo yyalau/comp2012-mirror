@@ -15,10 +15,12 @@
  * @include name: entity's name (ShooterEnemy/ShooterPlayer)
  *
  * PUBLIC MEMBER FUNCTIONS
+ * @include set_text(): displays the correct health value on screen
  * @include get_health(): return current health
  * @include increase_health(): +1 hp //TODO: just do set_health()? maybe boss do more damage
  * @include decrease_health(): -1 hp
  * @include is_dead(): check if hp is 0
+ * @include reset_health(): whenever the programme restarts, this function will be called to reset the health of the player
  */
 
 class Health: public QGraphicsTextItem{
@@ -33,8 +35,7 @@ public:
     Health(const QString& name, int max_health, bool show_name=true, QGraphicsItem* parent=nullptr);
     void set_text();
     int get_health();
-    void increase_health();
-    void decrease_health();
+    void set_health(int increment);
     bool is_dead();
     void reset_health();
 };

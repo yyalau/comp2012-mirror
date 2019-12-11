@@ -23,15 +23,9 @@ int Health::get_health()
     return health;
 }
 
-void Health::increase_health()
+void Health::set_health(int increment)
 {
-    ++health;
-    set_text();
-}
-
-void Health::decrease_health()
-{
-    if(health > 0) --health;
+    health=health+increment;
     set_text();
 }
 

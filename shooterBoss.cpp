@@ -183,7 +183,7 @@ bool ShooterBoss::collision()
     if (phase == Entrance || phase == Dialogue || phase == Dead) return false;
 
     //decrease own health
-    health->decrease_health();
+    health->set_health(-1);
 
     //change the health bar's width
     double current_phase_hp = 0.0;
