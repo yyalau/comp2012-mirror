@@ -2,6 +2,8 @@
 #define DEFINE_H
 
 #include <QGraphicsScene>
+#include <stdlib.h> //rand()
+#include <time.h>
 
 /**
   * Some defines to make the code easier to read

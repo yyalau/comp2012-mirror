@@ -214,9 +214,12 @@ bool ShooterBoss::collision()
                 flag_timer->start_timer(1000, true, this, SLOT(enable_flag()));
                 break;
             case PhasePre2: //show Phase2's pattern name
-                new PopUpDialogue(scene(), "ERROR: LEAK 108 DIRECT BYTES", 1500, PopUpDialogue::Dialogue);
+            {
+                QString text = "ERROR #2: LEAK " + QString::number(100+rand()%100) + " DIRECT BYTES";
+                new PopUpDialogue(scene(), text, 1500, PopUpDialogue::Dialogue);
                 flag_timer->start_timer(2000, true, this, SLOT(enable_flag()));
                 break;
+            }
             case Phase2:    //show Phase3's pattern name
                 new PopUpDialogue(scene(), "NullPointerException\nYou cannot move in this phase!", 2500, PopUpDialogue::Dialogue);
                 flag_timer->start_timer(3000, true, this, SLOT(enable_flag()));
@@ -341,22 +344,26 @@ void ShooterBoss::enable_flag()
 
 void ShooterBoss::show_dialogue()
 {
-    if (dialogue_counter < 1 || dialogue_counter > 5) return;
+    if (dialogue_counter < 1 || dialogue_counter > 6) return;
     switch (dialogue_counter)
     {
         case 1:
-            new PopUpDialogue(scene(), "This is dialogue 1", DIALOGUE_FREQ, PopUpDialogue::Dialogue);
+            new PopUpDialogue(scene(), "Looks like you have found me at last.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 40);
             break;
         case 2:
-            new PopUpDialogue(scene(), "This is dialogue 2", DIALOGUE_FREQ, PopUpDialogue::Dialogue);
+            new PopUpDialogue(scene(), "I am the massive underlying bug that is making your program\nrunning into problems, crashing left and right.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 40);
             break;
         case 3:
-            new PopUpDialogue(scene(), "This is dialogue 3", DIALOGUE_FREQ, PopUpDialogue::Dialogue);
+            new PopUpDialogue(scene(), "All because of your unorganized data structures, unhandled\ndynamic memory and lack of documentation.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 40);
             break;
         case 4:
-            new PopUpDialogue(scene(), "This is dialogue 4", DIALOGUE_FREQ, PopUpDialogue::Dialogue);
+            new PopUpDialogue(scene(), "If you want to get out of here alive, you will have to defeat me.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 40);
             break;
         case 5:
+            //the TODO in the dialogue is deliberate
+            new PopUpDialogue(scene(), "And I won't go down without a good fight!\nGive it all you've//TODO: Finish the dialogues", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 40);
+            break;
+        case 6:
             start_bossfight();
             break;
         default:

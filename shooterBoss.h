@@ -56,7 +56,7 @@ public:
     static const int BOSS_SIZE_Y {200};
     static const int BOSS_POS_X {(GAMEAREA_LENGTH-BOSS_SIZE_X)/2};
     static const int BOSS_POS_Y {10};
-    static const int DIALOGUE_FREQ {3000};       //each dialogue line lasts for 5 seconds
+    static const int DIALOGUE_FREQ {5000};       //each dialogue line lasts for 5 seconds
 
 public:
     enum BossPhase
@@ -67,7 +67,7 @@ public:
         Phase1,         //IndexOutOfBoundException, shoot 2 rays of OutOfBound bullets (bulletEnemy handles the pattern)
         PhasePre2,      //2 rays of "spaghetti code"
         Phase2,         //LEAK X DIRECT BYTES, Explode bullets fall from the top
-        Phase3,         //NullPointerException, disable moving?
+        Phase3,         //NullPointerException, disable moving
         Dead
     };
 

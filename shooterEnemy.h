@@ -1,7 +1,6 @@
 #ifndef SHOOTERENEMY_H
 #define SHOOTERENEMY_H
 
-#include <stdlib.h> //rand()
 #include <cmath>
 #include <QPainterPath>
 

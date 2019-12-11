@@ -46,8 +46,9 @@ void InfoBox::unpause()
 
 void InfoBox::show_shooter_info(int powerup_shooter)
 {
+    //TODO
     qDebug()<<"powerup_shooter: "<<powerup_shooter;
-    QString message=QString("Power-Up Shooter: ")+ QString::number(powerup_shooter)+ QString(" seconds");
+    QString message = QString::number(powerup_shooter)+ QString(" seconds left");
     shooter_text= new PopUpDialogue(scene(),message,1000,
                                     PopUpDialogue::InfoBox,GAMEAREA_LENGTH,200);
     shooter_text->set_font(font, Qt::blue);
@@ -55,22 +56,33 @@ void InfoBox::show_shooter_info(int powerup_shooter)
 
 void InfoBox::show_powerup_info(int event)
 {
+    QString text;
+
     switch(event){
         case BulletPowerUp::Breakpoint:
-            powerup_text= new PopUpDialogue(scene(),"StackOverflow: Cleared field!",3000,
-                                    PopUpDialogue::InfoBox,GAMEAREA_LENGTH,100);
+            text = QString {
+                "Breakpoint added!\n"
+                "Your debugger gained 1 Health!"
+            };
             break;
         case BulletPowerUp::StackOverflow:
-            powerup_text= new PopUpDialogue(scene(),"StackOverflow: Cleared field!",3000,
-                                        PopUpDialogue::InfoBox,GAMEAREA_LENGTH,100);
+            text = QString {
+                "Your question on StackOverflow\n"
+                "was answered!\n"
+                "This code section is bug-free!"
+            };
             break;
         case BulletPowerUp::CoutTestEndl:
-            powerup_text= new PopUpDialogue(scene(),"CoutTestEndl: \nPowered up your shooter!",3000,
-                                            PopUpDialogue::InfoBox,GAMEAREA_LENGTH,100);
+            text = QString {
+                "cout << \"test\" << endl;\n"
+                "Your debugger is temporarily stronger!"
+            };
             break;
         default:
             return;
     }
+
+    powerup_text= new PopUpDialogue(scene(), text, 4000, PopUpDialogue::InfoBox, GAMEAREA_LENGTH, 100);
 
     powerup_text->set_font(font, Qt::cyan);
 }

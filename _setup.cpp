@@ -48,9 +48,12 @@ _SetUp::_SetUp()
     //should i move this to somewhere else? (nah here is ok, it's for setup)
     QString instructions{
         "\t COMP2012H-ShootTheBugs \n\n"
-        "Some instructions \n"
-        "1. \t ... \n"
-        "2. \t ... \n"
+        "Instructions: \n"
+        "You are controlling a debugger.\n"
+        "Do your best to survive and defeat the bugs!\n"
+        "Hold Up, Down, Left or Right to move around.\n"
+        "Hold Spacebar to shoot.\n"
+        "You start with 25 health. Don't let it go to 0.\n"
         "\n"
         "\t \t Press P to play"
     };

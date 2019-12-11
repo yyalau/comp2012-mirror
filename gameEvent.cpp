@@ -197,7 +197,7 @@ void GameEvent::trigger_event(int event_id)
             }
             enemy[4]->set_drop_powerup();
             ShooterEnemy* enemy2=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::Random,
-                                             11, 0, 0, 450, 0, DEFAULT_SHOOT_FREQ*5);
+                                             15, 0, 0, 450, 0, DEFAULT_SHOOT_FREQ*5);
             enemy2->set_targetPos(400, 70);
             break;
         }
@@ -218,13 +218,13 @@ void GameEvent::trigger_event(int event_id)
             ShooterEnemy* enemy[4];
 
             enemy[0]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer,
-                                 4, 0, 0, 50, 0, DEFAULT_SHOOT_FREQ*5);
+                                 4, 0, 0, 50, 0, DEFAULT_SHOOT_FREQ*6);
             enemy[1]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer,
-                                 4, 0, 0, 750, 0, DEFAULT_SHOOT_FREQ*6);
+                                 4, 0, 0, 750, 0, DEFAULT_SHOOT_FREQ*7);
             enemy[2]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer,
-                                 7, 0, 0, 150, 0, DEFAULT_SHOOT_FREQ*7);
+                                 7, 0, 0, 150, 0, DEFAULT_SHOOT_FREQ*8);
             enemy[3]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer,
-                                 7, 0, 0, 650, 0, DEFAULT_SHOOT_FREQ*8);
+                                 7, 0, 0, 650, 0, DEFAULT_SHOOT_FREQ*9);
             enemy[0]->set_targetPos(100, 100);
             enemy[1]->set_targetPos(700, 100);
             enemy[2]->set_targetPos(300, 150);
@@ -250,11 +250,11 @@ void GameEvent::trigger_event(int event_id)
         case 8:
         {
             spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Circle,
-                        8, 0, 1, 250, 0, DEFAULT_SHOOT_FREQ*7);
+                        8, 0, 1, 250, 0, DEFAULT_SHOOT_FREQ*9);
             spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Circle,
-                        13, 0, 4, 400, 0, DEFAULT_SHOOT_FREQ*5);
+                        13, 0, 4, 400, 0, DEFAULT_SHOOT_FREQ*6);
             spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Circle,
-                        8, 0, 1, 550, 0, DEFAULT_SHOOT_FREQ*7);
+                        8, 0, 1, 550, 0, DEFAULT_SHOOT_FREQ*9);
             break;
         }
         case 9:
@@ -306,15 +306,10 @@ void GameEvent::pause_game()
     event_timer->pause();
 
     //pause screen
-    //TODO: more info?
     if (!game_begin)
-    {
         game_begin = true;
-    }
     else
-    {
         dialogue = new PopUpDialogue(parent_scene, "Press P to continue. \nPress R to restart.", NO_DURATION, PopUpDialogue::GameArea);
-    }
 }
 
 //helper template
@@ -380,11 +375,22 @@ void GameEvent::trigger_game_over(bool win)
     if (dialogue != nullptr) return;
     if (win)
     {
-        dialogue = new PopUpDialogue(parent_scene, "YOU WON!!!", NO_DURATION, PopUpDialogue::GameArea);
+        QString dialogue_text {
+            "ShootTheBugs.exe exited with code 0.\n\n"
+            "Congratulations! You have won the game!\n"
+            "Press R to play again."
+        };
+        dialogue = new PopUpDialogue(parent_scene, dialogue_text, NO_DURATION, PopUpDialogue::GameArea);
     }
     else
     {
-        dialogue = new PopUpDialogue(parent_scene, "YOU LOSE! RUNTIME ERROR!!", NO_DURATION, PopUpDialogue::GameArea);
+        QString dialogue_text {
+            "SEGMENTATION FAULT\n"
+            "ShootTheBugs.exe exited unexpectedly.\n\n"
+            "Oh no! You have lost the game!\n"
+            "Press R to play again."
+        };
+        dialogue = new PopUpDialogue(parent_scene, dialogue_text, NO_DURATION, PopUpDialogue::GameArea);
     }
     game_begin = false;
     pause_game();

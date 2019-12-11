@@ -198,8 +198,13 @@ void ShooterPlayer::shoot()
     shoot_bullet(new BulletPlayer(0, -20));
 
     if (powerup_shooter > 0){
-        shoot_bullet(new BulletPlayer(8, -17));
-        shoot_bullet(new BulletPlayer(-8, -17));
+        if (powerup_shooter_counter == 2)
+        {
+            shoot_bullet(new BulletPlayer(8, -17));
+            shoot_bullet(new BulletPlayer(-8, -17));
+            powerup_shooter_counter = 0;
+        }
+        else ++powerup_shooter_counter;
     }
 }
 
@@ -208,6 +213,7 @@ void ShooterPlayer::reset_shooter()
     if (powerup_shooter > 0)
     {
         emit shooter_text(--powerup_shooter);
+        //TODO: remove ALL qDebug()
         qDebug()<<powerup_shooter;
     }
     else{
