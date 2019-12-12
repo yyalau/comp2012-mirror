@@ -6,5 +6,6 @@
         <file>images/shooter.png</file>
         <file>images/powerup.png</file>
         <file>images/shooter_hurt.png</file>
+        <file>images/computer_dead.png</file>
     </qresource>
 </RCC>

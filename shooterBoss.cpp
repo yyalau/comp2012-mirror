@@ -49,7 +49,7 @@ void ShooterBoss::set_phase(BossPhase phase)
     {
         case Entrance:
         case Dialogue:
-        case Dead:
+        //case Dead:
             //do nothing
             return;
         case PhasePre1:
@@ -154,7 +154,7 @@ void ShooterBoss::move()
         }
         case Phase1:
         case Phase3:
-        case Dead:
+        //case Dead:
             //dont move in these phases
             break;
         case PhasePre1:
@@ -180,7 +180,7 @@ void ShooterBoss::move()
 
 bool ShooterBoss::collision()
 {
-    if (phase == Entrance || phase == Dialogue || phase == Dead) return false;
+    if (phase == Entrance || phase == Dialogue /*|| phase == Dead*/) return false;
 
     //decrease own health
     health->set_health(-1);
@@ -238,15 +238,11 @@ bool ShooterBoss::collision()
     if (health->get_health() == 0)
     {
         //TODO: use another image
-        QPixmap bulletimage(":/image/images/firebullet.png");
-        setPixmap(bulletimage.scaled(size_y, size_x, Qt::IgnoreAspectRatio)); //rotate 90 degrees
-        setRotation(90);
-        setShapeMode(QGraphicsPixmapItem::MaskShape);
-        setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
-        setScale(1.2);
+        ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y, 2000);
+        explosion->setPos(x(), y());
+        scene()->addItem(explosion);
 
-        //reuse flag_timer
-        flag_timer->start_timer(2000, false, this, SLOT(boss_death_animation()));
+        emit boss_dead(true);
     }
 
     return true;
@@ -260,7 +256,7 @@ void ShooterBoss::shoot()
     {
         case Entrance:
         case Dialogue:
-        case Dead:
+        //case Dead:
             //do nothing
             return;
         case PhasePre1:
@@ -370,12 +366,4 @@ void ShooterBoss::show_dialogue()
             return;
     }
     ++dialogue_counter;
-}
-
-void ShooterBoss::boss_death_animation()
-{
-    if (phase == Dead) emit boss_dead(true);
-    //set a null pixmap
-    setPixmap(QPixmap());
-    set_phase(Dead);
 }

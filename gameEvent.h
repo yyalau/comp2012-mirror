@@ -58,6 +58,7 @@ private:
     ShooterEnemy* spawn_enemy(ShooterEnemy::EnemyPathingType pathing_type, ShooterEnemy::EnemyShootingType shooting_type,
                               int hp, int dx, int dy,int initX, int initY, int shoot_freq = DEFAULT_SHOOT_FREQ);
     void collision();
+    void game_over(bool win);
 
 public:
     GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QString instructions);

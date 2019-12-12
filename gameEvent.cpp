@@ -100,8 +100,6 @@ void GameEvent::collision()
                     REMOVE_ENTITY(parent_scene, enemy_colliding_items[j]);
 
                 //Moved health == 0 check here as well, all REMOVE_ENTITY should be centralized
-                //ignore boss
-                if (typeid(*enemy)==typeid(ShooterBoss)) continue;
                 if (enemy->get_health_var()->get_health() == 0)
                 {
                     REMOVE_ENTITY(parent_scene, enemy);
@@ -130,12 +128,12 @@ void GameEvent::increment_time()
         case 47: time_reached(7); break;
         case 55: time_reached(8); break;
         case 63: time_reached(9); break;
+        case 70: game_timer -= 50; break;       //halt the timer, higher values will be used for game over events
+        case 80: game_over(false); break;       //game_timer set to 3950 to trigger lose screen after 2 seconds
+        case 90: game_over(true); break;        //game_timer set to 4350 to trigger win screen after 4 seconds
         default: break;
 
         }
-
-        //emit time_reached((game_timer/200)-1 % 5);
-        //emit time_reached(6);
     }
     collision();
 }
@@ -300,6 +298,7 @@ void GameEvent::pause_game()
     for(int i=0; i<scene_items.size(); ++i){
         if (try_pause<BulletBase>(scene_items[i])) continue;
         if (try_pause<ShooterBase>(scene_items[i])) continue;
+        if (try_pause<ShooterExplosion>(scene_items[i])) continue;
         if (try_pause<InfoBox>(scene_items[i])) continue;
         if (try_pause<PopUpDialogue>(scene_items[i])) continue;
     }
@@ -332,6 +331,7 @@ void GameEvent::unpause_game()
     for(int i=0; i<scene_items.size(); ++i){
         if (try_unpause<BulletBase>(scene_items[i])) continue;
         if (try_unpause<ShooterBase>(scene_items[i])) continue;
+        if (try_unpause<ShooterExplosion>(scene_items[i])) continue;
         if (try_unpause<InfoBox>(scene_items[i])) continue;
         if (try_unpause<PopUpDialogue>(scene_items[i])) continue;
     }
@@ -343,18 +343,23 @@ void GameEvent::trigger_clear_field(bool restart)
     QList<QGraphicsItem*> scene_items = parent_scene->items();
     for(int i=0; i<scene_items.size(); i++)
     {
-        if (typeid(*(scene_items[i]))==typeid (BulletEnemy)
-                || typeid(*(scene_items[i]))==typeid (ShooterEnemy))
+        if (typeid(*(scene_items[i]))==typeid (BulletEnemy))
         {
-            parent_scene->removeItem(scene_items[i]);
-            delete scene_items[i];
+            REMOVE_ENTITY(parent_scene, scene_items[i]);
+        }
+
+        if (typeid(*(scene_items[i]))==typeid (ShooterEnemy))
+        {
+            if (restart)
+                REMOVE_ENTITY(parent_scene, scene_items[i]);
+            else
+                dynamic_cast<ShooterEnemy*>(scene_items[i])->safe_kill();
         }
 
         if (restart && (typeid(*(scene_items[i]))==typeid (BulletPowerUp)
                         || typeid(*(scene_items[i]))==typeid (BulletPlayer)
                         || typeid(*(scene_items[i]))==typeid (ShooterBoss))){
-            parent_scene->removeItem(scene_items[i]);
-            delete scene_items[i];
+            REMOVE_ENTITY(parent_scene, scene_items[i]);
         }
     }
 
@@ -370,6 +375,11 @@ void GameEvent::trigger_clear_field(bool restart)
 
 //gameover part
 void GameEvent::trigger_game_over(bool win)
+{
+    game_timer = win ? 4350 : 3950; //see increment_time()
+}
+
+void GameEvent::game_over(bool win)
 {
     //prevent the case of winning and losing at the same time
     if (dialogue != nullptr) return;

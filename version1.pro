@@ -30,6 +30,7 @@ SOURCES += \
     shooterBase.cpp \
     shooterBoss.cpp \
     shooterEnemy.cpp \
+    shooterExplosion.cpp \
     shooterPlayer.cpp
 
 HEADERS += \
@@ -47,6 +48,7 @@ HEADERS += \
     shooterBase.h \
     shooterBoss.h \
     shooterEnemy.h \
+    shooterExplosion.h \
     shooterPlayer.h
 
 FORMS += \

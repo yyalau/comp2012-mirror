@@ -4,6 +4,7 @@
 
 //static member declaration
 bool ShooterPlayer::paused = true;
+bool ShooterPlayer::dead = false;
 
 ShooterPlayer::ShooterPlayer(int hp, int dx, int dy, int shoot_freq,  bool shoot,
                              int size_x, int size_y, int move_freq) :
@@ -106,6 +107,11 @@ void ShooterPlayer::unpause()
     powerup_timer->unpause();
     immune_timer->unpause();
     paused = false;
+    if (dead)
+    {
+        set_sprite(":/image/images/shooter.png");
+        dead = false;
+    }
 }
 
 void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
@@ -134,6 +140,7 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
 
 void ShooterPlayer::move()
 {
+    if (dead) return;
     if (nullptr_phase)   //move to initial position
     {
         double x_diff = START_POS_X - pos().x();
@@ -166,6 +173,7 @@ bool ShooterPlayer::collision()
 
 bool ShooterPlayer::collision(QGraphicsItem* collision_item)
 {
+    if (dead) return false;
     if (typeid(*collision_item)==typeid(BulletPowerUp))
     {
         process_powerup(dynamic_cast<BulletPowerUp*>(collision_item));
@@ -178,6 +186,13 @@ bool ShooterPlayer::collision(QGraphicsItem* collision_item)
 
         if (health->is_dead())
         {
+            dead = true;
+            //set pixmap as null
+            setPixmap(QPixmap());
+            //TODO: use another explosion image idk
+            ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y);
+            explosion->setPos(x(), y());
+            scene()->addItem(explosion);
             emit player_dead(false);
         }
         else
@@ -193,7 +208,7 @@ bool ShooterPlayer::collision(QGraphicsItem* collision_item)
 
 void ShooterPlayer::shoot()
 {
-    if (!is_shooting) return;
+    if (!is_shooting || dead) return;
 
     shoot_bullet(new BulletPlayer(0, -20));
 

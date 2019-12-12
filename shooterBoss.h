@@ -6,6 +6,7 @@
 #include "shooterBase.h"
 #include "shooterPlayer.h"
 #include "popUpDialogue.h"
+#include "shooterExplosion.h"
 
 /**
  * @brief The ShooterBoss class
@@ -68,7 +69,7 @@ public:
         PhasePre2,      //2 rays of "spaghetti code"
         Phase2,         //LEAK X DIRECT BYTES, Explode bullets fall from the top
         Phase3,         //NullPointerException, disable moving
-        Dead
+        //Dead
     };
 
 private:
@@ -109,7 +110,6 @@ public slots:
     virtual void shoot() override;
     void enable_flag();
     void show_dialogue();
-    void boss_death_animation();
 };
 
 #endif // SHOOTERBOSS_H

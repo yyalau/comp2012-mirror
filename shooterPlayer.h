@@ -19,6 +19,7 @@
  * @include immune: set to true if the player is immune (for 1 second after being hit)
  * @include powerup_shooter: is greater than 0 if the shooter has been improved
  * @include paused: static variable storing the pause state of the game, changed with keyboard P
+ * @include dead: boolean of whether player is dead or not, to allow for 3-second break before game over screen
  * @include nullptr_phase: for boss's phase 3, remove the player's ability to move
  * @include powerup_shooter_counter: if in powerup mode, shoot extra bullets once every 3 shoot()
  * @include powerup_timer, immune_timer: CustomTimer for keeping track of StackOverflow powerup and immunity's time
@@ -61,7 +62,7 @@ private:
     int speed {DEFAULT_SPEED};
     bool immune {false};
     int powerup_shooter {0};
-    static bool paused;
+    static bool paused, dead;
     bool nullptr_phase {false};
     int powerup_shooter_counter {0};
     CustomTimer *powerup_timer {nullptr}, *immune_timer {nullptr};

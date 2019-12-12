@@ -17,8 +17,7 @@
  * PUBLIC MEMBER FUNCTIONS
  * @include set_text(): displays the correct health value on screen
  * @include get_health(): return current health
- * @include increase_health(): +1 hp //TODO: just do set_health()? maybe boss do more damage
- * @include decrease_health(): -1 hp
+ * @include set_health(): change health
  * @include is_dead(): check if hp is 0
  * @include reset_health(): whenever the programme restarts, this function will be called to reset the health of the player
  */
