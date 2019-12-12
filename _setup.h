@@ -5,6 +5,7 @@
 #include <QGraphicsView>
 #include <QHBoxLayout>
 #include <QWidget>
+#include <QFontDatabase>>
 
 #include "define.h"
 #include "shooterPlayer.h"

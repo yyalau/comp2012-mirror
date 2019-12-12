@@ -7,7 +7,7 @@ bool ShooterPlayer::paused = true;
 
 ShooterPlayer::ShooterPlayer(int hp, int dx, int dy, int shoot_freq,  bool shoot,
                              int size_x, int size_y, int move_freq) :
-         ShooterBase("Player", hp, true, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq)
+         ShooterBase("Player", hp, false, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq)
 {
     set_sprite(":/image/images/shooter.png");
 

@@ -119,7 +119,7 @@ void GameEvent::increment_time()
     if ((game_timer % 50) == 0) //means every second
     {
 
-        switch (game_timer/50-1) {
+        switch (game_timer/50) {
         case 3: time_reached(0); break;         //Game starts at 3s,
         case 8: time_reached(1); break;         //for first 5 waves of enemy, each lasts for 5s,
         case 13: time_reached(2); break;        //after that, each lasts for 8s

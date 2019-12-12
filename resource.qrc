@@ -6,5 +6,11 @@
         <file>images/shooter.png</file>
         <file>images/powerup.png</file>
         <file>images/shooter_hurt.png</file>
+        <file>images/heart.png</file>
+    </qresource>
+    <qresource prefix="/fontstyle">
+        <file>font/ARCADECLASSIC.TTF</file>
+        <file>font/PressStart2P.ttf</file>
+        <file>font/joystix monospace.ttf</file>
     </qresource>
 </RCC>

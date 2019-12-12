@@ -80,7 +80,7 @@ public:
     void unpause();
     void set_message(QString message);
     void set_width(int width);
-    void set_font(QFont font={"Times", 16} , QColor Color=Qt::black);
+    void set_font(QFont font={"Joystix Monospace", 12} , QColor Color=Qt::black);
 
 public slots:
     PopUpDialogue* remove();

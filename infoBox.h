@@ -35,7 +35,7 @@ private:
     ShooterPlayer* shooter;
     PopUpDialogue* powerup_text {nullptr};
     PopUpDialogue* shooter_text {nullptr};
-    QFont font {"Times", 12};
+    QFont font {"Joystix Monospace", 9} ;
     CustomTimer* powerup_timer {nullptr};
 
 public:

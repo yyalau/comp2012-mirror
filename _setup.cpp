@@ -8,6 +8,10 @@ _SetUp::_SetUp()
 {
     //-----------------------------------GameSetting-------------------------------
     //scene
+    QFontDatabase::addApplicationFont(":/fontstyle/font/ARCADECLASSIC.TTF");
+    QFontDatabase::addApplicationFont(":/fontstyle/font/PressStart2P.ttf");
+    QFontDatabase::addApplicationFont(":/fontstyle/font/joystix monospace.ttf");
+
     GameScene = new QGraphicsScene(); //create a scene
     GameScene->setSceneRect(0, 0, SCREEN_LENGTH, SCREEN_HEIGHT);
 
