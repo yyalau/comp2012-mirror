@@ -35,7 +35,7 @@
  * @include shoot(): pure virtual slot for shooting bullets
  */
 
-class ShooterBase: public QObject, public QGraphicsPixmapItem{
+class ShooterBase: public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
 public:

@@ -47,7 +47,7 @@ void CustomTimer::set_interval(int interval)
 
 void CustomTimer::stop()
 {
-    timer->stop();
+    if (timer != nullptr) timer->stop();
 }
 
 

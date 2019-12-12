@@ -1,12 +1,12 @@
 #ifndef SHOOTERENEMY_H
 #define SHOOTERENEMY_H
 
-#include <stdlib.h> //rand()
 #include <cmath>
 #include <QPainterPath>
 
 #include "shooterBase.h"
 #include "shooterPlayer.h"
+#include "shooterExplosion.h"
 
 /**
  * @brief The ShooterEnemy class
@@ -24,6 +24,7 @@
  * PUBLIC MEMBER FUNCTIONS
  * @include set_player(): Set the shooter to point to the playe
  * @include set_drop_powerup(): Set drop_powerup to true
+ * @include safe_kill(): Set health to 0 (to generate explosion)
  *
  * PUBLIC SLOTS
  * @include move(): overrides shooterBase's function, handles going out of bound
@@ -84,6 +85,7 @@ public:
     virtual bool collision() override;
     bool out_of_bound();
     void set_drop_powerup();
+    void safe_kill();
 
 public slots:
     virtual void move() override;

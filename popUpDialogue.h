@@ -72,9 +72,9 @@ private:
 
 public:
     PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, QColor color, double opacity,
-                  int x, int y, int width, int height, int text_x=100, int text_y=SCREEN_HEIGHT/2);
+                  int x, int y, int width, int height, int text_x, int text_y);
     PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, PopUpType popup_type,
-                  int text_x=100, int text_y=SCREEN_HEIGHT/2);
+                  int text_x = 100, int text_y = SCREEN_HEIGHT/2);
     ~PopUpDialogue();
     void pause();
     void unpause();

@@ -57,6 +57,22 @@ bool ShooterEnemy::out_of_bound()
             !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y()));
 }
 
+void ShooterEnemy::safe_kill()
+{
+    //set health = 0
+    health->set_health(-health->get_health());
+    //still drop powerup and create explosion
+    if (drop_powerup)
+    {
+        shoot_bullet(new BulletPowerUp(0, 4));
+    }
+    ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y);
+    explosion->setPos(x(), y());
+    scene()->addItem(explosion);
+    //remove
+    REMOVE_ENTITY(scene(), this);
+}
+
 void ShooterEnemy::move()
 {
     switch (pathing_type)
@@ -168,6 +184,10 @@ bool ShooterEnemy::collision()
         {
             shoot_bullet(new BulletPowerUp(0, 4));
         }
+        //call explosion
+        ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y);
+        explosion->setPos(x(), y());
+        scene()->addItem(explosion);
     }
 
     return true;

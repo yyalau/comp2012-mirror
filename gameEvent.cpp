@@ -100,8 +100,6 @@ void GameEvent::collision()
                     REMOVE_ENTITY(parent_scene, enemy_colliding_items[j]);
 
                 //Moved health == 0 check here as well, all REMOVE_ENTITY should be centralized
-                //ignore boss
-                if (typeid(*enemy)==typeid(ShooterBoss)) continue;
                 if (enemy->get_health_var()->get_health() == 0)
                 {
                     REMOVE_ENTITY(parent_scene, enemy);
@@ -130,12 +128,12 @@ void GameEvent::increment_time()
         case 47: time_reached(7); break;
         case 55: time_reached(8); break;
         case 63: time_reached(9); break;
+        case 70: game_timer -= 50; break;       //halt the timer, higher values will be used for game over events
+        case 80: game_over(false); break;       //game_timer set to 3950 to trigger lose screen after 2 seconds
+        case 90: game_over(true); break;        //game_timer set to 4350 to trigger win screen after 4 seconds
         default: break;
 
         }
-
-        //emit time_reached((game_timer/200)-1 % 5);
-        //emit time_reached(6);
     }
     collision();
 }
@@ -197,7 +195,7 @@ void GameEvent::trigger_event(int event_id)
             }
             enemy[4]->set_drop_powerup();
             ShooterEnemy* enemy2=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::Random,
-                                             11, 0, 0, 450, 0, DEFAULT_SHOOT_FREQ*5);
+                                             15, 0, 0, 450, 0, DEFAULT_SHOOT_FREQ*5);
             enemy2->set_targetPos(400, 70);
             break;
         }
@@ -218,13 +216,13 @@ void GameEvent::trigger_event(int event_id)
             ShooterEnemy* enemy[4];
 
             enemy[0]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer,
-                                 4, 0, 0, 50, 0, DEFAULT_SHOOT_FREQ*5);
+                                 4, 0, 0, 50, 0, DEFAULT_SHOOT_FREQ*6);
             enemy[1]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer,
-                                 4, 0, 0, 750, 0, DEFAULT_SHOOT_FREQ*6);
+                                 4, 0, 0, 750, 0, DEFAULT_SHOOT_FREQ*7);
             enemy[2]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer,
-                                 7, 0, 0, 150, 0, DEFAULT_SHOOT_FREQ*7);
+                                 7, 0, 0, 150, 0, DEFAULT_SHOOT_FREQ*8);
             enemy[3]=spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::AimAtPlayer,
-                                 7, 0, 0, 650, 0, DEFAULT_SHOOT_FREQ*8);
+                                 7, 0, 0, 650, 0, DEFAULT_SHOOT_FREQ*9);
             enemy[0]->set_targetPos(100, 100);
             enemy[1]->set_targetPos(700, 100);
             enemy[2]->set_targetPos(300, 150);
@@ -250,11 +248,11 @@ void GameEvent::trigger_event(int event_id)
         case 8:
         {
             spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Circle,
-                        8, 0, 1, 250, 0, DEFAULT_SHOOT_FREQ*7);
+                        8, 0, 1, 250, 0, DEFAULT_SHOOT_FREQ*9);
             spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Circle,
-                        13, 0, 4, 400, 0, DEFAULT_SHOOT_FREQ*5);
+                        13, 0, 4, 400, 0, DEFAULT_SHOOT_FREQ*6);
             spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Circle,
-                        8, 0, 1, 550, 0, DEFAULT_SHOOT_FREQ*7);
+                        8, 0, 1, 550, 0, DEFAULT_SHOOT_FREQ*9);
             break;
         }
         case 9:
@@ -300,21 +298,17 @@ void GameEvent::pause_game()
     for(int i=0; i<scene_items.size(); ++i){
         if (try_pause<BulletBase>(scene_items[i])) continue;
         if (try_pause<ShooterBase>(scene_items[i])) continue;
+        if (try_pause<ShooterExplosion>(scene_items[i])) continue;
         if (try_pause<InfoBox>(scene_items[i])) continue;
         if (try_pause<PopUpDialogue>(scene_items[i])) continue;
     }
     event_timer->pause();
 
     //pause screen
-    //TODO: more info?
     if (!game_begin)
-    {
         game_begin = true;
-    }
     else
-    {
         dialogue = new PopUpDialogue(parent_scene, "Press P to continue. \nPress R to restart.", NO_DURATION, PopUpDialogue::GameArea);
-    }
 }
 
 //helper template
@@ -337,6 +331,7 @@ void GameEvent::unpause_game()
     for(int i=0; i<scene_items.size(); ++i){
         if (try_unpause<BulletBase>(scene_items[i])) continue;
         if (try_unpause<ShooterBase>(scene_items[i])) continue;
+        if (try_unpause<ShooterExplosion>(scene_items[i])) continue;
         if (try_unpause<InfoBox>(scene_items[i])) continue;
         if (try_unpause<PopUpDialogue>(scene_items[i])) continue;
     }
@@ -348,18 +343,23 @@ void GameEvent::trigger_clear_field(bool restart)
     QList<QGraphicsItem*> scene_items = parent_scene->items();
     for(int i=0; i<scene_items.size(); i++)
     {
-        if (typeid(*(scene_items[i]))==typeid (BulletEnemy)
-                || typeid(*(scene_items[i]))==typeid (ShooterEnemy))
+        if (typeid(*(scene_items[i]))==typeid (BulletEnemy))
         {
-            parent_scene->removeItem(scene_items[i]);
-            delete scene_items[i];
+            REMOVE_ENTITY(parent_scene, scene_items[i]);
+        }
+
+        if (typeid(*(scene_items[i]))==typeid (ShooterEnemy))
+        {
+            if (restart)
+                REMOVE_ENTITY(parent_scene, scene_items[i]);
+            else
+                dynamic_cast<ShooterEnemy*>(scene_items[i])->safe_kill();
         }
 
         if (restart && (typeid(*(scene_items[i]))==typeid (BulletPowerUp)
                         || typeid(*(scene_items[i]))==typeid (BulletPlayer)
                         || typeid(*(scene_items[i]))==typeid (ShooterBoss))){
-            parent_scene->removeItem(scene_items[i]);
-            delete scene_items[i];
+            REMOVE_ENTITY(parent_scene, scene_items[i]);
         }
     }
 
@@ -376,15 +376,31 @@ void GameEvent::trigger_clear_field(bool restart)
 //gameover part
 void GameEvent::trigger_game_over(bool win)
 {
+    game_timer = win ? 4350 : 3950; //see increment_time()
+}
+
+void GameEvent::game_over(bool win)
+{
     //prevent the case of winning and losing at the same time
     if (dialogue != nullptr) return;
     if (win)
     {
-        dialogue = new PopUpDialogue(parent_scene, "YOU WON!!!", NO_DURATION, PopUpDialogue::GameArea);
+        QString dialogue_text {
+            "ShootTheBugs.exe exited with code 0.\n\n"
+            "Congratulations! You have won the game!\n"
+            "Press R to play again."
+        };
+        dialogue = new PopUpDialogue(parent_scene, dialogue_text, NO_DURATION, PopUpDialogue::GameArea);
     }
     else
     {
-        dialogue = new PopUpDialogue(parent_scene, "YOU LOSE! RUNTIME ERROR!!", NO_DURATION, PopUpDialogue::GameArea);
+        QString dialogue_text {
+            "SEGMENTATION FAULT\n"
+            "ShootTheBugs.exe exited unexpectedly.\n\n"
+            "Oh no! You have lost the game!\n"
+            "Press R to play again."
+        };
+        dialogue = new PopUpDialogue(parent_scene, dialogue_text, NO_DURATION, PopUpDialogue::GameArea);
     }
     game_begin = false;
     pause_game();
