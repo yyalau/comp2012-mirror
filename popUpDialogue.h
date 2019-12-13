@@ -67,7 +67,7 @@ private:
     int duration;
 
     void create_dialogue(QString message, QColor color, double opacity,
-                         int x, int y, int width, int height,int text_x, int text_y);
+                         int x, int y, int width, int height,int text_x, int text_y,int fontsize);
     void set_duration(int duration);
 
 public:

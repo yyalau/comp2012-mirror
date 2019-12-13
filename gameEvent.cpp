@@ -13,7 +13,7 @@ GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QStri
     connect(this, SIGNAL(time_reached(int)), this, SLOT(trigger_event(int))); //when time is reached, trigger game events
 
     //start game dialogue
-    dialogue = new PopUpDialogue(parent_scene, instructions, NO_DURATION, PopUpDialogue::FullScreen,100,100);
+    dialogue = new PopUpDialogue(parent_scene, instructions, NO_DURATION, PopUpDialogue::FullScreen,50,100);
 
     //for pausing/unpausing the game
     connect(shooter, SIGNAL(pause_all()), this, SLOT(pause_game()));
@@ -152,14 +152,16 @@ void GameEvent::trigger_event(int event_id)
                                                3, 0 ,0, 700, 0, DEFAULT_SHOOT_FREQ*8);
             enemy->set_targetPos(250, 150);
             enemy2->set_targetPos(450, 150);
+            enemy->set_drop_powerup();
+            enemy2->set_drop_powerup();
             break;
         }
         case 1:
         {
             spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Random,
-                        6, 0, 2, 100+rand()%200, 0, DEFAULT_SHOOT_FREQ*3);
+                        6, 0, 2, 100+rand()%200, 0, DEFAULT_SHOOT_FREQ*3)->set_drop_powerup();
             spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Random,
-                        6, 0, 2, 400+rand()%200, 0, DEFAULT_SHOOT_FREQ*3);
+                        6, 0, 2, 400+rand()%200, 0, DEFAULT_SHOOT_FREQ*3)->set_drop_powerup();
             break;
         }
         case 2:

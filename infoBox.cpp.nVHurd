@@ -71,28 +71,30 @@ void InfoBox::show_shooter_info(int powerup_shooter)
 void InfoBox::show_powerup_info(int event)
 {
     QString text;
-    QFont font("Joystix Monospace",8);
+
     switch(event){
         case BulletPowerUp::Breakpoint:
             text = QString {
                 "Breakpoint added!\n"
                 "Your debugger gained 1 Health!"
             };
+            powerup_text->set_font(QFont("Joystix Monospace",8), Qt::cyan);
             break;
         case BulletPowerUp::StackOverflow:
             text = QString {
                 "Your question on StackOverflow\n"
-                "was answered!\n\n"
+                "was answered!\n"
                 "This code section is bug-free!"
             };
-                        font.setPointSize(7);
+            powerup_text->set_font(QFont("Joystix Monospace",8), Qt::cyan);
             break;
         case BulletPowerUp::CoutTestEndl:
             text = QString {
-                "cout<< \"test\" <<endl;\n"
+                "cout << \"test\" << endl;\n"
                 "Your debugger is \n"
                 "temporarily stronger!"
             };
+            powerup_text->set_font(QFont("Joystix Monospace",7), Qt::cyan);
             break;
         default:
             return;
@@ -101,5 +103,5 @@ void InfoBox::show_powerup_info(int event)
 
     powerup_text= new PopUpDialogue(scene(), text, 4000, PopUpDialogue::InfoBox, GAMEAREA_LENGTH, 100);
 
-    powerup_text->set_font(font, Qt::cyan);
+
 }
