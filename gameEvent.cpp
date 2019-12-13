@@ -152,16 +152,14 @@ void GameEvent::trigger_event(int event_id)
                                                3, 0 ,0, 700, 0, DEFAULT_SHOOT_FREQ*8);
             enemy->set_targetPos(250, 150);
             enemy2->set_targetPos(450, 150);
-            enemy->set_drop_powerup();
-            enemy2->set_drop_powerup();
             break;
         }
         case 1:
         {
             spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Random,
-                        6, 0, 2, 100+rand()%200, 0, DEFAULT_SHOOT_FREQ*3)->set_drop_powerup();
+                        6, 0, 2, 100+rand()%200, 0, DEFAULT_SHOOT_FREQ*3);
             spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Random,
-                        6, 0, 2, 400+rand()%200, 0, DEFAULT_SHOOT_FREQ*3)->set_drop_powerup();
+                        6, 0, 2, 400+rand()%200, 0, DEFAULT_SHOOT_FREQ*3);
             break;
         }
         case 2:
