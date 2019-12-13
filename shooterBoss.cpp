@@ -344,20 +344,20 @@ void ShooterBoss::show_dialogue()
     switch (dialogue_counter)
     {
         case 1:
-            new PopUpDialogue(scene(), "Looks like you have found me at last.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 40);
+            new PopUpDialogue(scene(), "Looks like you have found me at last.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30);
             break;
         case 2:
-            new PopUpDialogue(scene(), "I am the massive underlying bug that is making your program\nrunning into problems, crashing left and right.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 40);
+            new PopUpDialogue(scene(), "I am the massive underlying bug that is making \nyour program running into problems, crashing left and right.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30,SCREEN_HEIGHT/2-30);
             break;
         case 3:
-            new PopUpDialogue(scene(), "All because of your unorganized data structures, unhandled\ndynamic memory and lack of documentation.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 40);
+            new PopUpDialogue(scene(), "All because of your unorganized data structures, \nunhandled dynamic memory and lack of documentation.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30,SCREEN_HEIGHT/2-20);
             break;
         case 4:
-            new PopUpDialogue(scene(), "If you want to get out of here alive, you will have to defeat me.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 40);
+            new PopUpDialogue(scene(), "If you want to get out of here alive, you will \nhave to defeat me.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30,SCREEN_HEIGHT/2-20);
             break;
         case 5:
             //the TODO in the dialogue is deliberate
-            new PopUpDialogue(scene(), "And I won't go down without a good fight!\nGive it all you've//TODO: Finish the dialogues", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 40);
+            new PopUpDialogue(scene(), "And I won't go down without a good fight!\nGive it all you've//TODO: Finish the dialogues", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30, SCREEN_HEIGHT/2-20);
             break;
         case 6:
             start_bossfight();
