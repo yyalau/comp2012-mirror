@@ -98,12 +98,6 @@ void ShooterBoss::show_health()
     health_bar = new PopUpDialogue(scene(), "", NO_DURATION, PopUpDialogue::BossHealth);
 }
 
-inline void ShooterBoss::start_bossfight()
-{
-    if (phase != Dialogue) return; //wrong phase to call
-    set_phase(PhasePre1);
-}
-
 void ShooterBoss::move()
 {
     switch (phase)
@@ -360,7 +354,7 @@ void ShooterBoss::show_dialogue()
             new PopUpDialogue(scene(), "And I won't go down without a good fight!\nGive it all you've\n//TODO: Finish the dialogues", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30, SCREEN_HEIGHT/2-20);
             break;
         case 6:
-            start_bossfight();
+            set_phase(PhasePre1);
             break;
         default:
             return;

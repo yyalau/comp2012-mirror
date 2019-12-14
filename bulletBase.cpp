@@ -26,8 +26,8 @@ void BulletBase::unpause()
 
 bool BulletBase::out_of_bound()
 {
-    return !(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
-            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y()));
+    return !(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x(), this)) ||
+            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y(), this));
 }
 
 void BulletBase::move()

@@ -88,11 +88,6 @@ void PopUpDialogue::unpause()
     if (popup_timer != nullptr) popup_timer->unpause();
 }
 
-void PopUpDialogue::set_message(const QString& message)
-{
-    this->message = message;
-}
-
 void PopUpDialogue::set_width(const int& width)
 {
     this->width = width;

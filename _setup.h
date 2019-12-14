@@ -5,7 +5,7 @@
 #include <QGraphicsView>
 #include <QHBoxLayout>
 #include <QWidget>
-#include <QFontDatabase>>
+#include <QFontDatabase>
 
 #include "define.h"
 #include "shooterPlayer.h"
@@ -38,8 +38,6 @@ public:
     QHBoxLayout* layout;
     QWidget* window;
 
-signals:
-    void create_start_scene();
 };
 
 

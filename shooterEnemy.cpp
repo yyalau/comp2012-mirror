@@ -53,8 +53,8 @@ void ShooterEnemy::set_pathing_type(EnemyPathingType pathingType){
 bool ShooterEnemy::out_of_bound()
 {
     //remove once its out of bound
-    return !(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
-            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y()));
+    return !(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x(), this)) ||
+            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y(), this));
 }
 
 void ShooterEnemy::safe_kill()
@@ -82,11 +82,11 @@ void ShooterEnemy::move()
             setPos(x()+dx,y()+dy);
             break;
         case BorderBounce:
-            if (!(INSCREEN_LEFT_RIGID(pos().x()+dx)) || !(INSCREEN_RIGHT_RIGID(pos().x()+dx)))
+            if (!(INSCREEN_LEFT_RIGID(pos().x()+dx)) || !(INSCREEN_RIGHT_RIGID(pos().x()+dx, this)))
             {
                 dx = -dx;
             }
-            if (!(INSCREEN_UP_RIGID(pos().y()+dy)) || !(INSCREEN_DOWN_RIGID(pos().y()+dy)))
+            if (!(INSCREEN_UP_RIGID(pos().y()+dy)) || !(INSCREEN_DOWN_RIGID(pos().y()+dy, this)))
             {
                 dy = -dy;
             }

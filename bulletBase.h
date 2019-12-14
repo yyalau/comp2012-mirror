@@ -16,15 +16,17 @@
  * Abstract Base Class for bullets
  *
  * PROTECTED DATA MEMBERS
- * @include dx, dy: velocity of bullet
- * @include move_freq: milliseconds between times move() is called
+ * @include dx, dy: Velocity of bullet
+ * @include size_x, size_y: Bullet's size
+ * @include move_freq: Milliseconds between times move() is called
  * @include move_timer: CustomTimer for triggering move()
  *
- * PUBLIC FUNCTIONS
- * @include pause(), unpause(): stopping/restarting the timers
+ * PUBLIC MEMBER FUNCTIONS
+ * @include pause(), unpause(): Stopping/restarting the timers
+ * @include out_of_bound(): Virtual function for checking out of bound, can be overloaded for OutOfBound bullet
  *
  * PUBLIC SLOTS
- * @include move(): virtual slot for updating the position of bullet, has out of bound handling
+ * @include move(): Virtual slot for updating the position of bullet, has out of bound handling
  */
 
 class BulletBase: public QObject, public QGraphicsPixmapItem{

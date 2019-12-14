@@ -20,25 +20,27 @@
  * @brief The GameEvent class
  * Has a timer to trigger events at certain time
  *
- * PRIVATE DATA MEMBERS
- * @include parentScene: //TODO, see setup.h (need this to call addItem)
+ * PRIVATE DATA MEMBERS/MEMBER FUNCTIONS
+ * @include parent_scene: The main scene (need this to call addItem)
+ * @include dialogue: Game's dialogue, used for boss dialogues and gameover screens
  * @include shooter: Pointer to the player (for receiving signals)
  * @include event_timer: CustomTimer for triggering increment_time()
- * @include game_timer: Goes up by 1 every MIN_TIME ms
- * @include game_begin: Static bool for the first pause_game() called in constructor to avoid pause screen
+ * @include game_timer: Goes up by 1 every MIN_TIME ms.
+ *                      Only goes up to 70 seconds in normal gameplay, higher values reserved for gameover sequences.
+ * @include game_begin: Static bool for pause_game() used in gameover/game start to avoid pause screen
+ * @include spawn_enemy(): Convenience function for spawning enemy
+ * @include collision(): Called by increment_time() to check for shooter/bullet collisions
+ * @include game_over(): Generate the game over screen, called by increment_time();
  *
- * PRIVATE MEMBER FUNCTIONS:
- * @include spawn_enemy: convenience function for spawning enemy
- * PUBLIC MEMBER FUNCTIONS:
+ * PUBLIC MEMBER FUNCTIONS
  * @include get_time(): Returns the value of game_timer
  *
- * PUBLIC SLOTS:
- * @include collision_powerup(): If the shooter collides with the BulletPowerUp, it gets certain health/ shooter improvements
+ * PUBLIC SLOTS
  * @include increment_time(): Increase game_timer by 1 when triggered
  * @include trigger_event(): Trigger time-based game events, such as spawning enemies, when called
  * @include pause_game(), unpause_game(): Pause/Unpause the game, connect with signals sent by shooterPlayer
  * @include trigger_clear_field(): delete all the enemies in the screen, connect with clear_field signal sent by shooterPlayer
- * @include trigger_game_over(): Start the game over sequence, connect with player_dead() signal sent by shooterPlayer
+ * @include trigger_game_over(): Set game_timer beyond the maximum time to trigger game over after some time
  *
  * SIGNALS:
  * @include time_reached(): Sent when game_timer reaches time for triggering events in trigger_event()

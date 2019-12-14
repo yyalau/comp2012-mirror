@@ -23,6 +23,7 @@
  * @include unpause(): Resets the timer with the remaining time, then switch to initial timer after 1 timeout()
  * (pause() and unpause() handle the case where timer is deleted already, just sont delete the customTimer too soon)
  * @include set_interval(): Resets the timer with new interval
+ * @include stop(): Stops the timer, similar to QTimer
  *
  * PUBLIC SLOTS
  * @include restart_timer(): See unpause(). Delete this timer if custom_singleshot is true

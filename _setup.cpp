@@ -1,9 +1,5 @@
 #include "_setup.h"
 
-/**
- * TODO: Document this more properly
- */
-
 _SetUp::_SetUp()
 {
     //-----------------------------------GameSetting-------------------------------
@@ -48,8 +44,7 @@ _SetUp::_SetUp()
     window->setLayout(layout);
     window->show();
 
-    //set the instructions of the game
-    //should i move this to somewhere else? (nah here is ok, it's for setup)
+    //Instructions of the game
     QString instructions{
         "\t\tCOMP2012H-ShootTheBugs \n\n\n"
         "Instructions: \n\n"

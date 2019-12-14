@@ -15,7 +15,7 @@
  * ENUMS
  * @enum BossPhase: Name of the phase the boss is in
  *
- * PRIVATE DATA MEMBERS
+ * PRIVATE DATA MEMBERS/MEMBER FUNCTIONS
  * @include PHASE_HEALTH: Health when the boss switches to next state. PHASE_HEALTH[X] -> go to state X
  * @include phase: See enum above
  * @include boss_to_next_phase: flag for allowing boss to switch from Dialogue to other phases
@@ -31,7 +31,7 @@
  * @include set_player(): Set the shooter to point to the player
  * @include pause(), unpause(): Overrides ShooterBase's functions
  * @include show_health(): Show the boss's remaining health. ONLY CALL AFTER parent_scene->addItem()
- * @include start_bossfight(): Call this after the intro dialogue finishes //TODO: can remove
+ * @include collision(): overrides shooterBase's function
  *
  * SIGNALS
  * @include start_phase3(): sent to the shooterPlayer
@@ -39,12 +39,9 @@
  *
  * PUBLIC SLOTS
  * @include move(): overrides shooterBase's function, handles going out of bound
- * @include collision(): overrides shooterBase's function
  * @include shoot(): overrides shooterBase's function
  * @include enable_flag(): set flag to true after the pattern name finishes showing
  * @include show_dialogue(): display the dialogue before the battle
- * @include boss_death_animation(): shows "animation" for 1 second before "deleting" itself
- * @include boss_send_dead_signal(): sends the boss_dead() signals
  */
 
 class ShooterBoss : public ShooterBase
@@ -98,7 +95,6 @@ public:
     virtual void pause() override;
     virtual void unpause() override;
     void show_health();
-    void start_bossfight();
     virtual bool collision() override;
 
 signals:

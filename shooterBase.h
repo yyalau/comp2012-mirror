@@ -27,10 +27,10 @@
  * @include health: Pointer to dynamic Health object, created in constructor and deleted in destructor
  * @include pause(), unpause(): virtual functions for stopping/restarting the timers
  * @include shoot_bullet(): convenient function for creating a bullet
+ * @include collision(): pure virtual slot for handling collision effects
  *
  * PUBLIC SLOTS
  * @include move(): pure virtual slot for updating entity's position
- * @include collision(): pure virtual slot for checking collision with other entities/bullets
  * @include shoot(): pure virtual slot for shooting bullets
  */
 

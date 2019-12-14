@@ -2,47 +2,59 @@
 #define DEFINE_H
 
 #include <QGraphicsScene>
+#include <QGraphicsItem>
+
 #include <stdlib.h> //rand()
 #include <time.h>
 
 /**
-  * Some defines to make the code easier to read
-  * TODO: change to const int and templates?
+  * Some "defines" and templates to make the code easier to read
   */
 
-#define INFOBOX_LENGTH      300
-#define GAMEAREA_LENGTH     800
-#define SCREEN_HEIGHT       600
-#define SCREEN_LENGTH       GAMEAREA_LENGTH+INFOBOX_LENGTH
+static const int INFOBOX_LENGTH     {300};
+static const int GAMEAREA_LENGTH    {800};
+static const int SCREEN_HEIGHT      {600};
+static const int SCREEN_LENGTH      {GAMEAREA_LENGTH+INFOBOX_LENGTH};
 
-//for out of bound checking
-#define INSCREEN_LEFT(X)        (X) >= -50
-#define INSCREEN_RIGHT(X)       (X)+boundingRect().width() <= scene()->width()-INFOBOX_LENGTH+15
-#define INSCREEN_UP(Y)          (Y) >= -50
-#define INSCREEN_DOWN(Y)        (Y)+boundingRect().height() <= scene()->height()+50
+//for out of bound checking with some tolerance
+inline bool INSCREEN_LEFT(double x) {
+    return x >= -50;
+}
+inline bool INSCREEN_RIGHT(double x, QGraphicsItem* item) {
+    return x + item->boundingRect().width() <= item->scene()->width()-INFOBOX_LENGTH+15;
+}
+inline bool INSCREEN_UP(double y) {
+    return y >= -50;
+}
+inline bool INSCREEN_DOWN(double y, QGraphicsItem* item) {
+    return y + item->boundingRect().height() <= item->scene()->height()+50;
+}
 
-#define INSCREEN_LEFT_RIGID(X)        (X) >= 0
-#define INSCREEN_RIGHT_RIGID(X)       (X)+boundingRect().width() <= scene()->width()-INFOBOX_LENGTH
-#define INSCREEN_UP_RIGID(Y)          (Y) >= 0
-#define INSCREEN_DOWN_RIGID(Y)        (Y)+boundingRect().height() <= scene()->height()
-
+//check without the tolerance
+inline bool INSCREEN_LEFT_RIGID(double x) {
+    return x >= 0;
+}
+inline bool INSCREEN_RIGHT_RIGID(double x, QGraphicsItem* item) {
+    return x + item->boundingRect().width() <= item->scene()->width()-INFOBOX_LENGTH;
+}
+inline bool INSCREEN_UP_RIGID(double y) {
+    return y >= 0;
+}
+inline bool INSCREEN_DOWN_RIGID(double y, QGraphicsItem* item) {
+    return y + item->boundingRect().height() <= item->scene()->height();
+}
 
 //player's starting position
-#define START_POS_X         400
-#define START_POS_Y         500
+static const int START_POS_X    {400};
+static const int START_POS_Y    {500};
 
 //timer update duration (= 1000/frame per sec)
 //MIN_FREQ: ensures the slots are triggered in sync
-#define MIN_FREQ            20
-#define DEFAULT_FREQ        MIN_FREQ
-#define DEFAULT_SHOOT_FREQ  5*MIN_FREQ
-
-//player and enemy's health
-#define DEFAULT_PLAYER_HP   250
-#define DEFAULT_ENEMY_HP    3
+static const int MIN_FREQ            {20};
+static const int DEFAULT_FREQ        {MIN_FREQ};
+static const int DEFAULT_SHOOT_FREQ  {5*MIN_FREQ};
 
 //for removing a bullet/enemy out of the screen
-
 template <typename T>
 void REMOVE_ENTITY(QGraphicsScene* scene, T* X)
 {

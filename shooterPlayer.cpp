@@ -6,7 +6,7 @@
 bool ShooterPlayer::paused = true;
 bool ShooterPlayer::dead = false;
 
-ShooterPlayer::ShooterPlayer(const int& hp, const int& dx, const int& dy, const int& shoot_freq,  const bool& shoot,
+ShooterPlayer::ShooterPlayer(const int hp, const int& dx, const int& dy, const int& shoot_freq,  const bool& shoot,
                              const int size_x, const int size_y, const int& move_freq) :
          ShooterBase("Player", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq)
 {
@@ -160,8 +160,8 @@ void ShooterPlayer::move()
         }
         return;
     }
-    double new_x = x() + (INSCREEN_LEFT_RIGID(pos().x()+dx) && INSCREEN_RIGHT_RIGID(pos().x()+dx) ? dx : 0);
-    double new_y = y() + (INSCREEN_UP_RIGID(pos().y()+dy) && INSCREEN_DOWN_RIGID(pos().y()+dy) ? dy : 0);
+    double new_x = x() + (INSCREEN_LEFT_RIGID(pos().x()+dx) && INSCREEN_RIGHT_RIGID(pos().x()+dx, this) ? dx : 0);
+    double new_y = y() + (INSCREEN_UP_RIGID(pos().y()+dy) && INSCREEN_DOWN_RIGID(pos().y()+dy, this) ? dy : 0);
     setPos(new_x, new_y);
 }
 

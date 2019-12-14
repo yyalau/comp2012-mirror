@@ -6,7 +6,22 @@
 #include "bulletBase.h"
 #include "bulletPlayer.h"
 
-class BulletPowerUp: public BulletBase{
+/**
+ * @brief The BulletPowerUp class
+ * Class for PowerUp bullets
+ *
+ * ENUMS
+ * @enum PowerUpType: Type of PowerUp will be given to the player
+ *
+ * PRIVATE DATA MEMBERS
+ * @include power_type: See enum above
+ *
+ * PUBLIC MEMBER FUNCTIONS
+ * @include get_power_type(): returns power_type
+ */
+
+class BulletPowerUp: public BulletBase {
+
 public:
     enum PowerUpType
     {

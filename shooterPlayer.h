@@ -34,16 +34,18 @@
  * @include pause(), unpause(): Overrides ShooterBase's functions
  * @include get_pos(): return the player's position
  * @include process_powerup(BulletPowerUp*): handles power-up tasks when ShooterPlayer/BulletPlayer collided with BulletPowerUp
+ * @include collision():
+ *              No parameter: overrides shooterBase's function (do NOTHING)
+ *              1 argument (collision_item): Call this function instead and pass the collision item (bullet/enemy/boss)
  *
  * SIGNALS
  * @include pause_all(), unpause_all(): signals to send to the main game
  * @include player_dead(): signal triggered when health reaches 0
- * @include powerup_text(int): signal to send to infoBox, to display the correct power-up message in infoBox
+ * @include powerup_text(int), shooter_text(int): signal to send to infoBox, to display the correct power-up message in infoBox
  * @include clear_field(bool): signal triggered when player pressed 'R' key or hit BulletPowerUp with clear field function
  *
  * PUBLIC SLOTS
  * @include move(): overrides shooterBase's function, prevents going out of bound
- * @include collision(): overrides shooterBase's function
  * @include shoot(): overrides shooterBase's function
  * @include reset_shooter(): sets powerup_shooter to false after 10 seconds
  * @include reset_immune(): reset immunity after 1 second
@@ -57,6 +59,7 @@ public:
     static const int DEFAULT_SPEED {10};
     static const int PLAYER_SIZE_X {24};
     static const int PLAYER_SIZE_Y {38};
+    static const int DEFAULT_PLAYER_HP {25};
 
 private:
     int speed {DEFAULT_SPEED};
@@ -66,17 +69,17 @@ private:
     bool nullptr_phase {false};
     int powerup_shooter_counter {0};
     CustomTimer *powerup_timer {nullptr}, *immune_timer {nullptr};
+    void set_sprite(const char* sprite);
+
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void focusOutEvent(QFocusEvent* event) override;
-    void set_sprite(const char* sprite);
 
 public:
-    ShooterPlayer(const int& hp = DEFAULT_PLAYER_HP, const int& dx = 0, const int& dy = 0,
+    ShooterPlayer(const int hp = DEFAULT_PLAYER_HP, const int& dx = 0, const int& dy = 0,
                   const int& shoot_freq = DEFAULT_SHOOT_FREQ, const bool& shoot = false,
                   const int size_x = PLAYER_SIZE_X, const int size_y = PLAYER_SIZE_Y,
                   const int& move_freq = DEFAULT_FREQ);
-    //TODO: Destructor for the timer? Probably not needed actually, we dont delete the player
     QPointF get_pos();
     virtual void pause() override;
     virtual void unpause() override;

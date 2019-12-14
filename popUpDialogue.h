@@ -13,25 +13,26 @@
  * Creates a dialogue on the screen. Can be used for pause/gameover messages, as well as game dialogues
  * (added a third type for displaying boss health)
  *
- * ENUMS:
+ * ENUMS
  * @enum PopUpType: Serves as default configuration for easy dialogue initialization
  *
- * PRIVATE DATA MEMBERS:
+ * PRIVATE DATA MEMBERS/MEMBER FUNCTIONS
  * @include parent_scene, popup_scene, popup_text: Handles creating the popup box
  * @include popup_timer: Keep track of time that popup dialogue is active
  * @include popup_type: See enum above
  * @include message: Dialogue's message
  * @include color, opacity: Dialogue's color properties
  * @include x, y, width, height: Dialogue's position and size
+ * @include text_x, text_y: Text's position
  * @include duration: Time that the dialogue remains active
  * @include create_dialogue(), set_duration(): For constructors' use
  *
- * PUBLIC MEMBER FUNCTIONS:
+ * PUBLIC MEMBER FUNCTIONS
  * @include pause(), unpause(): Pause/Unpause the popup_timer
- * @include set_message(): Change the current message (for game dialogues)
  * @include set_width(): Change the popup box's width (for boss health)
+ * @include set_font(): Change the text's font
  *
- * PUBLIC SLOTS:
+ * PUBLIC SLOTS
  * @include remove(): deletes the object itself, and returns nullptr to its pointer
  */
 
@@ -79,7 +80,6 @@ public:
     ~PopUpDialogue();
     void pause();
     void unpause();
-    void set_message(const QString& message);
     void set_width(const int& width);
     void set_font(const QFont& font={"Joystix Monospace", 12} , const QColor& Color=Qt::black);
 

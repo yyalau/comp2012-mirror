@@ -11,15 +11,16 @@
  * Class for players/enemies health
  *
  * PRIVATE DATA MEMBERS
- * @include health: entity's remaining health
- * @include name: entity's name (ShooterEnemy/ShooterPlayer)
+ * @include health: Entity's remaining health
+ * @include max_health: Entity's max_health, initialized with constructor
+ * @include name: Entity's name (ShooterEnemy/ShooterPlayer)
  *
  * PUBLIC MEMBER FUNCTIONS
- * @include set_text(): displays the correct health value on screen
- * @include get_health(): return current health
- * @include set_health(): change health
- * @include is_dead(): check if hp is 0
- * @include reset_health(): whenever the programme restarts, this function will be called to reset the health of the player
+ * @include set_text(): Displays the correct health value on screen
+ * @include get_health(): Return current health
+ * @include set_health(): Change health (normally use 1 or -1)
+ * @include is_dead(): Check if hp is 0
+ * @include reset_health(): RSeset the health of the entity (use on player when pressing restart)
  */
 
 class Health: public QGraphicsTextItem{

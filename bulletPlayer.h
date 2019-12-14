@@ -6,10 +6,6 @@
 /**
  * @brief The BulletPlayer class
  * Class for bullets shot by player
- *
- * PUBLIC MEMBER FUNCTIONS
- *
- * PUBLIC SLOTS
  */
 
 class BulletPlayer:public BulletBase{
@@ -23,8 +19,6 @@ public:
     BulletPlayer(const int& dx = 0, const int& dy = 0,
                  const int size_x = BULLETPLAYER_SIZE_X, const int size_y = BULLETPLAYER_SIZE_Y,
                  const int& move_freq = DEFAULT_FREQ);
-
-public slots:
 
 };
 

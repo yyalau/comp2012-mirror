@@ -17,13 +17,13 @@ BulletEnemy::BulletEnemy(const int& dx, const int& dy, const BulletType& bullet_
 bool BulletEnemy::out_of_bound()
 {
     if (bullet_type == OutOfBound)
-        return !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y()));
+        return !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y(), this));
     else if (bullet_type == Explode)
-        return !(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
-            !(INSCREEN_DOWN(pos().y()));
+        return !(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x(), this)) ||
+            !(INSCREEN_DOWN(pos().y(), this));
     else
-        return !(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x())) ||
-            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y()));
+        return !(INSCREEN_LEFT(pos().x())) || !(INSCREEN_RIGHT(pos().x(), this)) ||
+            !(INSCREEN_UP(pos().y())) || !(INSCREEN_DOWN(pos().y(), this));
 }
 
 void BulletEnemy::move()
@@ -64,7 +64,7 @@ void BulletEnemy::move()
                 }
             }
 
-            if (!(INSCREEN_DOWN(pos().y()+dy)))
+            if (!(INSCREEN_DOWN(pos().y()+dy, this)))
             {
                 double angle = 3.1415;
                 while (angle < 6.2832)

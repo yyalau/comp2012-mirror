@@ -7,8 +7,6 @@ InfoBox::InfoBox(ShooterPlayer* shooter) :
     setBrush(Qt::gray);
     setRect(0, 0, INFOBOX_LENGTH, SCREEN_HEIGHT);
 
-    powerup_timer = new CustomTimer();
-
     connect(shooter, SIGNAL(powerup_text(int)), this, SLOT(show_powerup_info(int)));
     connect(shooter, SIGNAL(shooter_text(int)), this, SLOT(show_shooter_info(int)));
 
@@ -16,8 +14,8 @@ InfoBox::InfoBox(ShooterPlayer* shooter) :
 
 InfoBox::~InfoBox()
 {
-    if (powerup_timer!= nullptr) delete powerup_timer;
-    if (powerup_text!=nullptr) delete powerup_text;
+    if (powerup_text != nullptr) delete powerup_text;
+    if (shooter_text != nullptr) delete shooter_text;
 }
 
 void InfoBox::show_general_info()
@@ -48,21 +46,10 @@ void InfoBox::show_general_info()
     scene()->addItem(general_text);
 }
 
-void InfoBox::pause()
-{
-    powerup_timer->pause();
-}
-
-void InfoBox::unpause()
-{
-    powerup_timer->unpause();
-}
-
 void InfoBox::show_shooter_info(const int& powerup_shooter)
 {
-    //TODO
     QString message = QString::number(powerup_shooter)+ QString(" seconds left");
-    shooter_text= new PopUpDialogue(scene(),message,1000,
+    shooter_text = new PopUpDialogue(scene(),message,1000,
                                     PopUpDialogue::InfoBox,GAMEAREA_LENGTH,350);
     shooter_text->set_font(QFont("Joystix Monospace",8), Qt::blue);
 }
@@ -97,7 +84,7 @@ void InfoBox::show_powerup_info(const int& event)
     }
 
 
-    powerup_text= new PopUpDialogue(scene(), text, 4000, PopUpDialogue::InfoBox, GAMEAREA_LENGTH, (event+1)*100);
+    powerup_text = new PopUpDialogue(scene(), text, 4000, PopUpDialogue::InfoBox, GAMEAREA_LENGTH, (event+1)*100);
 
     powerup_text->set_font(font, Qt::yellow);
 }

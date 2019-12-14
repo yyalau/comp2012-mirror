@@ -9,16 +9,17 @@
  * @brief The BulletEnemy class
  * Class for bullets shot by enemies
  *
- * ENUMS:
+ * ENUMS
  * @enum BulletType: How the bullet behaves
  *
  * PRIVATE DATA MEMBERS
  * @include bullet_type: See enum above
  *
  * PUBLIC MEMBER FUNCTIONS
+ * @include out_of_bound(): overrides bulletBase's function to reimplement out-of-bound case
  *
  * PUBLIC SLOTS
- * @include move(): overrides bulletBase's function to reimplement out-of-bound case
+ * @include move(): overrides bulletBase's function to reimplement type-specific cases
  */
 
 class BulletEnemy:public BulletBase{
@@ -29,13 +30,13 @@ public:
         OutOfBound, //ignores left, right boundaries        //FOR BOSS PHASE 1
         Falling,    //dy increases with time
         Explode     //when reaching the bottom, explodes into multiple Falling bullets      //FOR BOSS PHASE 3
-        //TODO
     };
 
 private:
     BulletType bullet_type;
-    bool bounced {false};
 
+    //type-specific variables
+    bool bounced {false};
     int fall_counter{0};
     const int FALL_COUNTER_MAX {3};
 

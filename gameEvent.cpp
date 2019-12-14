@@ -95,7 +95,6 @@ void GameEvent::collision()
         {
             if(typeid(*(enemy_colliding_items[j]))==typeid(BulletPlayer))
             {
-                //TODO? have nullptr check for dynamic cast, although probably unnecessary
                 if (enemy->collision())
                     REMOVE_ENTITY(parent_scene, enemy_colliding_items[j]);
 
@@ -142,8 +141,6 @@ void GameEvent::trigger_event(const int& event_id)
 {
     switch (event_id)
     {
-        //TODO: create macro or template for enemy creation
-        //if macro put it in define? shooterBoss also needs it
         case 0:
         {
             ShooterEnemy* enemy = spawn_enemy(ShooterEnemy::GotoTarget, ShooterEnemy::Random,
@@ -300,7 +297,6 @@ void GameEvent::pause_game()
         if (try_pause<BulletBase>(scene_items[i])) continue;
         if (try_pause<ShooterBase>(scene_items[i])) continue;
         if (try_pause<ShooterExplosion>(scene_items[i])) continue;
-        if (try_pause<InfoBox>(scene_items[i])) continue;
         if (try_pause<PopUpDialogue>(scene_items[i])) continue;
     }
     event_timer->pause();
@@ -333,7 +329,6 @@ void GameEvent::unpause_game()
         if (try_unpause<BulletBase>(scene_items[i])) continue;
         if (try_unpause<ShooterBase>(scene_items[i])) continue;
         if (try_unpause<ShooterExplosion>(scene_items[i])) continue;
-        if (try_unpause<InfoBox>(scene_items[i])) continue;
         if (try_unpause<PopUpDialogue>(scene_items[i])) continue;
     }
     event_timer->unpause();
