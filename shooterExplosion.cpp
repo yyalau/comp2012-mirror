@@ -1,6 +1,6 @@
 #include "shooterExplosion.h"
 
-ShooterExplosion::ShooterExplosion(int size_x, int size_y, int duration)
+ShooterExplosion::ShooterExplosion(const int& size_x, const int& size_y, int duration)
 {
     QPixmap image(":/image/images/computer_dead.png");
     setPixmap(image.scaled(size_x, size_y, Qt::IgnoreAspectRatio));

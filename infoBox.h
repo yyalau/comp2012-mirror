@@ -46,8 +46,8 @@ public:
     void unpause();
 
 public slots:
-    void show_powerup_info(int event);
-    void show_shooter_info(int powerup_shooter);
+    void show_powerup_info(const int& event);
+    void show_shooter_info(const int& powerup_shooter);
 
 };
 

@@ -1,7 +1,7 @@
 #include "health.h"
 
-Health::Health(const QString& name, int max_health, bool show_name, QGraphicsItem *parent):
-    name(name), max_health(max_health), show_name(show_name)
+Health::Health(const QString& name, const int& max_health):
+    name(name), max_health(max_health)
 {
     health = max_health;
 
@@ -12,13 +12,10 @@ Health::Health(const QString& name, int max_health, bool show_name, QGraphicsIte
 
 void Health::set_text()
 {
-    if (show_name){
-        setPlainText(QString(name)+QString(" Health: \n")+"\t x"+ QString::number(health));
-    } else
-        if(name=="Player")
-            setPlainText(QString("X")+QString::number(health));
-        else
-            setPlainText(QString::number(health));
+    if(name=="Player")
+        setPlainText(QString("X")+QString::number(health));
+    else
+        setPlainText(QString::number(health));
 }
 
 int Health::get_health()
@@ -26,7 +23,7 @@ int Health::get_health()
     return health;
 }
 
-void Health::set_health(int increment)
+void Health::set_health(const int& increment)
 {
     health=health+increment;
     set_text();

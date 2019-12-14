@@ -4,10 +4,10 @@
 //static member declaration
 ShooterPlayer* ShooterEnemy::player = nullptr;
 
-ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,
-                           int hp, int dx, int dy, int shoot_freq, bool shoot,
-                           int size_x, int size_y, int move_freq) :
-       ShooterBase("Enemy", hp, false, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq),
+ShooterEnemy::ShooterEnemy(const EnemyPathingType& pathing_type, const EnemyShootingType& shooting_type,
+                           const int& hp, const int& dx, const int& dy, const int& shoot_freq, const bool& shoot,
+                           const int size_x, const int size_y, const int& move_freq) :
+       ShooterBase("Enemy", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq),
        pathing_type(pathing_type), shooting_type(shooting_type)
 {
     QPixmap enemyimage(":/image/images/computer.png");
@@ -23,10 +23,10 @@ ShooterEnemy::ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shoo
 
     //if(pathing_type==Wave)
       //  dy=1;
-    move_timer= new CustomTimer(move_freq, false, this, SLOT(move()));
+    move_timer= new CustomTimer(this->move_freq, false, this, SLOT(move()));
     //connect the timer and move slot
 
-    shoot_timer= new CustomTimer(shoot_freq, false, this, SLOT(shoot()));
+    shoot_timer= new CustomTimer(this->shoot_freq, false, this, SLOT(shoot()));
     //connect the timer and bullet slot
 }
 

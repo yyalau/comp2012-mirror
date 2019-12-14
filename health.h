@@ -26,15 +26,14 @@ class Health: public QGraphicsTextItem{
 
 private:
     int health;
-    int max_health;
-    QString name;
-    bool show_name;
+    const int max_health;
+    const QString name;
 
 public:
-    Health(const QString& name, int max_health, bool show_name=true, QGraphicsItem* parent=nullptr);
+    Health(const QString& name, const int& max_health);
     void set_text();
     int get_health();
-    void set_health(int increment);
+    void set_health(const int& increment);
     bool is_dead();
     void reset_health();
 };

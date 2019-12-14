@@ -1,11 +1,12 @@
 #include "bulletPowerUp.h"
 
-BulletPowerUp::BulletPowerUp(int dx, int dy, PowerUpType power_type, int size_x, int size_y, int move_freq):
+BulletPowerUp::BulletPowerUp(const int& dx, const int& dy, const PowerUpType& power_type,
+                             const int size_x, int size_y, const int& move_freq):
     BulletBase(dx, dy, size_x, size_y, move_freq)
 {
 
     QPixmap bulletimage(":/image/images/powerup.png");
-    setPixmap(bulletimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
+    setPixmap(bulletimage.scaled(this->size_x, this->size_y, Qt::IgnoreAspectRatio));
     setRotation(-90);
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);

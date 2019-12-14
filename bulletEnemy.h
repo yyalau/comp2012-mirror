@@ -40,9 +40,9 @@ private:
     const int FALL_COUNTER_MAX {3};
 
 public:
-    BulletEnemy(int dx = 0, int dy = 0, BulletType bullet_type = Normal,
-                int size_x = BULLET_SIZE, int size_y = BULLET_SIZE,
-                int move_freq = DEFAULT_FREQ);
+    BulletEnemy(const int& dx = 0, const int& dy = 0, const BulletType& bullet_type = Normal,
+                const int size_x = BULLET_SIZE, const int size_y = BULLET_SIZE,
+                const int& move_freq = DEFAULT_FREQ);
     virtual bool out_of_bound() override;
 
 public slots:

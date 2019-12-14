@@ -41,9 +41,9 @@ private:
 
 public:
     CustomTimer() = default;
-    CustomTimer(int interval, bool singleShot,
+    CustomTimer(int interval, const bool& singleShot,
                 const QObject* receiver = nullptr, const char* member = nullptr);
-    void start_timer(int interval, bool singleShot,
+    void start_timer(int interval, const bool& singleShot,
                 const QObject* receiver = nullptr, const char* member = nullptr);
     virtual ~CustomTimer();
     void pause();

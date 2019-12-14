@@ -21,9 +21,9 @@ private:
     PowerUpType power_type;
 
 public:
-    BulletPowerUp(int dx = 0, int dy = 0, PowerUpType power_type = Random,
-                  int size_x = BULLET_SIZE, int size_y = BULLET_SIZE,
-                  int move_freq = DEFAULT_FREQ);
+    BulletPowerUp(const int& dx = 0, const int& dy = 0, const PowerUpType& power_type = Random,
+                  const int size_x = BULLET_SIZE, const int size_y = BULLET_SIZE,
+                  const int& move_freq = DEFAULT_FREQ);
     PowerUpType get_power_type();
 };
 

@@ -56,25 +56,25 @@ private:
     int game_timer {0};
     static bool game_begin;
     ShooterEnemy* spawn_enemy(ShooterEnemy::EnemyPathingType pathing_type, ShooterEnemy::EnemyShootingType shooting_type,
-                              int hp, int dx, int dy,int initX, int initY, int shoot_freq = DEFAULT_SHOOT_FREQ);
+                              int hp, int dx, int dy,const int& initX, const int& initY, int shoot_freq = DEFAULT_SHOOT_FREQ);
     void collision();
-    void game_over(bool win);
+    void game_over(const bool& win);
 
 public:
-    GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QString instructions);
+    GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, const QString& instructions);
     ~GameEvent();
     int get_time();
 
 public slots:
     void increment_time();
-    void trigger_event(int event_id);
+    void trigger_event(const int& event_id);
     void pause_game();
     void unpause_game();
-    void trigger_clear_field(bool restart);
-    void trigger_game_over(bool win);
+    void trigger_clear_field(const bool& restart);
+    void trigger_game_over(const bool& win);
 
 signals:
-    void time_reached(int event_id);
+    void time_reached(const int& event_id);
 };
 
 #endif // GAMEEVENT_H

@@ -1,14 +1,16 @@
 #include "popUpDialogue.h"
 
-PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, QColor color, double opacity,
-                             int x, int y, int width, int height, int text_x, int text_y):
+PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, const QString& message, const int duration,
+                             const QColor& color, const double& opacity,
+                             const int& x, const int& y, const int& width, const int& height, const int& text_x, const int& text_y):
     parent_scene(parent_scene)
 {
     create_dialogue(message, color, opacity, x, y, width, height, text_x, text_y,12);
     set_duration(duration);
 }
 
-PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, PopUpType popup_type, int text_x, int text_y):
+PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, const QString& message,const int duration, const PopUpType& popup_type,
+                             const int& text_x, const int& text_y):
     parent_scene(parent_scene), popup_type(popup_type)
 {
     switch (popup_type)
@@ -40,7 +42,8 @@ PopUpDialogue::~PopUpDialogue()
     delete popup_text;
 }
 
-void PopUpDialogue::create_dialogue(QString message, QColor color, double opacity, int x, int y, int width, int height, int text_x, int text_y,int fontsize)
+void PopUpDialogue::create_dialogue(const QString& message, const QColor& color, const double& opacity, const int& x, const int& y,
+                                    const int& width, const int& height, const int& text_x, const int& text_y,const int& fontsize)
 {
     //similar part of constructors
     this->message = message;
@@ -68,11 +71,11 @@ void PopUpDialogue::create_dialogue(QString message, QColor color, double opacit
     parent_scene->addItem(popup_text);
 }
 
-void PopUpDialogue::set_duration(int duration)
+void PopUpDialogue::set_duration(const int duration)
 {
     if (duration == NO_DURATION) return;
     this->duration = duration;
-    popup_timer = new CustomTimer(duration, true, this, SLOT(remove()));
+    popup_timer = new CustomTimer(this->duration, true, this, SLOT(remove()));
 }
 
 void PopUpDialogue::pause()
@@ -85,18 +88,18 @@ void PopUpDialogue::unpause()
     if (popup_timer != nullptr) popup_timer->unpause();
 }
 
-void PopUpDialogue::set_message(QString message)
+void PopUpDialogue::set_message(const QString& message)
 {
     this->message = message;
 }
 
-void PopUpDialogue::set_width(int width)
+void PopUpDialogue::set_width(const int& width)
 {
     this->width = width;
     popup_scene->setRect(x,y,width,height);
 }
 
-void PopUpDialogue::set_font(QFont font, QColor color)
+void PopUpDialogue::set_font(const QFont& font, const QColor& color)
 {
     popup_text->setFont(font);
     popup_text->setDefaultTextColor(color);

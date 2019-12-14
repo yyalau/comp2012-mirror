@@ -39,8 +39,8 @@ protected:
     CustomTimer *move_timer;
 
 public:
-    BulletBase(int dx = 0, int dy = 0, int size_x = BULLET_SIZE, int size_y = BULLET_SIZE,
-               int move_freq = DEFAULT_FREQ);
+    BulletBase(int dx = 0, int dy = 0, const int& size_x = BULLET_SIZE, const int& size_y = BULLET_SIZE,
+               const int move_freq = DEFAULT_FREQ);
     ~BulletBase();
     void pause();
     void unpause();

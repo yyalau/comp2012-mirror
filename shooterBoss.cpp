@@ -4,21 +4,21 @@
 //static member declaration
 ShooterPlayer* ShooterBoss::player = nullptr;
 
-ShooterBoss::ShooterBoss(int hp, int dx, int dy, int shoot_freq, bool shoot,
-                         int size_x, int size_y, int move_freq) :
-     ShooterBase("Boss", hp, true, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq)
+ShooterBoss::ShooterBoss(const int hp, const int& dx, const int& dy, const int& shoot_freq, const bool& shoot,
+                         const int size_x, const int size_y, const int& move_freq) :
+     ShooterBase("Boss", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq)
 {
     //TODO: use another sprite
     QPixmap enemyimage(":/image/images/computer.png");
-    setPixmap(enemyimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
+    setPixmap(enemyimage.scaled(this->size_x, this->size_y, Qt::IgnoreAspectRatio));
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.5);
 
-    move_timer= new CustomTimer(move_freq, false, this, SLOT(move()));
+    move_timer= new CustomTimer(this->move_freq, false, this, SLOT(move()));
     //connect the timer and move slot
 
-    shoot_timer= new CustomTimer(shoot_freq, false, this, SLOT(shoot()));
+    shoot_timer= new CustomTimer(this->shoot_freq, false, this, SLOT(shoot()));
     //connect the timer and bullet slot
 
     dialogue_timer = new CustomTimer(DIALOGUE_FREQ, false, this, SLOT(show_dialogue()));
@@ -42,7 +42,7 @@ inline void ShooterBoss::set_shoot_freq(int shoot_freq)
     shoot_timer->set_interval(shoot_freq);
 }
 
-void ShooterBoss::set_phase(BossPhase phase)
+void ShooterBoss::set_phase(const BossPhase& phase)
 {
     this->phase = phase;
     switch (phase)
@@ -229,7 +229,7 @@ bool ShooterBoss::collision()
         }
 
         //drop a powerup bullet
-        if (phase != Phase3) shoot_bullet(new BulletPowerUp(0, 4));
+        if (phase != Phase3) shoot_bullet(new BulletPowerUp(0, 4, BulletPowerUp::Breakpoint));
 
         set_phase(Dialogue);
     }
@@ -323,7 +323,7 @@ void ShooterBoss::shoot()
             ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::ExplodeOnDeath, 1, 7*dummy_dir_x, 0);
             enemy->setPos(dummy_x, dummy_y);
             scene()->addItem(enemy);
-            scene()->addItem(enemy->get_health_var());
+            scene()->addItem(enemy->health);
 
             //randomize the enemy spawn rate
             set_shoot_freq((40+rand()%50)*MIN_FREQ);
@@ -357,7 +357,7 @@ void ShooterBoss::show_dialogue()
             break;
         case 5:
             //the TODO in the dialogue is deliberate
-            new PopUpDialogue(scene(), "And I won't go down without a good fight!\nGive it all you've//TODO: Finish the dialogues", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30, SCREEN_HEIGHT/2-20);
+            new PopUpDialogue(scene(), "And I won't go down without a good fight!\nGive it all you've\n//TODO: Finish the dialogues", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30, SCREEN_HEIGHT/2-20);
             break;
         case 6:
             start_bossfight();

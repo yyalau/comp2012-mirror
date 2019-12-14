@@ -38,7 +38,7 @@
 #define DEFAULT_SHOOT_FREQ  5*MIN_FREQ
 
 //player and enemy's health
-#define DEFAULT_PLAYER_HP   25
+#define DEFAULT_PLAYER_HP   250
 #define DEFAULT_ENEMY_HP    3
 
 //for removing a bullet/enemy out of the screen
@@ -48,6 +48,7 @@ void REMOVE_ENTITY(QGraphicsScene* scene, T* X)
 {
     scene->removeItem(X);
     delete (X);
+    X=nullptr;
 }
 
 #endif // DEFINE_H

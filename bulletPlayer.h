@@ -20,9 +20,9 @@ public:
     static const int BULLETPLAYER_SIZE_Y {31};
 
 public:
-    BulletPlayer(int dx = 0, int dy = 0,
-                 int size_x = BULLETPLAYER_SIZE_X, int size_y = BULLETPLAYER_SIZE_Y,
-                 int move_freq = DEFAULT_FREQ);
+    BulletPlayer(const int& dx = 0, const int& dy = 0,
+                 const int size_x = BULLETPLAYER_SIZE_X, const int size_y = BULLETPLAYER_SIZE_Y,
+                 const int& move_freq = DEFAULT_FREQ);
 
 public slots:
 

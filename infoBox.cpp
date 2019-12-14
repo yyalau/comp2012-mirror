@@ -29,9 +29,9 @@ void InfoBox::show_general_info()
     health->setDefaultTextColor(Qt::red);
     scene()->addItem(health);
 
-    shooter->get_health_var()->setPos(GAMEAREA_LENGTH+100, 50);
-    scene()->addItem(shooter->get_health_var());
-    shooter->get_health_var()->setDefaultTextColor(Qt::red);
+    shooter->health->setPos(GAMEAREA_LENGTH+100, 50);
+    scene()->addItem(shooter->health);
+    shooter->health->setDefaultTextColor(Qt::red);
 
     QPixmap Heart(":/image/images/heart.png");
     QGraphicsPixmapItem* heart;
@@ -58,17 +58,16 @@ void InfoBox::unpause()
     powerup_timer->unpause();
 }
 
-void InfoBox::show_shooter_info(int powerup_shooter)
+void InfoBox::show_shooter_info(const int& powerup_shooter)
 {
     //TODO
-    qDebug()<<"powerup_shooter: "<<powerup_shooter;
     QString message = QString::number(powerup_shooter)+ QString(" seconds left");
     shooter_text= new PopUpDialogue(scene(),message,1000,
-                                    PopUpDialogue::InfoBox,GAMEAREA_LENGTH,200);
+                                    PopUpDialogue::InfoBox,GAMEAREA_LENGTH,350);
     shooter_text->set_font(QFont("Joystix Monospace",8), Qt::blue);
 }
 
-void InfoBox::show_powerup_info(int event)
+void InfoBox::show_powerup_info(const int& event)
 {
     QString text;
     QFont font("Joystix Monospace",8);
@@ -81,8 +80,7 @@ void InfoBox::show_powerup_info(int event)
             break;
         case BulletPowerUp::StackOverflow:
             text = QString {
-                "Your question on StackOverflow\n"
-                "was answered!\n\n"
+                "Your question on StackOverflow was answered!\n\n"
                 "This code section is bug-free!"
             };
                         font.setPointSize(7);
@@ -99,7 +97,7 @@ void InfoBox::show_powerup_info(int event)
     }
 
 
-    powerup_text= new PopUpDialogue(scene(), text, 4000, PopUpDialogue::InfoBox, GAMEAREA_LENGTH, 100);
+    powerup_text= new PopUpDialogue(scene(), text, 4000, PopUpDialogue::InfoBox, GAMEAREA_LENGTH, (event+1)*100);
 
-    powerup_text->set_font(font, Qt::cyan);
+    powerup_text->set_font(font, Qt::yellow);
 }

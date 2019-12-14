@@ -72,10 +72,10 @@ private:
     void set_sprite(const char* sprite);
 
 public:
-    ShooterPlayer(int hp = DEFAULT_PLAYER_HP, int dx = 0, int dy = 0,
-                  int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = false,
-                  int size_x = PLAYER_SIZE_X, int size_y = PLAYER_SIZE_Y,
-                  int move_freq = DEFAULT_FREQ);
+    ShooterPlayer(const int& hp = DEFAULT_PLAYER_HP, const int& dx = 0, const int& dy = 0,
+                  const int& shoot_freq = DEFAULT_SHOOT_FREQ, const bool& shoot = false,
+                  const int size_x = PLAYER_SIZE_X, const int size_y = PLAYER_SIZE_Y,
+                  const int& move_freq = DEFAULT_FREQ);
     //TODO: Destructor for the timer? Probably not needed actually, we dont delete the player
     QPointF get_pos();
     virtual void pause() override;

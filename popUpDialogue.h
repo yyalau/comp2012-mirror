@@ -32,7 +32,7 @@
  * @include set_width(): Change the popup box's width (for boss health)
  *
  * PUBLIC SLOTS:
- * @include remove():
+ * @include remove(): deletes the object itself, and returns nullptr to its pointer
  */
 
 #define NO_DURATION 0
@@ -66,21 +66,22 @@ private:
     int width, height;
     int duration;
 
-    void create_dialogue(QString message, QColor color, double opacity,
-                         int x, int y, int width, int height,int text_x, int text_y,int fontsize);
-    void set_duration(int duration);
+    void create_dialogue(const QString& message, const QColor& color, const double& opacity,
+                         const int& x, const int& y, const int& width, const int& height,
+                         const int& text_x, const int& text_y, const int& fontsize);
+    void set_duration(const int duration);
 
 public:
-    PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, QColor color, double opacity,
-                  int x, int y, int width, int height, int text_x, int text_y);
-    PopUpDialogue(QGraphicsScene* parent_scene, QString message, int duration, PopUpType popup_type,
-                  int text_x = 100, int text_y = SCREEN_HEIGHT/2);
+    PopUpDialogue(QGraphicsScene* parent_scene, const QString& message, const int duration, const QColor& color, const double& opacity,
+                  const int& x, const int& y, const int& width, const int& height, const int& text_x, const int& text_y);
+    PopUpDialogue(QGraphicsScene* parent_scene, const QString& message, const int duration, const PopUpType& popup_type,
+                  const int& text_x = 100, const int& text_y = SCREEN_HEIGHT/2);
     ~PopUpDialogue();
     void pause();
     void unpause();
-    void set_message(QString message);
-    void set_width(int width);
-    void set_font(QFont font={"Joystix Monospace", 12} , QColor Color=Qt::black);
+    void set_message(const QString& message);
+    void set_width(const int& width);
+    void set_font(const QFont& font={"Joystix Monospace", 12} , const QColor& Color=Qt::black);
 
 public slots:
     PopUpDialogue* remove();

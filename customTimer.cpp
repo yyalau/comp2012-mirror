@@ -1,11 +1,11 @@
 #include "customTimer.h"
 
-CustomTimer::CustomTimer(int interval, bool singleShot, const QObject *receiver, const char *member)
+CustomTimer::CustomTimer(int interval, const bool& singleShot, const QObject *receiver, const char *member)
 {
     start_timer(interval, singleShot, receiver, member);
 }
 
-void CustomTimer::start_timer(int interval, bool singleShot, const QObject *receiver, const char *member)
+void CustomTimer::start_timer(int interval, const bool& singleShot, const QObject *receiver, const char *member)
 {
     time_left = initial_interval = interval;
     this->singleShot = singleShot;

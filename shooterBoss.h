@@ -82,17 +82,17 @@ private:
     int dialogue_counter {0};
     static ShooterPlayer* player;
     void set_shoot_freq(int shoot_freq);
-    void set_phase(BossPhase phase);
+    void set_phase(const BossPhase& phase);
 
     //phase-specific variables
     int phase_dir {1};
     double phase_angle {0.0};
 
 public:
-    ShooterBoss(int hp = BOSS_HP, int dx = 0, int dy = 1,
-                int shoot_freq = DEFAULT_SHOOT_FREQ, bool shoot = true,
-                int size_x = BOSS_SIZE_X, int size_y = BOSS_SIZE_Y,
-                int move_freq = DEFAULT_FREQ);
+    ShooterBoss(const int hp = BOSS_HP, const int& dx = 0, const int& dy = 1,
+                const int& shoot_freq = DEFAULT_SHOOT_FREQ, const bool& shoot = true,
+                const int size_x = BOSS_SIZE_X, const int size_y = BOSS_SIZE_Y,
+                const int& move_freq = DEFAULT_FREQ);
     ~ShooterBoss() override;
     static void set_player(ShooterPlayer* shooter);
     virtual void pause() override;

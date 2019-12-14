@@ -33,7 +33,7 @@ private:
     CustomTimer* explosion_timer;
 
 public:
-    ShooterExplosion(int size_x, int size_y, int duration = EXPLOSION_DURATION);
+    ShooterExplosion(const int& size_x, const int& size_y, int duration = EXPLOSION_DURATION);
     ~ShooterExplosion();
     void pause();
     void unpause();

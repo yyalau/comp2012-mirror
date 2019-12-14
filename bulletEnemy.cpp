@@ -1,13 +1,13 @@
 #include "bulletEnemy.h"
 #include "bulletPlayer.h"
 
-BulletEnemy::BulletEnemy(int dx, int dy, BulletType bullet_type,
-                         int size_x, int size_y, int move_freq):
+BulletEnemy::BulletEnemy(const int& dx, const int& dy, const BulletType& bullet_type,
+                         const int size_x, const int size_y, const int& move_freq):
     BulletBase(dx, dy, size_x, size_y, move_freq), bullet_type(bullet_type)
 {
     //setRect(0, 0, size_x, size_y);
     QPixmap bulletimage(":/image/images/bugbullet2.png");
-    setPixmap(bulletimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
+    setPixmap(bulletimage.scaled(this->size_x, this->size_y, Qt::IgnoreAspectRatio));
     setRotation(180);
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);

@@ -3,7 +3,7 @@
 //static member declaration
 bool GameEvent::game_begin = false;
 
-GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, QString instructions) :
+GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, const QString& instructions) :
     parent_scene(parent_scene), shooter(shooter)
 {
 
@@ -41,10 +41,10 @@ int GameEvent::get_time()
 }
 
 //helper template
-//TODO: Use iterator on this one???
 template <typename T>
 QList<QGraphicsItem*> filter_items(QList<QGraphicsItem*> all_items)
 {
+
     for (int i=0; i<all_items.size(); ++i)
     {
         if (dynamic_cast<T*>(all_items[i]) == nullptr)
@@ -100,7 +100,7 @@ void GameEvent::collision()
                     REMOVE_ENTITY(parent_scene, enemy_colliding_items[j]);
 
                 //Moved health == 0 check here as well, all REMOVE_ENTITY should be centralized
-                if (enemy->get_health_var()->get_health() == 0)
+                if (enemy->health->get_health() == 0)
                 {
                     REMOVE_ENTITY(parent_scene, enemy);
                     break; //exit the enemy_colliding_items loop, continue with the itemsInScreen loop
@@ -138,7 +138,7 @@ void GameEvent::increment_time()
     collision();
 }
 
-void GameEvent::trigger_event(int event_id)
+void GameEvent::trigger_event(const int& event_id)
 {
     switch (event_id)
     {
@@ -271,11 +271,12 @@ void GameEvent::trigger_event(int event_id)
         }
 }
 
-ShooterEnemy* GameEvent::spawn_enemy(ShooterEnemy::EnemyPathingType pathing_type, ShooterEnemy::EnemyShootingType shooting_type, int hp, int dx, int dy,int initX, int initY, int shoot_freq){
+ShooterEnemy* GameEvent::spawn_enemy(ShooterEnemy::EnemyPathingType pathing_type, ShooterEnemy::EnemyShootingType shooting_type, int hp,
+                                     int dx, int dy, const int& initX, const int& initY, int shoot_freq){
     ShooterEnemy* enemy = new ShooterEnemy(pathing_type, shooting_type, hp, dx, dy, shoot_freq);
     enemy->setPos(initX, initY);
     parent_scene->addItem(enemy);
-    parent_scene->addItem(enemy->get_health_var());
+    parent_scene->addItem(enemy->health);
     return enemy;
 }
 
@@ -338,7 +339,7 @@ void GameEvent::unpause_game()
     event_timer->unpause();
 }
 
-void GameEvent::trigger_clear_field(bool restart)
+void GameEvent::trigger_clear_field(const bool& restart)
 {
     QList<QGraphicsItem*> scene_items = parent_scene->items();
     for(int i=0; i<scene_items.size(); i++)
@@ -367,19 +368,19 @@ void GameEvent::trigger_clear_field(bool restart)
     {
         if (dialogue != nullptr) {delete dialogue; dialogue=nullptr;}
         game_timer=0;
-        shooter->get_health_var()->reset_health();
+        shooter->health->reset_health();
         shooter->setPos(START_POS_X, START_POS_Y);
         unpause_game();
     }
 }
 
 //gameover part
-void GameEvent::trigger_game_over(bool win)
+void GameEvent::trigger_game_over(const bool& win)
 {
     game_timer = win ? 4350 : 3950; //see increment_time()
 }
 
-void GameEvent::game_over(bool win)
+void GameEvent::game_over(const bool& win)
 {
     //prevent the case of winning and losing at the same time
     if (dialogue != nullptr) return;

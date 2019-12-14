@@ -65,20 +65,20 @@ public:
 
 private:
     EnemyPathingType pathing_type;
-    EnemyShootingType shooting_type;
+    const EnemyShootingType shooting_type;
     static ShooterPlayer* player;
-    bool drop_powerup {false};
+    bool drop_powerup {true};
 
     QPoint target_pos;
     double cirPathCounter;
     double circular_angle {0.0};
 
 public:
-    ShooterEnemy(EnemyPathingType pathing_type, EnemyShootingType shooting_type,
-                 int hp = DEFAULT_ENEMY_HP, int dx = 0, int dy = 0,
-                 int shoot_freq = 2*DEFAULT_SHOOT_FREQ, bool shoot = true,
-                 int size_x = ENEMY_SIZE, int size_y = ENEMY_SIZE,
-                 int move_freq = DEFAULT_FREQ);
+    ShooterEnemy(const EnemyPathingType& pathing_type, const EnemyShootingType& shooting_type,
+                 const int& hp = DEFAULT_ENEMY_HP, const int& dx = 0, const int& dy = 0,
+                 const int& shoot_freq = 2*DEFAULT_SHOOT_FREQ, const bool& shoot = true,
+                 const int size_x = ENEMY_SIZE, const int size_y = ENEMY_SIZE,
+                 const int& move_freq = DEFAULT_FREQ);
     static void set_player(ShooterPlayer* shooter);
     void set_targetPos(int x, int y);
     void set_pathing_type(EnemyPathingType pathingType);

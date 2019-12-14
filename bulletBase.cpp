@@ -1,9 +1,9 @@
 #include "bulletBase.h"
 
-BulletBase::BulletBase(int dx, int dy, int size_x, int size_y, int move_freq):
+BulletBase::BulletBase(int dx, int dy, const int& size_x, const int& size_y, const int move_freq):
     dx(dx), dy(dy), size_x(size_x), size_y(size_y), move_freq(move_freq)
 {
-    move_timer = new CustomTimer(move_freq, false, this, SLOT(move()));
+    move_timer = new CustomTimer(this->move_freq, false, this, SLOT(move()));
     //connect timer and move slot
 
     //timer is started in bulletEnemy/bulletPlayer's unpause()
