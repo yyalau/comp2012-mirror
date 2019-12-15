@@ -5,9 +5,8 @@ BulletEnemy::BulletEnemy(const int& dx, const int& dy, const BulletType& bullet_
                          const int size_x, const int size_y, const int& move_freq):
     BulletBase(dx, dy, size_x, size_y, move_freq), bullet_type(bullet_type)
 {
-    //setRect(0, 0, size_x, size_y);
-    QPixmap bulletimage(":/image/images/bugbullet2.png");
-    setPixmap(bulletimage.scaled(this->size_x, this->size_y, Qt::IgnoreAspectRatio));
+    QPixmap bulletimage(bullet_type == Explode ? ":/image/images/chip.png" : ":/image/images/error.png");
+    setPixmap(bulletimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
     setRotation(180);
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
@@ -67,10 +66,11 @@ void BulletEnemy::move()
             if (!(INSCREEN_DOWN(pos().y()+dy, this)))
             {
                 double angle = 3.1415;
+                int explode_speed = 10 + rand()%4;
                 while (angle < 6.2832)
                 {
-                    int bullet_dx = static_cast<int>(cos(angle)*12);
-                    int bullet_dy = static_cast<int>(sin(angle)*12+0.01);
+                    int bullet_dx = static_cast<int>(cos(angle)*explode_speed);
+                    int bullet_dy = static_cast<int>(sin(angle)*explode_speed+0.5);
 
                     BulletEnemy* small_bullet = new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Falling);
                     small_bullet->setPos(x(), y());

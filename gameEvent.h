@@ -38,6 +38,7 @@
  * PUBLIC SLOTS
  * @include increment_time(): Increase game_timer by 1 when triggered
  * @include trigger_event(): Trigger time-based game events, such as spawning enemies, when called
+ * @include start_game(): Start the game by setting game_begin to true
  * @include pause_game(), unpause_game(): Pause/Unpause the game, connect with signals sent by shooterPlayer
  * @include trigger_clear_field(): delete all the enemies in the screen, connect with clear_field signal sent by shooterPlayer
  * @include trigger_game_over(): Set game_timer beyond the maximum time to trigger game over after some time
@@ -70,6 +71,7 @@ public:
 public slots:
     void increment_time();
     void trigger_event(const int& event_id);
+    void start_game();
     void pause_game();
     void unpause_game();
     void trigger_clear_field(const bool& restart);

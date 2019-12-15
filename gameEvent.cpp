@@ -15,7 +15,8 @@ GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, const
     //start game dialogue
     dialogue = new PopUpDialogue(parent_scene, instructions, PopUpDialogue::NO_DURATION, PopUpDialogue::FullScreen,50,100);
 
-    //for pausing/unpausing the game
+    //for starting/pausing/unpausing the game
+    connect(shooter, SIGNAL(start_signal()), this, SLOT(start_game()));
     connect(shooter, SIGNAL(pause_all()), this, SLOT(pause_game()));
     connect(shooter, SIGNAL(unpause_all()), this, SLOT(unpause_game()));
 
@@ -269,12 +270,20 @@ void GameEvent::trigger_event(const int& event_id)
 }
 
 ShooterEnemy* GameEvent::spawn_enemy(ShooterEnemy::EnemyPathingType pathing_type, ShooterEnemy::EnemyShootingType shooting_type, int hp,
-                                     int dx, int dy, const int& initX, const int& initY, int shoot_freq){
+                                     int dx, int dy, const int& initX, const int& initY, int shoot_freq)
+{
     ShooterEnemy* enemy = new ShooterEnemy(pathing_type, shooting_type, hp, dx, dy, shoot_freq);
     enemy->setPos(initX, initY);
     parent_scene->addItem(enemy);
     parent_scene->addItem(enemy->health);
     return enemy;
+}
+
+void GameEvent::start_game()
+{
+    if (game_begin) return;
+    game_begin = true;
+    trigger_clear_field(true);
 }
 
 //helper template
@@ -301,11 +310,9 @@ void GameEvent::pause_game()
     }
     event_timer->pause();
 
-    //pause screen
-    if (!game_begin)
-        game_begin = true;
-    else
-        dialogue = new PopUpDialogue(parent_scene, "Press P to continue. \nPress R to restart.", PopUpDialogue::NO_DURATION, PopUpDialogue::GameArea);
+    //display pause screen during game only
+    if (game_begin)
+        dialogue = new PopUpDialogue(parent_scene, "Press P to continue.\nPress R to restart.", PopUpDialogue::NO_DURATION, PopUpDialogue::GameArea);
 }
 
 //helper template
@@ -321,6 +328,7 @@ bool try_unpause(QGraphicsItem* item)
 }
 void GameEvent::unpause_game()
 {
+    if (!game_begin) return;
     if (dialogue != nullptr) {delete dialogue; dialogue=nullptr;}
 
     QList<QGraphicsItem*> scene_items = parent_scene->items(); //unpause all items
@@ -336,6 +344,7 @@ void GameEvent::unpause_game()
 
 void GameEvent::trigger_clear_field(const bool& restart)
 {
+    if (!game_begin) return;
     QList<QGraphicsItem*> scene_items = parent_scene->items();
     for(int i=0; i<scene_items.size(); i++)
     {
@@ -361,7 +370,6 @@ void GameEvent::trigger_clear_field(const bool& restart)
 
     if (restart)
     {
-        if (dialogue != nullptr) {delete dialogue; dialogue=nullptr;}
         game_timer=0;
         shooter->health->reset_health();
         shooter->setPos(START_POS_X, START_POS_Y);
@@ -384,7 +392,7 @@ void GameEvent::game_over(const bool& win)
         QString dialogue_text {
             "ShootTheBugs.exe exited with code 0.\n\n"
             "Congratulations! You have won the game!\n"
-            "Press R to play again."
+            "Press S to start again."
         };
         dialogue = new PopUpDialogue(parent_scene, dialogue_text, PopUpDialogue::NO_DURATION, PopUpDialogue::GameArea);
     }
@@ -394,7 +402,7 @@ void GameEvent::game_over(const bool& win)
             "SEGMENTATION FAULT\n"
             "ShootTheBugs.exe exited unexpectedly.\n\n"
             "Oh no! You have lost the game!\n"
-            "Press R to play again."
+            "Press S to start again."
         };
         dialogue = new PopUpDialogue(parent_scene, dialogue_text, PopUpDialogue::NO_DURATION, PopUpDialogue::GameArea);
     }

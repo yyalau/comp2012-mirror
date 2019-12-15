@@ -11,6 +11,8 @@
         <file>images/explosion_2.png</file>
         <file>images/explosion_3.png</file>
         <file>images/bg.png</file>
+        <file>images/error.png</file>
+        <file>images/chip.png</file>
     </qresource>
     <qresource prefix="/fontstyle">
         <file>font/ARCADECLASSIC.TTF</file>

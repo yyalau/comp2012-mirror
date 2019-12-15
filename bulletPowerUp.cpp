@@ -6,7 +6,7 @@ BulletPowerUp::BulletPowerUp(const int& dx, const int& dy, const PowerUpType& po
 {
 
     QPixmap bulletimage(":/image/images/powerup.png");
-    setPixmap(bulletimage.scaled(this->size_x, this->size_y, Qt::IgnoreAspectRatio));
+    setPixmap(bulletimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
     setRotation(-90);
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
