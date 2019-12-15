@@ -49,12 +49,12 @@ class ShooterBoss : public ShooterBase
     Q_OBJECT
 
 public:
-    static const int BOSS_HP {1000};
-    static const int BOSS_SIZE_X {300};
-    static const int BOSS_SIZE_Y {200};
-    static const int BOSS_POS_X {(GAMEAREA_LENGTH-BOSS_SIZE_X)/2};
-    static const int BOSS_POS_Y {10};
-    static const int DIALOGUE_FREQ {5000};       //each dialogue line lasts for 5 seconds
+    constexpr static const int BOSS_HP {1000};
+    constexpr static const int BOSS_SIZE_X {300};
+    constexpr static const int BOSS_SIZE_Y {200};
+    constexpr static const int BOSS_POS_X {(GAMEAREA_LENGTH-BOSS_SIZE_X)/2};
+    constexpr static const int BOSS_POS_Y {10};
+    constexpr static const int DIALOGUE_FREQ {5000};       //each dialogue line lasts for 5 seconds
 
 public:
     enum BossPhase

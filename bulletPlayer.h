@@ -12,8 +12,8 @@ class BulletPlayer:public BulletBase{
 
 public:
     //bullet sprite is flipped 90 degrees
-    static const int BULLETPLAYER_SIZE_X {18};
-    static const int BULLETPLAYER_SIZE_Y {31};
+    constexpr static const int BULLETPLAYER_SIZE_X {18};
+    constexpr static const int BULLETPLAYER_SIZE_Y {31};
 
 public:
     BulletPlayer(const int& dx = 0, const int& dy = 0,

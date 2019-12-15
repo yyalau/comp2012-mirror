@@ -14,7 +14,7 @@
  * @brief The ShooterPlayer class
  * Class for player
  *
- * PRIVATE DATA MEMBERS
+ * PRIVATE DATA MEMBERS/MEMBER FUNCTIONS
  * @include speed: player's moving speed
  * @include immune: set to true if the player is immune (for 1 second after being hit)
  * @include powerup_shooter: is greater than 0 if the shooter has been improved
@@ -25,7 +25,7 @@
  * @include powerup_timer, immune_timer: CustomTimer for keeping track of StackOverflow powerup and immunity's time
  * @include set_sprite(): Change the sprite to indicate immunity
  *
- * PRIVATE MEMBER FUNCTION RE-IMPLEMENTATIONS
+ * FUNCTION RE-IMPLEMENTATIONS
  * @implements keyPressEvent(QKeyEvent*): handles keyboard input, updates player velocity and is_shooting
  * @implements keyReleaseEvent(QKeyEvent*): handles keyboard input, resets player velocity and is_shooting
  * @implements focusOutEvent(QFocusEvent*): keeps the shooter to be focused
@@ -56,10 +56,10 @@ class ShooterPlayer: public ShooterBase{
     Q_OBJECT
 
 public:
-    static const int DEFAULT_SPEED {10};
-    static const int PLAYER_SIZE_X {24};
-    static const int PLAYER_SIZE_Y {38};
-    static const int DEFAULT_PLAYER_HP {25};
+    constexpr static const int DEFAULT_SPEED {10};
+    constexpr static const int PLAYER_SIZE_X {24};
+    constexpr static const int PLAYER_SIZE_Y {38};
+    constexpr static const int DEFAULT_PLAYER_HP {25};
 
 private:
     int speed {DEFAULT_SPEED};

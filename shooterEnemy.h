@@ -39,8 +39,8 @@ class ShooterEnemy: public ShooterBase {
     Q_OBJECT //implies an object can handle signals
 
 public:
-    static const int ENEMY_SIZE {40};
-    static const int DEFAULT_ENEMY_HP {3};
+    constexpr static const int ENEMY_SIZE {40};
+    constexpr static const int DEFAULT_ENEMY_HP {3};
 
 public:
     enum EnemyPathingType

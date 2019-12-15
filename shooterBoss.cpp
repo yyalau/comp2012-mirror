@@ -49,7 +49,6 @@ void ShooterBoss::set_phase(const BossPhase& phase)
     {
         case Entrance:
         case Dialogue:
-        //case Dead:
             //do nothing
             return;
         case PhasePre1:
@@ -95,7 +94,7 @@ void ShooterBoss::unpause()
 
 void ShooterBoss::show_health()
 {
-    health_bar = new PopUpDialogue(scene(), "", NO_DURATION, PopUpDialogue::BossHealth);
+    health_bar = new PopUpDialogue(scene(), "", PopUpDialogue::NO_DURATION, PopUpDialogue::BossHealth);
 }
 
 void ShooterBoss::move()
@@ -148,7 +147,6 @@ void ShooterBoss::move()
         }
         case Phase1:
         case Phase3:
-        //case Dead:
             //dont move in these phases
             break;
         case PhasePre1:
@@ -250,7 +248,6 @@ void ShooterBoss::shoot()
     {
         case Entrance:
         case Dialogue:
-        //case Dead:
             //do nothing
             return;
         case PhasePre1:

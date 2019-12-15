@@ -18,6 +18,14 @@ _SetUp::_SetUp()
     GameView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); //disable vertical scroll bar
     GameView->setFixedSize(SCREEN_LENGTH, SCREEN_HEIGHT); //set view and scene are of the same size
 
+    //background image
+    QGraphicsPixmapItem* background  = new QGraphicsPixmapItem(QPixmap(":/image/images/bg.png"));
+    background->setPixmap(background->pixmap().scaled(GAMEAREA_LENGTH, SCREEN_HEIGHT, Qt::IgnoreAspectRatio));
+    background->setShapeMode(QGraphicsPixmapItem::MaskShape);
+    background->setTransformOriginPoint(background->boundingRect().width()/2,background->boundingRect().height()/2);
+    background->setScale(1.05);
+    GameScene->addItem(background);
+
     //shooter
     shooter= new ShooterPlayer();
     GameScene->addItem(shooter);
@@ -35,14 +43,8 @@ _SetUp::_SetUp()
     GameScene->addItem(infoBox);
     infoBox->show_general_info();
 
-    //Layout Setting
-    layout = new QHBoxLayout();
-    layout->addWidget(GameView);
-    layout->setSizeConstraint(QLayout::SetFixedSize);
-
-    window = new QWidget();
-    window->setLayout(layout);
-    window->show();
+    //show the game
+    GameView->show();
 
     //Instructions of the game
     QString instructions{

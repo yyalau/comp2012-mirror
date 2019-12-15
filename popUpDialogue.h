@@ -36,11 +36,12 @@
  * @include remove(): deletes the object itself, and returns nullptr to its pointer
  */
 
-#define NO_DURATION 0
-
 class PopUpDialogue : public QObject
 {
     Q_OBJECT
+
+public:
+    constexpr static const int NO_DURATION {0};
 
 public:
     enum PopUpType

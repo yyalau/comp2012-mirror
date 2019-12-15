@@ -49,8 +49,8 @@ void InfoBox::show_general_info()
 void InfoBox::show_shooter_info(const int& powerup_shooter)
 {
     QString message = QString::number(powerup_shooter)+ QString(" seconds left");
-    shooter_text = new PopUpDialogue(scene(),message,1000,
-                                    PopUpDialogue::InfoBox,GAMEAREA_LENGTH,350);
+    shooter_text = new PopUpDialogue(scene(), message, 1000,
+                                    PopUpDialogue::InfoBox, GAMEAREA_LENGTH, 350);
     shooter_text->set_font(QFont("Joystix Monospace",8), Qt::blue);
 }
 

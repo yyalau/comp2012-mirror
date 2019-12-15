@@ -22,8 +22,6 @@
  * @include shooter: The player's shooter
  * @include infoBox: The info screen on the right
  * @include gameEvent: Counts the time and trigger events. Also handles pause, unpause
- * @include layout: //TODO @scarlett
- * @include window: //TODO @scarlett
  */
 
 class _SetUp{
@@ -35,8 +33,6 @@ public:
     ShooterPlayer* shooter;
     GameEvent* gameEvent;
     InfoBox* infoBox;
-    QHBoxLayout* layout;
-    QWidget* window;
 
 };
 

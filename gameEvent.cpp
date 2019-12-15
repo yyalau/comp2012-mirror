@@ -13,7 +13,7 @@ GameEvent::GameEvent(QGraphicsScene* parent_scene, ShooterPlayer* shooter, const
     connect(this, SIGNAL(time_reached(int)), this, SLOT(trigger_event(int))); //when time is reached, trigger game events
 
     //start game dialogue
-    dialogue = new PopUpDialogue(parent_scene, instructions, NO_DURATION, PopUpDialogue::FullScreen,50,100);
+    dialogue = new PopUpDialogue(parent_scene, instructions, PopUpDialogue::NO_DURATION, PopUpDialogue::FullScreen,50,100);
 
     //for pausing/unpausing the game
     connect(shooter, SIGNAL(pause_all()), this, SLOT(pause_game()));
@@ -112,11 +112,11 @@ void GameEvent::collision()
 void GameEvent::increment_time()
 {
     ++game_timer;
-    //game_timer/50 = seconds that have passed in-game
-    if ((game_timer % 50) == 0) //means every second
+    //game_timer/FREQ_PER_SEC = seconds that have passed in-game (FREQ_PER_SEC == 50)
+    if ((game_timer % FREQ_PER_SEC) == 0) //means every second
     {
 
-        switch (game_timer/50) {
+        switch (game_timer/FREQ_PER_SEC) {
         case 3: time_reached(0); break;         //Game starts at 3s,
         case 8: time_reached(1); break;         //for first 5 waves of enemy, each lasts for 5s,
         case 13: time_reached(2); break;        //after that, each lasts for 8s
@@ -127,7 +127,7 @@ void GameEvent::increment_time()
         case 47: time_reached(7); break;
         case 55: time_reached(8); break;
         case 63: time_reached(9); break;
-        case 70: game_timer -= 50; break;       //halt the timer, higher values will be used for game over events
+        case 70: game_timer -= FREQ_PER_SEC; break;       //halt the timer, higher values will be used for game over events
         case 80: game_over(false); break;       //game_timer set to 3950 to trigger lose screen after 2 seconds
         case 90: game_over(true); break;        //game_timer set to 4350 to trigger win screen after 4 seconds
         default: break;
@@ -305,7 +305,7 @@ void GameEvent::pause_game()
     if (!game_begin)
         game_begin = true;
     else
-        dialogue = new PopUpDialogue(parent_scene, "Press P to continue. \nPress R to restart.", NO_DURATION, PopUpDialogue::GameArea);
+        dialogue = new PopUpDialogue(parent_scene, "Press P to continue. \nPress R to restart.", PopUpDialogue::NO_DURATION, PopUpDialogue::GameArea);
 }
 
 //helper template
@@ -386,7 +386,7 @@ void GameEvent::game_over(const bool& win)
             "Congratulations! You have won the game!\n"
             "Press R to play again."
         };
-        dialogue = new PopUpDialogue(parent_scene, dialogue_text, NO_DURATION, PopUpDialogue::GameArea);
+        dialogue = new PopUpDialogue(parent_scene, dialogue_text, PopUpDialogue::NO_DURATION, PopUpDialogue::GameArea);
     }
     else
     {
@@ -396,7 +396,7 @@ void GameEvent::game_over(const bool& win)
             "Oh no! You have lost the game!\n"
             "Press R to play again."
         };
-        dialogue = new PopUpDialogue(parent_scene, dialogue_text, NO_DURATION, PopUpDialogue::GameArea);
+        dialogue = new PopUpDialogue(parent_scene, dialogue_text, PopUpDialogue::NO_DURATION, PopUpDialogue::GameArea);
     }
     game_begin = false;
     pause_game();

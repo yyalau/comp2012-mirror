@@ -32,7 +32,7 @@
 class BulletBase: public QObject, public QGraphicsPixmapItem{
      Q_OBJECT //implies the object can handle signals
 public:
-    static const int BULLET_SIZE {30};
+    constexpr static const int BULLET_SIZE {30};
 
 protected:
     int dx, dy;

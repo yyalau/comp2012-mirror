@@ -38,7 +38,7 @@ class ShooterBase: public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
 public:
-    static const int ENTITY_SIZE {40};
+    constexpr static const int ENTITY_SIZE {40};
 
 protected:
     int dx, dy;

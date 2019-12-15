@@ -11,10 +11,10 @@
   * Some "defines" and templates to make the code easier to read
   */
 
-static const int INFOBOX_LENGTH     {300};
-static const int GAMEAREA_LENGTH    {800};
-static const int SCREEN_HEIGHT      {600};
-static const int SCREEN_LENGTH      {GAMEAREA_LENGTH+INFOBOX_LENGTH};
+constexpr static const int INFOBOX_LENGTH     {300};
+constexpr static const int GAMEAREA_LENGTH    {800};
+constexpr static const int SCREEN_HEIGHT      {600};
+constexpr static const int SCREEN_LENGTH      {GAMEAREA_LENGTH+INFOBOX_LENGTH};
 
 //for out of bound checking with some tolerance
 inline bool INSCREEN_LEFT(double x) {
@@ -45,14 +45,15 @@ inline bool INSCREEN_DOWN_RIGID(double y, QGraphicsItem* item) {
 }
 
 //player's starting position
-static const int START_POS_X    {400};
-static const int START_POS_Y    {500};
+constexpr static const int START_POS_X    {400};
+constexpr static const int START_POS_Y    {500};
 
 //timer update duration (= 1000/frame per sec)
 //MIN_FREQ: ensures the slots are triggered in sync
-static const int MIN_FREQ            {20};
-static const int DEFAULT_FREQ        {MIN_FREQ};
-static const int DEFAULT_SHOOT_FREQ  {5*MIN_FREQ};
+constexpr static const int MIN_FREQ            {20};
+constexpr static const int DEFAULT_FREQ        {MIN_FREQ};
+constexpr static const int DEFAULT_SHOOT_FREQ  {5*MIN_FREQ};
+constexpr static const int FREQ_PER_SEC        {1000/MIN_FREQ}; //a MIN_FREQ slot updates this much tme per second
 
 //for removing a bullet/enemy out of the screen
 template <typename T>
