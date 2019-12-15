@@ -16,6 +16,5 @@ Method 2:
 	-kit selection: Qt 5.12.5 MinGW 32-bit
 	-project management: version control: <None>
 	-press finish
-3) delete all the files in the headers, sources, forms folder
-4) import all .h and .cpp files from the same folder of this txt file
-5) import all images and font files from the same folder of this txt file
+3) import all .h and .cpp files from the same folder of this txt file, and replace main.cpp
+4) import all images and font files from the same folder of this txt file
