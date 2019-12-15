@@ -40,7 +40,7 @@ class ShooterEnemy: public ShooterBase {
     Q_OBJECT //implies an object can handle signals
 
 public:
-    constexpr static const int ENEMY_SIZE {40};
+    constexpr static const int ENEMY_SIZE {35};
     constexpr static const int DEFAULT_ENEMY_HP {3};
 
 public:

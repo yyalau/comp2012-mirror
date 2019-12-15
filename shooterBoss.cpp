@@ -8,7 +8,6 @@ ShooterBoss::ShooterBoss(const int hp, const int& dx, const int& dy, const int& 
                          const int size_x, const int size_y, const int& move_freq) :
      ShooterBase("Boss", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq)
 {
-    //TODO: use another sprite
     QPixmap enemyimage(":/image/images/computer.png");
     setPixmap(enemyimage.scaled(this->size_x, this->size_y, Qt::IgnoreAspectRatio));
     setShapeMode(QGraphicsPixmapItem::MaskShape);
@@ -234,7 +233,7 @@ bool ShooterBoss::collision()
     if (health->get_health() == 0)
     {
         //TODO: use another image
-        ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y, 2000);
+        ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y, 300);
         explosion->setPos(x(), y());
         scene()->addItem(explosion);
 
@@ -305,7 +304,7 @@ void ShooterBoss::shoot()
         case Phase2:
         {
             int bullet_x = 100 + rand()%600;
-            BulletEnemy* bullet = new BulletEnemy(0, 3, BulletEnemy::Explode);
+            BulletEnemy* bullet = new BulletEnemy(0, 3, BulletEnemy::Explode, 2*BulletEnemy::BULLET_SIZE, 2*BulletEnemy::BULLET_SIZE);
             bullet->setPos(bullet_x, -20);
             scene()->addItem(bullet);
             break;

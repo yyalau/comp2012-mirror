@@ -79,6 +79,9 @@ void ShooterPlayer::keyPressEvent(QKeyEvent* event)
             emit clear_field(true);
             nullptr_phase = false;
             break;
+        case Qt::Key_S:
+            emit start_signal();
+            break;
         default:
             break;
     }

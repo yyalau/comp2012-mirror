@@ -10,7 +10,7 @@ ShooterEnemy::ShooterEnemy(const EnemyPathingType& pathing_type, const EnemyShoo
        ShooterBase("Enemy", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq),
        pathing_type(pathing_type), shooting_type(shooting_type)
 {
-    QPixmap enemyimage(":/image/images/computer.png");
+    QPixmap enemyimage(":/image/images/bugbullet2.png");
     setPixmap(enemyimage.scaled(size_x, size_y, Qt::IgnoreAspectRatio));
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
@@ -145,8 +145,8 @@ void ShooterEnemy::move()
             }
     }
 
-    //show and move health
-    health->setPos(x()+size_x,y());
+    //show and move health, the additional values are for health number placement on the sprite
+    health->setPos(x() + 4 + (health->get_health()<10?4:0), y() - 9);
 
     if (out_of_bound())
         REMOVE_ENTITY(scene(), this);

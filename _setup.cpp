@@ -23,7 +23,7 @@ _SetUp::_SetUp()
     background->setPixmap(background->pixmap().scaled(GAMEAREA_LENGTH, SCREEN_HEIGHT, Qt::IgnoreAspectRatio));
     background->setShapeMode(QGraphicsPixmapItem::MaskShape);
     background->setTransformOriginPoint(background->boundingRect().width()/2,background->boundingRect().height()/2);
-    background->setScale(1.05);
+    background->setScale(1);
     GameScene->addItem(background);
 
     //shooter
@@ -57,7 +57,7 @@ _SetUp::_SetUp()
         "You start with 25 health. \n"
         "Don't let it go to 0.\n"
         "\n\n\n"
-        "\t\t\tPress P to play"
+        "\t\t\tPress S to start"
     };
 
     //time counter to trigger events

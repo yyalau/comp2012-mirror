@@ -45,7 +45,7 @@
  *              1 argument (collision_item): Call this function instead and pass the collision item (bullet/enemy/boss)
  *
  * SIGNALS
- * @include pause_all(), unpause_all(): signals to send to the main game
+ * @include start_signal(), pause_all(), unpause_all(): signals to send to the main game
  * @include player_dead(): signal triggered when health reaches 0
  * @include powerup_text(int), shooter_text(int): signal to send to infoBox, to display the correct power-up message in infoBox
  * @include clear_field(bool): signal triggered when player pressed 'R' key or hit BulletPowerUp with clear field function
@@ -101,6 +101,7 @@ public:
     bool collision(QGraphicsItem* collision_item);
 
 signals:
+    void start_signal();
     void pause_all();
     void unpause_all();
     void player_dead(bool win);

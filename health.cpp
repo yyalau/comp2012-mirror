@@ -5,7 +5,7 @@ Health::Health(const QString& name, const int& max_health):
 {
     health = max_health;
 
-    setDefaultTextColor(Qt::black);
+    setDefaultTextColor(Qt::red);
     set_text();
     setFont(QFont("Joystix Monospace", 9));
 }
