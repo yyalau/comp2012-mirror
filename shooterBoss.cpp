@@ -15,6 +15,9 @@ ShooterBoss::ShooterBoss(const int hp, const int& dx, const int& dy, const int& 
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.5);
 
+    music = new QMediaPlayer();
+    music->setMedia(QUrl("qrc:/sounds/sounds/BossExplosion.mp3"));
+
     move_timer= new CustomTimer(this->move_freq, false, this, SLOT(move()));
     //connect the timer and move slot
 
@@ -33,6 +36,7 @@ ShooterBoss::~ShooterBoss()
     if (health_bar != nullptr) delete health_bar;
     delete dialogue_timer;
     delete flag_timer;
+    delete music;
 }
 
 
@@ -234,6 +238,7 @@ bool ShooterBoss::collision()
         explosion->setPos(x(), y());
         scene()->addItem(explosion);
 
+        music->play();
         emit boss_dead(true);
     }
 
@@ -338,17 +343,17 @@ void ShooterBoss::show_dialogue()
             new PopUpDialogue(scene(), "Looks like you have found me at last.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30);
             break;
         case 2:
-            new PopUpDialogue(scene(), "I am the massive underlying bug that is making \nyour program running into problems, crashing left and right.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30,SCREEN_HEIGHT/2-30);
+            new PopUpDialogue(scene(), "I am the massive underlying bug that is \nmaking your program running into \nproblems, crashing left and right.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30,SCREEN_HEIGHT/2-35);
             break;
         case 3:
-            new PopUpDialogue(scene(), "All because of your unorganized data structures, \nunhandled dynamic memory and lack of documentation.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30,SCREEN_HEIGHT/2-20);
+            new PopUpDialogue(scene(), "All because of your unorganized data \nstructures, unhandled dynamic memory \nand lack of documentation.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30,SCREEN_HEIGHT/2-35);
             break;
         case 4:
-            new PopUpDialogue(scene(), "If you want to get out of here alive, you will \nhave to defeat me.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30,SCREEN_HEIGHT/2-20);
+            new PopUpDialogue(scene(), "If you want to get out of here alive, \nyou will have to defeat me.", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30,SCREEN_HEIGHT/2-20);
             break;
         case 5:
             //the TODO in the dialogue is deliberate
-            new PopUpDialogue(scene(), "And I won't go down without a good fight!\nGive it all you've\n//TODO: Finish the dialogues", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30, SCREEN_HEIGHT/2-20);
+            new PopUpDialogue(scene(), "And I won't go down without a good fight!\nGive it all you've\n//TODO: Finish the dialogues", DIALOGUE_FREQ, PopUpDialogue::Dialogue, 30, SCREEN_HEIGHT/2-35);
             break;
         case 6:
             set_phase(PhasePre1);

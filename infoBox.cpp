@@ -50,7 +50,7 @@ void InfoBox::show_shooter_info(const int& powerup_shooter)
 {
     QString message = QString::number(powerup_shooter)+ QString(" seconds left");
     shooter_text = new PopUpDialogue(scene(), message, 1000,
-                                    PopUpDialogue::InfoBox, GAMEAREA_LENGTH, 350);
+                                    PopUpDialogue::InfoBox, GAMEAREA_LENGTH, 400);
     shooter_text->set_font(QFont("Joystix Monospace",8), Qt::blue);
 }
 
@@ -58,19 +58,22 @@ void InfoBox::show_powerup_info(const int& event)
 {
     QString text;
     QFont font("Joystix Monospace",8);
+    QColor color;
     switch(event){
         case BulletPowerUp::Breakpoint:
             text = QString {
                 "Breakpoint added!\n"
                 "Your debugger gained 1 Health!"
             };
+            font.setPointSize(9);
+            color.setRgb(255,69,0); //orange
             break;
         case BulletPowerUp::StackOverflow:
             text = QString {
                 "Your question on StackOverflow was answered!\n\n"
                 "This code section is bug-free!"
             };
-                        font.setPointSize(7);
+            color = Qt::yellow;
             break;
         case BulletPowerUp::CoutTestEndl:
             text = QString {
@@ -78,13 +81,14 @@ void InfoBox::show_powerup_info(const int& event)
                 "Your debugger is \n"
                 "temporarily stronger!"
             };
+            color.setRgb(0,128,0);
             break;
         default:
             return;
     }
 
 
-    powerup_text = new PopUpDialogue(scene(), text, 4000, PopUpDialogue::InfoBox, GAMEAREA_LENGTH, (event+1)*100);
+    powerup_text = new PopUpDialogue(scene(), text, 4000, PopUpDialogue::InfoBox, GAMEAREA_LENGTH, 100*(event+1)+(event>1?30:0));
 
-    powerup_text->set_font(font, Qt::yellow);
+    powerup_text->set_font(font, color);
 }

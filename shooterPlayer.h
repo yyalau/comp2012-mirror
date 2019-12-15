@@ -1,10 +1,12 @@
 #ifndef SHOOTERPLAYER_H
 #define SHOOTERPLAYER_H
 
+#include <QMediaPlayer>
 #include <QPauseAnimation>
 #include <QKeyEvent>
 #include <QDebug>
 #include <QList>
+
 
 #include "shooterBase.h"
 #include "bulletEnemy.h"
@@ -14,7 +16,11 @@
  * @brief The ShooterPlayer class
  * Class for player
  *
+ * ENUMs
+ * @enum MusicType: different sound made by the shooter for different actions
+ *
  * PRIVATE DATA MEMBERS/MEMBER FUNCTIONS
+ * @include sound: play music for different MusicType
  * @include speed: player's moving speed
  * @include immune: set to true if the player is immune (for 1 second after being hit)
  * @include powerup_shooter: is greater than 0 if the shooter has been improved
@@ -62,6 +68,12 @@ public:
     constexpr static const int DEFAULT_PLAYER_HP {25};
 
 private:
+    enum MusicType{
+        hitBullet,
+        powerUp,
+        Shoot
+    };
+    QMediaPlayer* sound[3];
     int speed {DEFAULT_SPEED};
     bool immune {false};
     int powerup_shooter {0};
@@ -70,6 +82,7 @@ private:
     int powerup_shooter_counter {0};
     CustomTimer *powerup_timer {nullptr}, *immune_timer {nullptr};
     void set_sprite(const char* sprite);
+    void play_sound(MusicType type);
 
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;

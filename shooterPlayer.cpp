@@ -10,6 +10,13 @@ ShooterPlayer::ShooterPlayer(const int hp, const int& dx, const int& dy, const i
                              const int size_x, const int size_y, const int& move_freq) :
          ShooterBase("Player", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq)
 {
+    sound[hitBullet] = new QMediaPlayer();
+    sound[hitBullet]->setMedia(QUrl("qrc:/sounds/sounds/playergetshot.mp3"));
+    sound[powerUp] = new QMediaPlayer();
+    sound[powerUp]->setMedia(QUrl("qrc:/sounds/sounds/powerup.mp3"));
+    sound[Shoot] = new QMediaPlayer();
+    sound[Shoot]->setMedia(QUrl("qrc:/sounds/sounds/shooting2.mp3"));
+
     set_sprite(":/image/images/shooter.png");
 
     move_timer= new CustomTimer(this->move_freq, false, this, SLOT(move()));
@@ -29,6 +36,19 @@ inline void ShooterPlayer::set_sprite(const char *sprite)
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.3);
+}
+
+void ShooterPlayer::play_sound(MusicType type)
+{
+
+    switch(type){
+    case hitBullet:
+        sound[hitBullet]->play(); break;
+    case powerUp:
+        sound[powerUp]->play(); break;
+    case Shoot:
+        sound[Shoot]->play(); break;
+    }
 }
 
 
@@ -177,12 +197,14 @@ bool ShooterPlayer::collision(QGraphicsItem* collision_item)
     if (typeid(*collision_item)==typeid(BulletPowerUp))
     {
         process_powerup(dynamic_cast<BulletPowerUp*>(collision_item));
+        play_sound(powerUp);
     }
     else //should be either BulletEnemy, ShooterEnemy or ShooterBoss
     {
         if (immune) return false;
         //decrease own health
         health->set_health(-1);
+        play_sound(hitBullet);
 
         if (health->is_dead())
         {
@@ -211,6 +233,10 @@ void ShooterPlayer::shoot()
     if (!is_shooting || dead) return;
 
     shoot_bullet(new BulletPlayer(0, -20));
+
+    sound[Shoot]->setPosition(0);
+    sound[Shoot]->setVolume(50);
+    sound[Shoot]->play();
 
     if (powerup_shooter > 0){
         if (powerup_shooter_counter == 2)

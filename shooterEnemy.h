@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <QPainterPath>
+#include <QMediaPlayer>
 
 #include "shooterBase.h"
 #include "shooterPlayer.h"
@@ -20,11 +21,11 @@
  * @include pathing_type, shooting_type: See enum above
  * @include player: Pointer to the player. Use set_player() when initializing the player in SetUp
  * @include drop_powerup: True if this enemy will drop a powerup upon death, false by default
+ * @include music: music player for the explosion sound
  *
  * PUBLIC MEMBER FUNCTIONS
  * @include set_player(): Set the shooter to point to the player
  * @include set_targetPos(): For GotoTarget's case
- * @include set_pathing_type: //TODO @scarlett unused?
  * @include collision(): overrides shooterBase's function
  * @include set_drop_powerup(): Set drop_powerup to true
  * @include out_of_bound(): Check if enemy is out of bound to remove
@@ -49,7 +50,6 @@ public:
         BorderBounce,       //Move in straight line, reverse direction when hitting border
         Circular,           //Move in an ellipse trajectory
         GotoTarget,         //Move to a specific position
-        LeaveScreen,        //TODO @scarlett unused?
         Wave                //Move in a wave trajectory
     };
 
@@ -70,11 +70,13 @@ private:
     const EnemyShootingType shooting_type;
     static ShooterPlayer* player;
     bool drop_powerup {false};
+    QMediaPlayer* music;
 
     //type-specific variables
     QPoint target_pos;
     double cirPathCounter;
     double circular_angle {0.0};
+
 
 public:
     ShooterEnemy(const EnemyPathingType& pathing_type, const EnemyShootingType& shooting_type,
@@ -84,7 +86,6 @@ public:
                  const int& move_freq = DEFAULT_FREQ);
     static void set_player(ShooterPlayer* shooter);
     void set_targetPos(int x, int y);
-    void set_pathing_type(EnemyPathingType pathingType);
     virtual bool collision() override;
     bool out_of_bound();
     void set_drop_powerup();

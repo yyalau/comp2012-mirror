@@ -22,7 +22,7 @@ PopUpDialogue::PopUpDialogue(QGraphicsScene* parent_scene, const QString& messag
             create_dialogue(message, Qt::gray, 0.5, 0, 0, SCREEN_LENGTH, SCREEN_HEIGHT, text_x, text_y,10);
             break;
         case Dialogue:
-            create_dialogue(message, Qt::gray, 0.5, 0, SCREEN_HEIGHT/3, GAMEAREA_LENGTH, SCREEN_HEIGHT/3, text_x, text_y,9);
+            create_dialogue(message, Qt::gray, 0.5, 0, SCREEN_HEIGHT/3, GAMEAREA_LENGTH, SCREEN_HEIGHT/3, text_x, text_y,11);
             break;
         case BossHealth:
             create_dialogue(message, Qt::red, 1, 0, SCREEN_HEIGHT-10, GAMEAREA_LENGTH, 10, text_x, text_y,12);

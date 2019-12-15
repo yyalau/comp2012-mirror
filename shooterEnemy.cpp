@@ -16,13 +16,14 @@ ShooterEnemy::ShooterEnemy(const EnemyPathingType& pathing_type, const EnemyShoo
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.5);
 
+    music = new QMediaPlayer();
+    music->setMedia(QUrl("qrc:/sounds/sounds/explosion.mp3"));
+
     cirPathCounter=0.00;
 
     target_pos.setX(pos().toPoint().x());
     target_pos.setY(pos().toPoint().y());
 
-    //if(pathing_type==Wave)
-      //  dy=1;
     move_timer= new CustomTimer(this->move_freq, false, this, SLOT(move()));
     //connect the timer and move slot
 
@@ -44,10 +45,6 @@ void ShooterEnemy::set_targetPos(int x, int y)
 {
     target_pos.setX(x);
     target_pos.setY(y);
-}
-
-void ShooterEnemy::set_pathing_type(EnemyPathingType pathingType){
-    pathing_type = pathingType;
 }
 
 bool ShooterEnemy::out_of_bound()
@@ -124,13 +121,6 @@ void ShooterEnemy::move()
                 setPos(x()+dx,y()+dy);
                 break;
             }
-        case LeaveScreen:
-          {
-                //if(x()>=400){dx=10;}
-                //else{dx=-10;}
-                 //is_shooting = false;
-                break;
-          }
         case Wave:
             {
                 QPainterPath test;
@@ -188,6 +178,8 @@ bool ShooterEnemy::collision()
         ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y);
         explosion->setPos(x(), y());
         scene()->addItem(explosion);
+
+        music->play();
     }
 
     return true;

@@ -13,8 +13,13 @@
         <file>images/bg.png</file>
     </qresource>
     <qresource prefix="/fontstyle">
-        <file>font/ARCADECLASSIC.TTF</file>
-        <file>font/PressStart2P.ttf</file>
         <file>font/joystix monospace.ttf</file>
+    </qresource>
+    <qresource prefix="/sounds">
+        <file>sounds/explosion.mp3</file>
+        <file>sounds/playergetshot.mp3</file>
+        <file>sounds/powerup.mp3</file>
+        <file>sounds/shooting2.mp3</file>
+        <file>sounds/BossExplosion.mp3</file>
     </qresource>
 </RCC>
