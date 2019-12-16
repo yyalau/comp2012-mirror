@@ -17,6 +17,7 @@
  * @include explosion_timer: CustomTimer for displaying the explosion
  * @include size_x, size_y: Sprite's size
  * @include sprite_counter: Count the sprite to be displayed
+ * @include sound: Play explosion sound when created
  * @include set_sprite(): Update the sprite with an image
  *
  * PUBLIC MEMBER FUNCTIONS

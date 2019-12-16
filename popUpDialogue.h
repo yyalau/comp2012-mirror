@@ -33,7 +33,7 @@
  * @include set_font(): Change the text's font
  *
  * PUBLIC SLOTS
- * @include remove(): deletes the object itself, and returns nullptr to its pointer
+ * @include remove(): Deletes the object itself, and returns nullptr to its pointer
  */
 
 class PopUpDialogue : public QObject

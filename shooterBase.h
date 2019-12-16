@@ -17,23 +17,25 @@
  * @brief The ShooterBase class
  * Abstract Base Class for player/enemy
  *
- * PROTECTED DATA MEMBERS
- * @include dx, dy: entity's velocity
- * @include size_x, size_y: entity's size
- * @include move_freq, coll_freq, shoot_freq: milliseconds between times move(), collision(), shoot() are called
+ * PROTECTED DATA MEMBERS/MEMBER FUNCTIONS
+ * @include dx, dy: Entity's velocity
+ * @include size_x, size_y: Entity's size
+ * @include move_freq, coll_freq, shoot_freq: Milliseconds between times move(), collision(), shoot() are called
  * @include move_timer, coll_timer, shoot_timer: CustomTimer for triggering move(), collision(), shoot()
- * @include is_shooting: set to true if the entity will shoot bullet (called automatically)
+ * @include is_shooting: Set to true if the entity will shoot bullet (called automatically)
  * @include sound: Array of shooter's sound effects. Set the size in constructor
+ * @include num_sound_types: sound's array size for deleting
+ * @include play_sound(): Set sound position back to 0 and play again
  *
  * PUBLIC MEMBER FUNCTIONS
  * @include health: Pointer to dynamic Health object, created in constructor and deleted in destructor
- * @include pause(), unpause(): virtual functions for stopping/restarting the timers
- * @include shoot_bullet(): convenient function for creating a bullet
- * @include collision(): pure virtual slot for handling collision effects
+ * @include pause(), unpause(): Virtual functions for stopping/restarting the timers
+ * @include shoot_bullet(): Convenient function for creating a bullet
+ * @include collision(): Pure virtual slot for handling collision effects
  *
  * PUBLIC SLOTS
- * @include move(): pure virtual slot for updating entity's position
- * @include shoot(): pure virtual slot for shooting bullets
+ * @include move(): Pure virtual slot for updating entity's position
+ * @include shoot(): Pure virtual slot for shooting bullets
  */
 
 class ShooterBase: public QObject, public QGraphicsPixmapItem {

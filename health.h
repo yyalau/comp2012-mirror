@@ -20,7 +20,7 @@
  * @include get_health(): Return current health
  * @include set_health(): Change health (normally use 1 or -1)
  * @include is_dead(): Check if hp is 0
- * @include reset_health(): RSeset the health of the entity (use on player when pressing restart)
+ * @include reset_health(): Reset the health of the entity (use on player when pressing restart)
  */
 
 class Health: public QGraphicsTextItem{

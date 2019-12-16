@@ -14,34 +14,35 @@
  *
  * ENUMS
  * @enum BossPhase: Name of the phase the boss is in
+ * @enum SoundType: Different sounds for different actions
  *
  * PRIVATE DATA MEMBERS/MEMBER FUNCTIONS
  * @include PHASE_HEALTH: Health when the boss switches to next state. PHASE_HEALTH[X] -> go to state X
  * @include phase: See enum above
- * @include boss_to_next_phase: flag for allowing boss to switch from Dialogue to other phases
+ * @include boss_to_next_phase: Flag for allowing boss to switch from Dialogue to other phases
  * @include health_bar: PopUpDialogue for displaying the health bar
  * @include dialogue_counter: Counter to keep track of dialogues shown
  * @include dialogue_timer: CustomTimer for displaying pre-battle dialogue
  * @include flag_timer: CustomTimer for setting flag to true after some time
  * @include player: Pointer to the player. Use set_player() when initializing the player in SetUp
- * @include set_shoot_freq(): change the shooting frequency (for each pattern)
- * @include set_phase(): change to a certain phase. handles specific configuration when entering phase
+ * @include set_shoot_freq(): Change the shooting frequency (for each pattern)
+ * @include set_phase(): Change to a certain phase. handles specific configuration when entering phase
  *
  * PUBLIC MEMBER FUNCTIONS
  * @include set_player(): Set the shooter to point to the player
  * @include pause(), unpause(): Overrides ShooterBase's functions
  * @include show_health(): Show the boss's remaining health. ONLY CALL AFTER parent_scene->addItem()
- * @include collision(): overrides shooterBase's function
+ * @include collision(): Overrides shooterBase's function
  *
  * SIGNALS
- * @include start_phase3(): sent to the shooterPlayer
- * @include boss_dead(): sent when boss is defeated -> win!
+ * @include start_phase3(): Sent to the shooterPlayer
+ * @include boss_dead(): Sent when boss is defeated -> win!
  *
  * PUBLIC SLOTS
- * @include move(): overrides shooterBase's function, handles going out of bound
- * @include shoot(): overrides shooterBase's function
- * @include enable_flag(): set flag to true after the pattern name finishes showing
- * @include show_dialogue(): display the dialogue before the battle
+ * @include move(): Overrides shooterBase's function, handles going out of bound
+ * @include shoot(): Overrides shooterBase's function
+ * @include enable_flag(): Set flag to true after the pattern name finishes showing
+ * @include show_dialogue(): Display the dialogue before the battle
  */
 
 class ShooterBoss : public ShooterBase

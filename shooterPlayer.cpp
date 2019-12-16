@@ -206,7 +206,7 @@ bool ShooterPlayer::collision(QGraphicsItem* collision_item)
             dead = true;
             //set pixmap as null
             setPixmap(QPixmap());
-            //TODO: use another explosion image idk
+
             ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y);
             explosion->setPos(x(), y());
             scene()->addItem(explosion);

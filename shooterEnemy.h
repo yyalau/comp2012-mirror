@@ -15,24 +15,24 @@
  * ENUMS
  * @enum EnemyPathingType: How the enemy moves after spawned
  * @enum EnemyShootingType: How the enemy shoots bullets
+ * @enum SoundType: Different sounds for different actions
  *
  * PRIVATE DATA MEMBERS
  * @include pathing_type, shooting_type: See enum above
  * @include player: Pointer to the player. Use set_player() when initializing the player in SetUp
  * @include drop_powerup: True if this enemy will drop a powerup upon death, false by default
- * @include music: music player for the explosion sound
  *
  * PUBLIC MEMBER FUNCTIONS
  * @include set_player(): Set the shooter to point to the player
  * @include set_targetPos(): For GotoTarget's case
- * @include collision(): overrides shooterBase's function
+ * @include collision(): Overrides shooterBase's function
  * @include set_drop_powerup(): Set drop_powerup to true
  * @include out_of_bound(): Check if enemy is out of bound to remove
  * @include safe_kill(): Set health to 0 (to generate explosion)
  *
  * PUBLIC SLOTS
- * @include move(): overrides shooterBase's function, handles going out of bound
- * @include shoot(): overrides shooterBase's function
+ * @include move(): Overrides shooterBase's function, handles going out of bound
+ * @include shoot(): Overrides shooterBase's function
  */
 
 class ShooterEnemy: public ShooterBase {

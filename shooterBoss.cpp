@@ -229,7 +229,7 @@ bool ShooterBoss::collision()
         //drop a powerup bullet and play phase complete sound
         if (phase != Phase3)
         {
-            shoot_bullet(new BulletPowerUp(0, 4, BulletPowerUp::Breakpoint));
+            shoot_bullet(new BulletPowerUp(0, 4, BulletPowerUp::Random));
             play_sound(sound[PhaseComplete]);
         }
 
@@ -243,7 +243,6 @@ bool ShooterBoss::collision()
     //when health reach 0
     if (health->get_health() == 0)
     {
-        //TODO: use another image
         ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y, true, 300);
         explosion->setPos(x(), y());
         scene()->addItem(explosion);

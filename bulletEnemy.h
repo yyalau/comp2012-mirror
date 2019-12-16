@@ -16,13 +16,13 @@
  * @include bullet_type: See enum above
  *
  * PUBLIC MEMBER FUNCTIONS
- * @include out_of_bound(): overrides bulletBase's function to reimplement out-of-bound case
+ * @include out_of_bound(): Overrides bulletBase's function to reimplement out-of-bound case
  *
  * PUBLIC SLOTS
- * @include move(): overrides bulletBase's function to reimplement type-specific cases
+ * @include move(): Overrides bulletBase's function to reimplement type-specific cases
  */
 
-class BulletEnemy:public BulletBase{
+class BulletEnemy: public BulletBase {
 
 public:
     enum BulletType {

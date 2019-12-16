@@ -16,47 +16,46 @@
  * @brief The ShooterPlayer class
  * Class for player
  *
- * ENUMs
- * @enum SoundType: different sound made by the shooter for different actions
+ * ENUMS
+ * @enum SoundType: Different sounds for different actions
  *
  * PRIVATE DATA MEMBERS/MEMBER FUNCTIONS
- * @include sound: play music for different SoundType
- * @include speed: player's moving speed
- * @include immune: set to true if the player is immune (for 1 second after being hit)
- * @include powerup_shooter: is greater than 0 if the shooter has been improved
- * @include paused: static variable storing the pause state of the game, changed with keyboard P
- * @include dead: boolean of whether player is dead or not, to allow for 3-second break before game over screen
- * @include nullptr_phase: for boss's phase 3, remove the player's ability to move
- * @include powerup_shooter_counter: if in powerup mode, shoot extra bullets once every 3 shoot()
+ * @include speed: Player's moving speed
+ * @include immune: Set to true if the player is immune (for 1 second after being hit)
+ * @include powerup_shooter: Is greater than 0 if the shooter has been improved
+ * @include paused: Static variable storing the pause state of the game, changed with keyboard P
+ * @include dead: Static boolean of whether player is dead or not, to allow for 3-second break before game over screen
+ * @include nullptr_phase: For boss's phase 3, remove the player's ability to move
+ * @include powerup_shooter_counter: If in powerup mode, shoot extra bullets once every 3 shoot()
  * @include powerup_timer, immune_timer: CustomTimer for keeping track of StackOverflow powerup and immunity's time
  * @include set_sprite(): Change the sprite to indicate immunity
  *
  * FUNCTION RE-IMPLEMENTATIONS
- * @implements keyPressEvent(QKeyEvent*): handles keyboard input, updates player velocity and is_shooting
- * @implements keyReleaseEvent(QKeyEvent*): handles keyboard input, resets player velocity and is_shooting
- * @implements focusOutEvent(QFocusEvent*): keeps the shooter to be focused
+ * @implements keyPressEvent(QKeyEvent*): Handles keyboard input, updates player velocity and is_shooting
+ * @implements keyReleaseEvent(QKeyEvent*): Handles keyboard input, resets player velocity and is_shooting
+ * @implements focusOutEvent(QFocusEvent*): Keeps the shooter focused
  *
  * PUBLIC MEMBER FUNCTIONS
  * @include pause(), unpause(): Overrides ShooterBase's functions
- * @include get_pos(): return the player's position
- * @include process_powerup(BulletPowerUp*): handles power-up tasks when ShooterPlayer/BulletPlayer collided with BulletPowerUp
+ * @include get_pos(): Return the player's position
+ * @include process_powerup(BulletPowerUp*): Handles power-up tasks when ShooterPlayer/BulletPlayer collided with BulletPowerUp
  * @include collision():
- *              No parameter: overrides shooterBase's function (do NOTHING)
+ *              No parameter: Overrides shooterBase's function (do NOTHING)
  *              1 argument (collision_item): Call this function instead and pass the collision item (bullet/enemy/boss)
  * @include reset_nullptr(): Call in gameEvent's restart function to set nullptr_phase to false
  *
  * SIGNALS
- * @include start_signal(), pause_all(), unpause_all(): signals to send to the main game
- * @include player_dead(): signal triggered when health reaches 0
- * @include powerup_text(int), shooter_text(int): signal to send to infoBox, to display the correct power-up message in infoBox
- * @include clear_field(bool): signal triggered when player pressed 'R' key or hit BulletPowerUp with clear field function
+ * @include start_signal(), pause_all(), unpause_all(): Signals to send to the main game
+ * @include player_dead(): Signal triggered when health reaches 0
+ * @include powerup_text(int), shooter_text(int): Signal to send to infoBox, to display the correct power-up message in infoBox
+ * @include clear_field(bool): Signal triggered when player pressed 'R' key or hit BulletPowerUp with clear field function
  *
  * PUBLIC SLOTS
- * @include move(): overrides shooterBase's function, prevents going out of bound
- * @include shoot(): overrides shooterBase's function
- * @include reset_shooter(): sets powerup_shooter to false after 10 seconds
- * @include reset_immune(): reset immunity after 1 second
- * @include begin_phase3(): set null_pointer to true when boss's phase 3 starts
+ * @include move(): Overrides shooterBase's function, prevents going out of bound
+ * @include shoot(): Overrides shooterBase's function
+ * @include reset_shooter(): Sets powerup_shooter to false after 10 seconds
+ * @include reset_immune(): Reset immunity after 1 second
+ * @include begin_phase3(): Set null_pointer to true when boss's phase 3 starts
  */
 
 class ShooterPlayer: public ShooterBase{

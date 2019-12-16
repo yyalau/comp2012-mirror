@@ -17,7 +17,7 @@
  * @include power_type: See enum above
  *
  * PUBLIC MEMBER FUNCTIONS
- * @include get_power_type(): returns power_type
+ * @include get_power_type(): Returns power_type
  */
 
 class BulletPowerUp: public BulletBase {
