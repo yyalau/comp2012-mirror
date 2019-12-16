@@ -123,7 +123,7 @@ void ShooterBoss::move()
             if (target_pos_x < 0) target_pos_x = 0;
             double x_diff = target_pos_x - pos().x();
             double y_diff = BOSS_POS_Y - pos().y();
-            if (x_diff*x_diff + y_diff*y_diff < 100)
+            if (x_diff*x_diff + y_diff*y_diff < 100) //position reached
             {
                 dx = dy = 0;
                 setPos(target_pos_x, BOSS_POS_Y);
@@ -159,11 +159,12 @@ void ShooterBoss::move()
         case PhasePre2:
         case Phase2:
         {
+            //move left and right
             dx = phase_dir * (phase == PhasePre1 ? 4 : 2);
             if (x()+dx > BOSS_POS_X+100) phase_dir = -1;
             else if (x()+dx < BOSS_POS_X-100) phase_dir = 1;
 
-            if (phase == Phase2)
+            if (phase == Phase2) //in phase 2, also move in a sine wave
             {
                 dy = static_cast<int>(4.5*sin(phase_angle));
                 phase_angle += 0.1;
@@ -178,7 +179,7 @@ void ShooterBoss::move()
 
 bool ShooterBoss::collision()
 {
-    if (phase == Entrance || phase == Dialogue /*|| phase == Dead*/) return false;
+    if (phase == Entrance || phase == Dialogue) return false;
 
     //decrease own health
     health->set_health(-1);
@@ -199,8 +200,8 @@ bool ShooterBoss::collision()
     if (health->get_health() == (PHASE_HEALTH[Phase2]+PHASE_HEALTH[Phase3])/2)
         set_shoot_freq(12*MIN_FREQ);
 
-    //do something when health reaches checkpoint, activate next phase
-    if (health->get_health() == PHASE_HEALTH[phase+1]) // use <= if decrease_health is > 1
+    //activate next phase when health reaches checkpoint
+    if (health->get_health() == PHASE_HEALTH[phase+1])
     {
         switch (phase)
         {
@@ -213,7 +214,7 @@ bool ShooterBoss::collision()
                 break;
             case PhasePre2: //show Phase2's pattern name
             {
-                QString text = "ERROR #2: LEAK " + QString::number(100+rand()%100) + " DIRECT BYTES";
+                QString text = "ERROR #2: LEAK " + QString::number(RANDOM(100, 200)) + " DIRECT BYTES";
                 new PopUpDialogue(scene(), text, 1500, PopUpDialogue::Dialogue);
                 flag_timer->start_timer(2000, true, this, SLOT(enable_flag()));
                 break;
@@ -265,7 +266,7 @@ void ShooterBoss::shoot()
             return;
         case PhasePre1:
         {
-            int bullet_dx = rand()%20 - rand()%20;
+            int bullet_dx = RANDOM(-20, 20);
             int bullet_dy = 10;
             shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));
             break;
@@ -312,7 +313,7 @@ void ShooterBoss::shoot()
         }
         case Phase2:
         {
-            int bullet_x = 100 + rand()%600;
+            int bullet_x = RANDOM(100, 700);
             BulletEnemy* bullet = new BulletEnemy(0, 3, BulletEnemy::Explode, 2*BulletEnemy::BULLET_SIZE, 2*BulletEnemy::BULLET_SIZE);
             bullet->setPos(bullet_x, -20);
             scene()->addItem(bullet);
@@ -320,9 +321,9 @@ void ShooterBoss::shoot()
         }
         case Phase3:
         {
-            int dummy_dir_x = (rand()%2) * 2 - 1; //1 or -1
+            int dummy_dir_x = RANDOM(0, 1) * 2 - 1; //1 or -1
             int dummy_x = (dummy_dir_x == 1) ? 10 : GAMEAREA_LENGTH-ShooterEnemy::ENEMY_SIZE-10;
-            int dummy_y = 200 + rand()%150;
+            int dummy_y = RANDOM(200, 350);
 
             ShooterEnemy* enemy = new ShooterEnemy(ShooterEnemy::Linear, ShooterEnemy::ExplodeOnDeath, 1, 7*dummy_dir_x, 0);
             enemy->setPos(dummy_x, dummy_y);
@@ -330,7 +331,7 @@ void ShooterBoss::shoot()
             scene()->addItem(enemy->health);
 
             //randomize the enemy spawn rate
-            set_shoot_freq((40+rand()%50)*MIN_FREQ);
+            set_shoot_freq(RANDOM(40, 90)*MIN_FREQ);
             break;
         }
     }

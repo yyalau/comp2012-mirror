@@ -46,10 +46,10 @@ public:
 public:
     enum PopUpType
     {
-        GameArea, //for pausing/game over screens, the dialogue covers 800*600
+        GameArea,   //for pausing/game over screens, the dialogue covers 800*600
         FullScreen, //the dialogue covers 1100*600
         Dialogue,   //for dialogue messages
-        BossHealth,  //for drawing boss's health bar
+        BossHealth, //for drawing boss's health bar
         InfoBox     //show message on InfoBox
     };
 

@@ -4,8 +4,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 
-#include <stdlib.h> //rand()
-#include <time.h>
+#include <random>
 
 /**
   * Some "defines" and templates to make the code easier to read
@@ -62,6 +61,13 @@ void REMOVE_ENTITY(QGraphicsScene* scene, T* X)
     scene->removeItem(X);
     delete (X);
     X=nullptr;
+}
+
+//random number generator
+inline int RANDOM(int min, int max)
+{
+    static std::random_device rd;
+    return min + rd()%(max-min+1);
 }
 
 #endif // DEFINE_H

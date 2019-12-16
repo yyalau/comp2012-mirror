@@ -25,7 +25,7 @@ int Health::get_health()
 
 void Health::set_health(const int& increment)
 {
-    health=health+increment;
+    health += increment;
     set_text();
 }
 
@@ -36,7 +36,7 @@ bool Health::is_dead()
 
 void Health::reset_health()
 {
-    health=max_health;
+    health = max_health;
     set_text();
 }
 

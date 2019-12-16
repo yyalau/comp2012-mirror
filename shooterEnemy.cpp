@@ -16,10 +16,11 @@ ShooterEnemy::ShooterEnemy(const EnemyPathingType& pathing_type, const EnemyShoo
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.5);
 
+    //type-specific variables initialization
     cirPathCounter=0.00;
-
     target_pos.setX(pos().toPoint().x());
     target_pos.setY(pos().toPoint().y());
+
 
     move_timer= new CustomTimer(this->move_freq, false, this, SLOT(move()));
     //connect the timer and move slot
@@ -125,23 +126,23 @@ void ShooterEnemy::move()
             }
         case Wave:
             {
-                QPainterPath test;
+                QPainterPath path;
                 if(target_pos.x()<400){
-                    test.moveTo(target_pos);
-                    test.quadTo(target_pos.x()+133,target_pos.y()-100,target_pos.x()+266,target_pos.y());
-                    test.quadTo(target_pos.x()+399,target_pos.y()+100,target_pos.x()+532,target_pos.y());
-                    test.quadTo(target_pos.x()+660,target_pos.y()-100,target_pos.x()+750,target_pos.y());
+                    path.moveTo(target_pos);
+                    path.quadTo(target_pos.x()+133,target_pos.y()-100,target_pos.x()+266,target_pos.y());
+                    path.quadTo(target_pos.x()+399,target_pos.y()+100,target_pos.x()+532,target_pos.y());
+                    path.quadTo(target_pos.x()+660,target_pos.y()-100,target_pos.x()+750,target_pos.y());
                 }else{
-                    test.moveTo(target_pos);
-                    test.quadTo(target_pos.x()-133,target_pos.y()+100,target_pos.x()-266,target_pos.y());
-                    test.quadTo(target_pos.x()-399,target_pos.y()-100,target_pos.x()-532,target_pos.y());
-                    test.quadTo(target_pos.x()-660,target_pos.y()+100,target_pos.x()-750,target_pos.y());
+                    path.moveTo(target_pos);
+                    path.quadTo(target_pos.x()-133,target_pos.y()+100,target_pos.x()-266,target_pos.y());
+                    path.quadTo(target_pos.x()-399,target_pos.y()-100,target_pos.x()-532,target_pos.y());
+                    path.quadTo(target_pos.x()-660,target_pos.y()+100,target_pos.x()-750,target_pos.y());
                 }
                 cirPathCounter+=(dy/120.000);
                 if (cirPathCounter>=0.99){dy=-1;}
                 else if(cirPathCounter<=0.01){dy=1;}
 
-                setPos(test.pointAtPercent(cirPathCounter).toPoint().x(),test.pointAtPercent(cirPathCounter).toPoint().y());
+                setPos(path.pointAtPercent(cirPathCounter).toPoint().x(),path.pointAtPercent(cirPathCounter).toPoint().y());
                 break;
 
             }
@@ -198,7 +199,7 @@ void ShooterEnemy::shoot()
     {
         case Random:
         {
-            int bullet_dx = rand()%20 - rand()%20;
+            int bullet_dx = RANDOM(-20, 20);
             int bullet_dy = 12;
 
             shoot_bullet(new BulletEnemy(bullet_dx, bullet_dy, BulletEnemy::Normal));

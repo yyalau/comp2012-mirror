@@ -43,6 +43,7 @@ inline void ShooterPlayer::set_sprite(const char *sprite)
 
 void ShooterPlayer::keyPressEvent(QKeyEvent* event)
 {
+    //when pressed, allow the shooter to move and shoot
     switch (event->key()) {
         case Qt::Key_Left:
             dx = -speed;
@@ -77,6 +78,7 @@ void ShooterPlayer::keyPressEvent(QKeyEvent* event)
 
 void ShooterPlayer::keyReleaseEvent(QKeyEvent* event)
 {
+    //when released, disable move and shoot
     switch (event->key()) {
         case Qt::Key_Left:
         case Qt::Key_Right:

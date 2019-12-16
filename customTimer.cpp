@@ -10,12 +10,14 @@ void CustomTimer::start_timer(int interval, const bool& singleShot, const QObjec
     time_left = initial_interval = interval;
     this->singleShot = singleShot;
 
+    //start the timer
     timer = new QTimer();
     timer->start(interval);
 
+    //connect the QTimer with the receiving slot
     if (receiver != nullptr && member != nullptr)
         connect(timer, SIGNAL(timeout()), receiver, member);
-
+    //also connect with restart_timer to reset time_left
     connect(timer, SIGNAL(timeout()), this, SLOT(restart_timer()));
 }
 
@@ -27,16 +29,16 @@ CustomTimer::~CustomTimer()
 void CustomTimer::pause()
 {
     if (timer == nullptr) return;
-    time_left = timer->remainingTime();
-    if (time_left < 0) time_left = initial_interval; //sometimes the application reports back that "QTimer cannot set negative time"
+    time_left = timer->remainingTime(); //get the remaining time
+    if (time_left < 0) time_left = initial_interval; //just to be safe
     timer->stop();
 }
 
 void CustomTimer::unpause()
 {
     if (timer == nullptr) return;
-    timer->start(time_left);
-    if (time_left < initial_interval) restart = true;
+    timer->start(time_left); //start QTimer with duration as the remaining time
+    if (time_left < initial_interval) restart = true; //in order to reset time_left
 }
 
 void CustomTimer::set_interval(int interval)

@@ -66,7 +66,7 @@ void BulletEnemy::move()
             if (!(INSCREEN_DOWN(pos().y()+dy, this)))
             {
                 double angle = 3.1415;
-                int explode_speed = 10 + rand()%4;
+                int explode_speed = RANDOM(10, 13);
                 while (angle < 6.2832)
                 {
                     int bullet_dx = static_cast<int>(cos(angle)*explode_speed);

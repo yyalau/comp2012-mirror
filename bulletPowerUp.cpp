@@ -14,7 +14,7 @@ BulletPowerUp::BulletPowerUp(const int& dx, const int& dy, const PowerUpType& po
 
     if (power_type == Random)
     {
-        int random_power= rand()%3;
+        int random_power= RANDOM(0, 2);
 
         switch (random_power) {
             case 0:

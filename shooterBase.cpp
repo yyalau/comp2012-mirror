@@ -39,6 +39,7 @@ void ShooterBase::unpause()
 
 void ShooterBase::shoot_bullet(BulletBase *bullet)
 {
+    //add bullet at the center of the shooter
     bullet->setPos(x()+size_x/2, y()+size_y/2);
     scene()->addItem(bullet);
 }

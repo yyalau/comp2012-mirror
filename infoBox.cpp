@@ -7,6 +7,7 @@ InfoBox::InfoBox(ShooterPlayer* shooter) :
     setBrush(Qt::gray);
     setRect(0, 0, INFOBOX_LENGTH, SCREEN_HEIGHT);
 
+    //connect with signals sent by shooterPlayer to show powerup information
     connect(shooter, SIGNAL(powerup_text(int)), this, SLOT(show_powerup_info(int)));
     connect(shooter, SIGNAL(shooter_text(int)), this, SLOT(show_shooter_info(int)));
 

@@ -45,7 +45,7 @@ int GameEvent::get_time()
 template <typename T>
 QList<QGraphicsItem*> filter_items(QList<QGraphicsItem*> all_items)
 {
-
+    //From a QList, remove all items except ones of type T
     for (int i=0; i<all_items.size(); ++i)
     {
         if (dynamic_cast<T*>(all_items[i]) == nullptr)
@@ -59,7 +59,7 @@ QList<QGraphicsItem*> filter_items(QList<QGraphicsItem*> all_items)
 
 void GameEvent::collision()
 {
-    //10 DEC: COLLISION DETECTION IS NOW CENTRALISED HERE
+    //COLLISION DETECTION IS CENTRALISED HERE
     //COLLISION IS DONE ON PLAYER FIRST, THEN BOSS AND ENEMY (depending on "Ascending Order")
 
     //shooter
@@ -80,6 +80,7 @@ void GameEvent::collision()
         }
     }
 
+    //get a list of enemies and boss
     QList<QGraphicsItem*> boss = filter_items<ShooterBoss>(
                 parent_scene->items(0,0,800,600,Qt::IntersectsItemShape,Qt::AscendingOrder));
     QList<QGraphicsItem*> enemies = filter_items<ShooterEnemy>(
@@ -99,7 +100,7 @@ void GameEvent::collision()
                 if (enemy->collision())
                     REMOVE_ENTITY(parent_scene, enemy_colliding_items[j]);
 
-                //Moved health == 0 check here as well, all REMOVE_ENTITY should be centralized
+                //Moved health == 0 check here as well
                 if (enemy->health->get_health() == 0)
                 {
                     REMOVE_ENTITY(parent_scene, enemy);
@@ -158,9 +159,9 @@ void GameEvent::trigger_event(const int& event_id)
         case 1:
         {
             spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Random,
-                        6, 0, 2, 100+rand()%200, 0, DEFAULT_SHOOT_FREQ*3);
+                        6, 0, 2, RANDOM(100, 300), 0, DEFAULT_SHOOT_FREQ*3);
             spawn_enemy(ShooterEnemy::Linear, ShooterEnemy::Random,
-                        6, 0, 2, 400+rand()%200, 0, DEFAULT_SHOOT_FREQ*3);
+                        6, 0, 2, RANDOM(400, 600), 0, DEFAULT_SHOOT_FREQ*3);
             break;
         }
         case 2:
@@ -358,9 +359,9 @@ void GameEvent::trigger_clear_field(const bool& restart)
 
         if (typeid(*(scene_items[i]))==typeid (ShooterEnemy))
         {
-            if (restart)
+            if (restart) //just remove enemies if restart
                 REMOVE_ENTITY(parent_scene, scene_items[i]);
-            else
+            else        //else, kill the enemies but still have the explosion + sound effects
                 dynamic_cast<ShooterEnemy*>(scene_items[i])->safe_kill();
         }
 
