@@ -1,6 +1,5 @@
 #ifndef BULLETPOWERUP_H
 #define BULLETPOWERUP_H
-#include <QtDebug>
 
 #include "bulletBase.h"
 #include "bulletPlayer.h"

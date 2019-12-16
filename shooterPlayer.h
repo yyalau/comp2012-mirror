@@ -4,7 +4,6 @@
 #include <QMediaPlayer>
 #include <QPauseAnimation>
 #include <QKeyEvent>
-#include <QDebug>
 #include <QList>
 
 

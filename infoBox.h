@@ -5,8 +5,8 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsScene>
 #include <QGraphicsTextItem>
-#include <popUpDialogue.h>
 
+#include "popUpDialogue.h"
 #include "shooterPlayer.h"
 
 /**

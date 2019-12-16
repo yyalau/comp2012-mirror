@@ -5,7 +5,6 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
-#include <QDebug>
 #include <QList>
 
 #include "define.h"

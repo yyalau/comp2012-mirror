@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
-#include <QDebug>
 #include <QMediaPlayer>
 
 #include "define.h"
