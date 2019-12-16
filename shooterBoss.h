@@ -68,6 +68,12 @@ public:
         Phase3,         //NullPointerException, disable moving
         //Dead
     };
+    enum SoundType
+    {
+        Hurt,
+        PhaseComplete,
+        NUM_SOUND_TYPES
+    };
 
 private:
     const int PHASE_HEALTH[6] = {BOSS_HP, 825, 625, 400, 175, 0};
@@ -78,7 +84,6 @@ private:
     CustomTimer *dialogue_timer {nullptr}, *flag_timer {nullptr};
     int dialogue_counter {0};
     static ShooterPlayer* player;
-    QMediaPlayer* music;
 
     void set_shoot_freq(int shoot_freq);
     void set_phase(const BossPhase& phase);

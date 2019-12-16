@@ -8,15 +8,8 @@ bool ShooterPlayer::dead = false;
 
 ShooterPlayer::ShooterPlayer(const int hp, const int& dx, const int& dy, const int& shoot_freq,  const bool& shoot,
                              const int size_x, const int size_y, const int& move_freq) :
-         ShooterBase("Player", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq)
+         ShooterBase("Player", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, NUM_SOUND_TYPES)
 {
-    sound[hitBullet] = new QMediaPlayer();
-    sound[hitBullet]->setMedia(QUrl("qrc:/sounds/sounds/playergetshot.mp3"));
-    sound[powerUp] = new QMediaPlayer();
-    sound[powerUp]->setMedia(QUrl("qrc:/sounds/sounds/powerup.mp3"));
-    sound[Shoot] = new QMediaPlayer();
-    sound[Shoot]->setMedia(QUrl("qrc:/sounds/sounds/shooting2.mp3"));
-
     set_sprite(":/image/images/shooter.png");
 
     move_timer= new CustomTimer(this->move_freq, false, this, SLOT(move()));
@@ -27,6 +20,15 @@ ShooterPlayer::ShooterPlayer(const int hp, const int& dx, const int& dy, const i
 
     powerup_timer = new CustomTimer();
     immune_timer = new CustomTimer();
+
+    sound = new QMediaPlayer*[NUM_SOUND_TYPES];
+    sound[Hurt] = new QMediaPlayer();
+    sound[Hurt]->setMedia(QUrl("qrc:/sounds/sounds/playergetshot.mp3"));
+    sound[Powerup] = new QMediaPlayer();
+    sound[Powerup]->setMedia(QUrl("qrc:/sounds/sounds/powerup.mp3"));
+    sound[Shoot] = new QMediaPlayer();
+    sound[Shoot]->setMedia(QUrl("qrc:/sounds/sounds/shooting2.mp3"));
+
 }
 
 inline void ShooterPlayer::set_sprite(const char *sprite)
@@ -36,19 +38,6 @@ inline void ShooterPlayer::set_sprite(const char *sprite)
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.3);
-}
-
-void ShooterPlayer::play_sound(MusicType type)
-{
-
-    switch(type){
-    case hitBullet:
-        sound[hitBullet]->play(); break;
-    case powerUp:
-        sound[powerUp]->play(); break;
-    case Shoot:
-        sound[Shoot]->play(); break;
-    }
 }
 
 
@@ -204,14 +193,13 @@ bool ShooterPlayer::collision(QGraphicsItem* collision_item)
     if (typeid(*collision_item)==typeid(BulletPowerUp))
     {
         process_powerup(dynamic_cast<BulletPowerUp*>(collision_item));
-        play_sound(powerUp);
+        play_sound(sound[Powerup]);
     }
     else //should be either BulletEnemy, ShooterEnemy or ShooterBoss
     {
         if (immune) return false;
         //decrease own health
         health->set_health(-1);
-        play_sound(hitBullet);
 
         if (health->is_dead())
         {
@@ -226,6 +214,7 @@ bool ShooterPlayer::collision(QGraphicsItem* collision_item)
         }
         else
         {
+            play_sound(sound[Hurt]);
             immune = true;
             set_sprite(":/image/images/shooter_hurt.png");
             immune_timer->start_timer(1000, true, this, SLOT(reset_immunity()));
@@ -241,9 +230,8 @@ void ShooterPlayer::shoot()
 
     shoot_bullet(new BulletPlayer(0, -20));
 
-    sound[Shoot]->setPosition(0);
     sound[Shoot]->setVolume(50);
-    sound[Shoot]->play();
+    play_sound(sound[Shoot]);
 
     if (powerup_shooter > 0){
         if (powerup_shooter_counter == 2)

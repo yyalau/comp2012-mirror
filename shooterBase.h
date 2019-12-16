@@ -5,6 +5,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QDebug>
+#include <QMediaPlayer>
 
 #include "define.h"
 #include "customTimer.h"
@@ -22,6 +23,7 @@
  * @include move_freq, coll_freq, shoot_freq: milliseconds between times move(), collision(), shoot() are called
  * @include move_timer, coll_timer, shoot_timer: CustomTimer for triggering move(), collision(), shoot()
  * @include is_shooting: set to true if the entity will shoot bullet (called automatically)
+ * @include sound: Array of shooter's sound effects. Set the size in constructor
  *
  * PUBLIC MEMBER FUNCTIONS
  * @include health: Pointer to dynamic Health object, created in constructor and deleted in destructor
@@ -46,13 +48,17 @@ protected:
     int move_freq, shoot_freq;
     CustomTimer *move_timer, *shoot_timer;
     bool is_shooting;
+    QMediaPlayer** sound;
+    int num_sound_types;
+
+    void play_sound(QMediaPlayer* sound_to_play);
 
 public:
     ShooterBase(const QString& name, const int& hp, const int& dx = 0, const int& dy = 0,
                 const int& shoot_freq = DEFAULT_SHOOT_FREQ, const bool& shoot = false,
                 const int size_x = ENTITY_SIZE, const int size_y = ENTITY_SIZE,
-                const int move_freq = DEFAULT_FREQ);
-    ~ShooterBase();
+                const int move_freq = DEFAULT_FREQ, const int& num_sound_types = 0);
+    virtual ~ShooterBase();
     Health* health;
     virtual void pause();
     virtual void unpause();

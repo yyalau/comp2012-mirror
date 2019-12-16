@@ -3,7 +3,6 @@
 
 #include <cmath>
 #include <QPainterPath>
-#include <QMediaPlayer>
 
 #include "shooterBase.h"
 #include "shooterPlayer.h"
@@ -65,12 +64,17 @@ public:
         ExplodeOnDeath,     //For Boss's 3rd phase
     };
 
+    enum SoundType
+    {
+        Hurt,
+        NUM_SOUND_TYPES
+    };
+
 private:
     EnemyPathingType pathing_type;
     const EnemyShootingType shooting_type;
     static ShooterPlayer* player;
     bool drop_powerup {false};
-    QMediaPlayer* music;
 
     //type-specific variables
     QPoint target_pos;

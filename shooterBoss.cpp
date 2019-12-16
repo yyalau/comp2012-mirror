@@ -6,16 +6,13 @@ ShooterPlayer* ShooterBoss::player = nullptr;
 
 ShooterBoss::ShooterBoss(const int hp, const int& dx, const int& dy, const int& shoot_freq, const bool& shoot,
                          const int size_x, const int size_y, const int& move_freq) :
-     ShooterBase("Boss", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq)
+     ShooterBase("Boss", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, NUM_SOUND_TYPES)
 {
     QPixmap enemyimage(":/image/images/computer.png");
     setPixmap(enemyimage.scaled(this->size_x, this->size_y, Qt::IgnoreAspectRatio));
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.5);
-
-    music = new QMediaPlayer();
-    music->setMedia(QUrl("qrc:/sounds/sounds/BossExplosion.mp3"));
 
     move_timer= new CustomTimer(this->move_freq, false, this, SLOT(move()));
     //connect the timer and move slot
@@ -27,6 +24,13 @@ ShooterBoss::ShooterBoss(const int hp, const int& dx, const int& dy, const int& 
     //update dialogue every 5 seconds
 
     flag_timer = new CustomTimer();
+
+    sound = new QMediaPlayer*[NUM_SOUND_TYPES];
+    sound[Hurt] = new QMediaPlayer();
+    sound[Hurt]->setMedia(QUrl("qrc:/sounds/sounds/enemygetshot.mp3"));
+    sound[PhaseComplete] = new QMediaPlayer();
+    sound[PhaseComplete]->setMedia(QUrl("qrc:/sounds/sounds/explosion.mp3"));
+
 }
 
 ShooterBoss::~ShooterBoss()
@@ -35,7 +39,6 @@ ShooterBoss::~ShooterBoss()
     if (health_bar != nullptr) delete health_bar;
     delete dialogue_timer;
     delete flag_timer;
-    delete music;
 }
 
 
@@ -223,21 +226,28 @@ bool ShooterBoss::collision()
                 break;
         }
 
-        //drop a powerup bullet
-        if (phase != Phase3) shoot_bullet(new BulletPowerUp(0, 4, BulletPowerUp::Breakpoint));
+        //drop a powerup bullet and play phase complete sound
+        if (phase != Phase3)
+        {
+            shoot_bullet(new BulletPowerUp(0, 4, BulletPowerUp::Breakpoint));
+            play_sound(sound[PhaseComplete]);
+        }
 
         set_phase(Dialogue);
+    }
+    else
+    {
+        play_sound(sound[Hurt]);
     }
 
     //when health reach 0
     if (health->get_health() == 0)
     {
         //TODO: use another image
-        ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y, 300);
+        ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y, true, 300);
         explosion->setPos(x(), y());
         scene()->addItem(explosion);
 
-        music->play();
         emit boss_dead(true);
     }
 

@@ -17,10 +17,10 @@
  * Class for player
  *
  * ENUMs
- * @enum MusicType: different sound made by the shooter for different actions
+ * @enum SoundType: different sound made by the shooter for different actions
  *
  * PRIVATE DATA MEMBERS/MEMBER FUNCTIONS
- * @include sound: play music for different MusicType
+ * @include sound: play music for different SoundType
  * @include speed: player's moving speed
  * @include immune: set to true if the player is immune (for 1 second after being hit)
  * @include powerup_shooter: is greater than 0 if the shooter has been improved
@@ -68,13 +68,15 @@ public:
     constexpr static const int PLAYER_SIZE_Y {38};
     constexpr static const int DEFAULT_PLAYER_HP {25};
 
-private:
-    enum MusicType{
-        hitBullet,
-        powerUp,
-        Shoot
+    enum SoundType
+    {
+        Hurt,
+        Powerup,
+        Shoot,
+        NUM_SOUND_TYPES
     };
-    QMediaPlayer* sound[3];
+
+private:
     int speed {DEFAULT_SPEED};
     bool immune {false};
     int powerup_shooter {0};
@@ -84,7 +86,6 @@ private:
     CustomTimer *powerup_timer {nullptr}, *immune_timer {nullptr};
 
     void set_sprite(const char* sprite);
-    void play_sound(MusicType type);
 
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;

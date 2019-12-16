@@ -7,7 +7,7 @@ ShooterPlayer* ShooterEnemy::player = nullptr;
 ShooterEnemy::ShooterEnemy(const EnemyPathingType& pathing_type, const EnemyShootingType& shooting_type,
                            const int& hp, const int& dx, const int& dy, const int& shoot_freq, const bool& shoot,
                            const int size_x, const int size_y, const int& move_freq) :
-       ShooterBase("Enemy", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq),
+       ShooterBase("Enemy", hp, dx, dy, shoot_freq, shoot, size_x, size_y, move_freq, NUM_SOUND_TYPES),
        pathing_type(pathing_type), shooting_type(shooting_type)
 {
     QPixmap enemyimage(":/image/images/bugbullet2.png");
@@ -15,9 +15,6 @@ ShooterEnemy::ShooterEnemy(const EnemyPathingType& pathing_type, const EnemyShoo
     setShapeMode(QGraphicsPixmapItem::MaskShape);
     setTransformOriginPoint(boundingRect().width()/2,boundingRect().height()/2);
     setScale(1.5);
-
-    music = new QMediaPlayer();
-    music->setMedia(QUrl("qrc:/sounds/sounds/explosion.mp3"));
 
     cirPathCounter=0.00;
 
@@ -29,6 +26,11 @@ ShooterEnemy::ShooterEnemy(const EnemyPathingType& pathing_type, const EnemyShoo
 
     shoot_timer= new CustomTimer(this->shoot_freq, false, this, SLOT(shoot()));
     //connect the timer and bullet slot
+
+    sound = new QMediaPlayer*[NUM_SOUND_TYPES];
+    sound[Hurt] = new QMediaPlayer();
+    sound[Hurt]->setMedia(QUrl("qrc:/sounds/sounds/enemygetshot.mp3"));
+
 }
 
 void ShooterEnemy::set_player(ShooterPlayer* shooter)
@@ -58,7 +60,7 @@ void ShooterEnemy::safe_kill()
 {
     //set health = 0
     health->set_health(-health->get_health());
-    //still drop powerup and create explosion and play destroyed sound
+    //still drop powerup and create explosion
     if (drop_powerup)
     {
         shoot_bullet(new BulletPowerUp(0, 4));
@@ -66,7 +68,6 @@ void ShooterEnemy::safe_kill()
     ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y);
     explosion->setPos(x(), y());
     scene()->addItem(explosion);
-    music->play();
     //remove
     REMOVE_ENTITY(scene(), this);
 }
@@ -180,7 +181,10 @@ bool ShooterEnemy::collision()
         explosion->setPos(x(), y());
         scene()->addItem(explosion);
 
-        music->play();
+    }
+    else
+    {
+        play_sound(sound[Hurt]);
     }
 
     return true;

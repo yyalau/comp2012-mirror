@@ -23,5 +23,6 @@
         <file>sounds/powerup.mp3</file>
         <file>sounds/shooting2.mp3</file>
         <file>sounds/BossExplosion.mp3</file>
+        <file>sounds/enemygetshot.mp3</file>
     </qresource>
 </RCC>

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
+#include <QMediaPlayer>
 
 #include "define.h"
 #include "customTimer.h"
@@ -36,11 +37,12 @@ private:
     CustomTimer* explosion_timer;
     int size_x, size_y;
     int sprite_counter {1};
+    QMediaPlayer* sound;
 
     void set_sprite(const char* sprite);
 
 public:
-    ShooterExplosion(const int& size_x, const int& size_y, int duration = EXPLOSION_DURATION);
+    ShooterExplosion(const int& size_x, const int& size_y, bool boss = false, int duration = EXPLOSION_DURATION);
     ~ShooterExplosion();
     void pause();
     void unpause();
