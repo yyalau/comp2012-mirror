@@ -58,7 +58,7 @@ void ShooterEnemy::safe_kill()
 {
     //set health = 0
     health->set_health(-health->get_health());
-    //still drop powerup and create explosion
+    //still drop powerup and create explosion and play destroyed sound
     if (drop_powerup)
     {
         shoot_bullet(new BulletPowerUp(0, 4));
@@ -66,6 +66,7 @@ void ShooterEnemy::safe_kill()
     ShooterExplosion* explosion = new ShooterExplosion(size_x, size_y);
     explosion->setPos(x(), y());
     scene()->addItem(explosion);
+    music->play();
     //remove
     REMOVE_ENTITY(scene(), this);
 }
