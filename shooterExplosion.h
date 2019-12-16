@@ -36,6 +36,7 @@ private:
     CustomTimer* explosion_timer;
     int size_x, size_y;
     int sprite_counter {1};
+
     void set_sprite(const char* sprite);
 
 public:

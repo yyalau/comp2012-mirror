@@ -79,6 +79,7 @@ private:
     int dialogue_counter {0};
     static ShooterPlayer* player;
     QMediaPlayer* music;
+
     void set_shoot_freq(int shoot_freq);
     void set_phase(const BossPhase& phase);
 

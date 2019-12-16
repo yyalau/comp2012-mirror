@@ -375,6 +375,7 @@ void GameEvent::trigger_clear_field(const bool& restart)
     {
         game_timer=0;
         shooter->health->reset_health();
+        shooter->reset_nullptr();
         shooter->setPos(START_POS_X, START_POS_Y);
         unpause_game();
     }

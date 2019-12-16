@@ -77,7 +77,6 @@ void ShooterPlayer::keyPressEvent(QKeyEvent* event)
             //only enable this at pause/gameover, also resets the player's position
             if (!paused) break;
             emit clear_field(true);
-            nullptr_phase = false;
             break;
         case Qt::Key_S:
             emit start_signal();
@@ -159,6 +158,11 @@ void ShooterPlayer::process_powerup(BulletPowerUp* bullet)
     }
 
     emit powerup_text(BulletPowerUp::PowerUpType (bullet->get_power_type()));
+}
+
+void ShooterPlayer::reset_nullptr()
+{
+    nullptr_phase = false;
 }
 
 void ShooterPlayer::move()

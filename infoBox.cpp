@@ -39,7 +39,7 @@ void InfoBox::show_general_info()
     scene()->addItem(heart);
 
     //instructions
-    QGraphicsTextItem* general_text= new QGraphicsTextItem("Press P to pause.");
+    QGraphicsTextItem* general_text= new QGraphicsTextItem("Press P to pause");
     general_text->setFont(font);
     general_text->setDefaultTextColor(Qt::black);
     general_text->setPos(GAMEAREA_LENGTH,550);
@@ -48,7 +48,8 @@ void InfoBox::show_general_info()
 
 void InfoBox::show_shooter_info(const int& powerup_shooter)
 {
-    QString message = QString::number(powerup_shooter)+ QString(" seconds left");
+    QString message = QString::number(powerup_shooter) +
+            QString(" second") + (powerup_shooter==1?QString(""):QString("s")) + QString(" left");
     shooter_text = new PopUpDialogue(scene(), message, 1000,
                                     PopUpDialogue::InfoBox, GAMEAREA_LENGTH, 400);
     shooter_text->set_font(QFont("Joystix Monospace",8), Qt::blue);

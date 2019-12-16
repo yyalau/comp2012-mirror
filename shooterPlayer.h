@@ -43,6 +43,7 @@
  * @include collision():
  *              No parameter: overrides shooterBase's function (do NOTHING)
  *              1 argument (collision_item): Call this function instead and pass the collision item (bullet/enemy/boss)
+ * @include reset_nullptr(): Call in gameEvent's restart function to set nullptr_phase to false
  *
  * SIGNALS
  * @include start_signal(), pause_all(), unpause_all(): signals to send to the main game
@@ -81,6 +82,7 @@ private:
     bool nullptr_phase {false};
     int powerup_shooter_counter {0};
     CustomTimer *powerup_timer {nullptr}, *immune_timer {nullptr};
+
     void set_sprite(const char* sprite);
     void play_sound(MusicType type);
 
@@ -99,6 +101,7 @@ public:
     void process_powerup(BulletPowerUp* bullet);
     virtual bool collision() override;
     bool collision(QGraphicsItem* collision_item);
+    void reset_nullptr();
 
 signals:
     void start_signal();
